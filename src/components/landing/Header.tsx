@@ -20,8 +20,8 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary">
+      <div className="container flex h-16 items-center justify-center gap-8">
+        <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary mr-auto">
           BarberParadise
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
@@ -35,7 +35,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-4 ml-auto">
             <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                 <Link href="/login">Pedir Cita</Link>
             </Button>
