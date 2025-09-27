@@ -20,7 +20,7 @@ export default function LoginPage() {
           <form className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Correo Electrónico</Label>
-              <Input id="email" type="email" placeholder="admin@example.com" required />
+              <Input id="email" type="email" placeholder="nelson@barberparadise.com" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Contraseña</Label>
