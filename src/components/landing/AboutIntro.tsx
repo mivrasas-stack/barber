@@ -13,9 +13,6 @@ export default function AboutIntro() {
             <p className="text-muted-foreground leading-relaxed">
               En BarberParadise, creemos que un corte de pelo es más que una simple tarea rutinaria: es un oficio, una forma de arte y una declaración de estilo personal. Fundada en 2007, nos hemos dedicado a brindar una experiencia de aseo premium para el hombre moderno. Nuestros barberos son maestros en su oficio, combinando técnicas tradicionales con un estilo contemporáneo para ofrecer resultados inigualables.
             </p>
-            <Button asChild variant="link" className="text-primary p-0 h-auto">
-              <Link href="#">Leer más sobre nosotros &rarr;</Link>
-            </Button>
           </div>
           <div className="hidden md:block">
             {/* Can be an image or some graphic element */}
