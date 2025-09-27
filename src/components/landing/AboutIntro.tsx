@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function AboutIntro() {
   return (
     <section id="about" className="py-20 lg:py-32 bg-background">
-      <div className="container mx-auto px-4">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-4xl lg:text-5xl font-bold text-primary">

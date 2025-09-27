@@ -22,7 +22,7 @@ const contactDetails = [
 export default function Contact() {
   return (
     <section id="contact" className="py-20 lg:py-32 bg-card">
-      <div className="container mx-auto px-4">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {contactDetails.map((detail, index) => (
             <Card key={index} className="bg-transparent border-0 md:border-x border-accent first:border-l-0 last:border-r-0 rounded-none shadow-none">

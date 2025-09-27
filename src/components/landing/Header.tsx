@@ -19,8 +19,8 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-      <div className=" flex h-16 items-center justify-between">
-        <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary ml-4">
+      <div className=" flex h-16 items-center justify-between px-4 sm:px-6">
+        <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary">
           BarberParadise
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
@@ -34,7 +34,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex items-center space-x-4 mr-4">
+        <div className="hidden md:flex items-center space-x-4">
             <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                 <Link href="/login">Pedir Cita</Link>
             </Button>
