@@ -63,7 +63,7 @@ export default function ProductsPage() {
                   {product.stock} en stock
                 </Badge>
               </TableCell>
-              <TableCell>${product.price.toFixed(2)}</TableCell>
+              <TableCell>COP {product.price.toLocaleString('es-CO')}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

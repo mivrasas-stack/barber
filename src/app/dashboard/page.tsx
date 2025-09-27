@@ -21,7 +21,7 @@ import { weeklySales, dummyAppointments } from "./data";
 import { PageHeader } from "@/components/dashboard/PageHeader";
 
 export default function Dashboard() {
-  const totalRevenue = 5423;
+  const totalRevenue = 5423000;
   const totalAppointments = 125;
   const newCustomers = 12;
 
@@ -36,7 +36,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${totalRevenue.toLocaleString()}
+              COP {totalRevenue.toLocaleString('es-CO')}
             </div>
             <p className="text-xs text-muted-foreground">
               +20.1% desde el mes pasado
@@ -90,15 +90,16 @@ export default function Dashboard() {
               <BarChart data={weeklySales}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
-                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `COP ${value/1000}k`} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "hsl(var(--background))",
                     borderColor: "hsl(var(--border))",
                   }}
+                  formatter={(value: number) => `COP ${value.toLocaleString('es-CO')}`}
                 />
                 <Legend iconType="circle" />
-                <Bar dataKey="sales" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="sales" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} name="Ventas" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

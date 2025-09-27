@@ -1,13 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-
-const services = [
-  { name: "Corte de pelo", price: 40 },
-  { name: "Afeitado", price: 35 },
-  { name: "Corte de pelo + Afeitado", price: 70 },
-  { name: "Corte de barba", price: 15 },
-];
+import { dummyServices } from "@/app/dashboard/data";
 
 export default function Pricing() {
   return (
@@ -21,10 +15,10 @@ export default function Pricing() {
           <Card className="border-accent">
             <CardContent className="p-6">
               <ul className="divide-y divide-accent">
-                {services.map((service) => (
+                {dummyServices.map((service) => (
                   <li key={service.name} className="flex justify-between items-center py-4">
                     <span className="text-lg font-medium">{service.name}</span>
-                    <span className="text-lg font-bold text-primary">${service.price}</span>
+                    <span className="text-lg font-bold text-primary">COP {service.price.toLocaleString('es-CO')}</span>
                   </li>
                 ))}
               </ul>

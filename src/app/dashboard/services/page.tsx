@@ -46,7 +46,7 @@ export default function ServicesPage() {
             <TableRow key={service.id}>
               <TableCell className="font-medium">{service.name}</TableCell>
               <TableCell>{service.description}</TableCell>
-              <TableCell>${service.price.toFixed(2)}</TableCell>
+              <TableCell>COP {service.price.toLocaleString('es-CO')}</TableCell>
               <TableCell>{service.duration} min</TableCell>
               <TableCell>
                 <DropdownMenu>

@@ -30,7 +30,7 @@ export default function CustomersPage() {
               <TableCell>{customer.email}</TableCell>
               <TableCell>{customer.phone}</TableCell>
               <TableCell>{customer.totalAppointments}</TableCell>
-              <TableCell>${customer.totalSpent.toFixed(2)}</TableCell>
+              <TableCell>COP {customer.totalSpent.toLocaleString('es-CO')}</TableCell>
             </TableRow>
           ))}
         </TableBody>

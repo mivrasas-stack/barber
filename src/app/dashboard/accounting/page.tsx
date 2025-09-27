@@ -51,7 +51,7 @@ export default function AccountingPage() {
                 </Badge>
               </TableCell>
               <TableCell className={`text-right font-medium ${transaction.type === 'Ingreso' ? 'text-green-400' : 'text-red-400'}`}>
-                {transaction.type === 'Ingreso' ? '+' : '-'}${transaction.amount.toFixed(2)}
+                {transaction.type === 'Ingreso' ? '+' : '-'}COP {transaction.amount.toLocaleString('es-CO')}
               </TableCell>
             </TableRow>
           ))}
