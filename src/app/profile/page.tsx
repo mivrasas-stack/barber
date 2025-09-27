@@ -36,49 +36,47 @@ export default function ProfilePage() {
             </div>
         </div>
       </header>
-      <div className="container mx-auto py-8">
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-            <div className="grid gap-4 md:grid-cols-3">
-                <div className="md:col-span-1">
-                    <Card>
-                    <CardHeader className="flex flex-col items-center text-center">
-                        <Avatar className="h-24 w-24 mb-4">
-                        <AvatarImage src="https://picsum.photos/seed/user-profile/200/200" alt="User" />
-                        <AvatarFallback>JD</AvatarFallback>
-                        </Avatar>
-                        <CardTitle className="text-2xl">John Doe</CardTitle>
-                        <CardDescription>john.d@example.com</CardDescription>
-                        <Button size="sm" variant="outline" className="mt-4">
-                            <Edit className="h-4 w-4 mr-2" />
-                            Editar Perfil
-                        </Button>
-                    </CardHeader>
-                    <CardContent className="text-sm text-center text-muted-foreground">
-                        <p>Miembro desde: 25 de Octubre, 2023</p>
-                    </CardContent>
-                    </Card>
-                </div>
-                <div className="md:col-span-2">
-                    <Tabs defaultValue="appointments">
-                        <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="appointments">Citas</TabsTrigger>
-                        <TabsTrigger value="points">Puntos</TabsTrigger>
-                        <TabsTrigger value="badges">Insignias</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="appointments">
-                            <UserAppointments />
-                        </TabsContent>
-                        <TabsContent value="points">
-                           <UserPoints />
-                        </TabsContent>
-                        <TabsContent value="badges">
-                            <UserBadges />
-                        </TabsContent>
-                    </Tabs>
-                </div>
-            </div>
-        </main>
-      </div>
+      <main className="container flex-1 items-start gap-4 p-4 sm:px-6 sm:py-8 md:gap-8">
+          <div className="grid gap-4 md:grid-cols-3">
+              <div className="md:col-span-1">
+                  <Card>
+                  <CardHeader className="flex flex-col items-center text-center">
+                      <Avatar className="h-24 w-24 mb-4">
+                      <AvatarImage src="https://picsum.photos/seed/user-profile/200/200" alt="User" />
+                      <AvatarFallback>JD</AvatarFallback>
+                      </Avatar>
+                      <CardTitle className="text-2xl">John Doe</CardTitle>
+                      <CardDescription>john.d@example.com</CardDescription>
+                      <Button size="sm" variant="outline" className="mt-4">
+                          <Edit className="h-4 w-4 mr-2" />
+                          Editar Perfil
+                      </Button>
+                  </CardHeader>
+                  <CardContent className="text-sm text-center text-muted-foreground">
+                      <p>Miembro desde: 25 de Octubre, 2023</p>
+                  </CardContent>
+                  </Card>
+              </div>
+              <div className="md:col-span-2">
+                  <Tabs defaultValue="appointments">
+                      <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="appointments">Citas</TabsTrigger>
+                      <TabsTrigger value="points">Puntos</TabsTrigger>
+                      <TabsTrigger value="badges">Insignias</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="appointments">
+                          <UserAppointments />
+                      </TabsContent>
+                      <TabsContent value="points">
+                         <UserPoints />
+                      </TabsContent>
+                      <TabsContent value="badges">
+                          <UserBadges />
+                      </TabsContent>
+                  </Tabs>
+              </div>
+          </div>
+      </main>
     </div>
   )
 }
