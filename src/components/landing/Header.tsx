@@ -19,9 +19,8 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-center gap-8">
-        <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary mr-auto">
+      <div className=" flex h-16 items-center justify-center gap-8">
+        <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary ml-4 mr-auto">
           BarberParadise
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
@@ -83,6 +82,5 @@ export default function Header() {
           </Sheet>
         </div>
       </div>
-    </header>
   );
 }
