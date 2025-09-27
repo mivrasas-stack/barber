@@ -22,7 +22,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header className="sticky top-0 z-30 w-full border-b bg-background">
-        <div className="container flex h-16 items-center justify-between px-6">
+        <div className="flex h-16 items-center justify-between px-6">
             <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary">
                 BarberParadise
             </Link>
@@ -36,7 +36,7 @@ export default function ProfilePage() {
             </div>
         </div>
       </header>
-      <div className="container mx-auto">
+      <div className="container mx-auto py-8">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <div className="grid gap-4 md:grid-cols-3">
                 <div className="md:col-span-1">
