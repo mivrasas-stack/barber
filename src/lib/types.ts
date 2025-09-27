@@ -47,3 +47,12 @@ export type Transaction = {
   type: "Ingreso" | "Gasto";
   amount: number;
 };
+
+export type SavedObject = {
+  id: string;
+  customerName: string;
+  objectName: string;
+  dateStored: string;
+  dateReturned: string | null;
+  status: "Guardado" | "Devuelto";
+};

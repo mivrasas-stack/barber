@@ -1,4 +1,4 @@
-import type { Appointment, Service, Product, Customer, User, Transaction } from "@/lib/types";
+import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject } from "@/lib/types";
 
 export const dummyAppointments: Appointment[] = [
   { id: 'APP001', customerName: 'John Doe', customerEmail: 'john.d@example.com', service: 'Corte de pelo + Afeitado', date: '2023-10-28 10:00', status: 'Confirmada' },
@@ -38,6 +38,12 @@ export const dummyTransactions: Transaction[] = [
     { id: 'TRN002', date: '2023-10-27', description: 'Reabastecimiento de producto - Pomada', type: 'Gasto', amount: 200000 },
     { id: 'TRN003', date: '2023-10-26', description: 'Ventas del día - Tarjeta', type: 'Ingreso', amount: 780000 },
     { id: 'TRN004', date: '2023-10-26', description: 'Alquiler', type: 'Gasto', amount: 500000 },
+];
+
+export const dummySavedObjects: SavedObject[] = [
+    { id: 'OBJ001', customerName: 'John Doe', objectName: 'Maletín negro', dateStored: '2023-10-28', dateReturned: null, status: 'Guardado' },
+    { id: 'OBJ002', customerName: 'Peter Jones', objectName: 'Casco de moto', dateStored: '2023-10-28', dateReturned: '2023-10-28', status: 'Devuelto' },
+    { id: 'OBJ003', customerName: 'Sam Wilson', objectName: 'Paraguas', dateStored: '2023-10-29', dateReturned: null, status: 'Guardado' },
 ];
 
 export const weeklySales = [

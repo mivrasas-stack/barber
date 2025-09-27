@@ -10,6 +10,7 @@ import {
   Settings,
   CreditCard,
   LogOut,
+  Package,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -41,6 +42,7 @@ const navItems = [
   { href: '/dashboard/products', icon: ShoppingBag, label: 'Productos' },
   { href: '/dashboard/customers', icon: Users, label: 'Clientes' },
   { href: '/dashboard/accounting', icon: CreditCard, label: 'Contabilidad' },
+  { href: '/dashboard/saved-objects', icon: Package, label: 'Guardar Objetos' },
   { href: '/dashboard/settings', icon: Settings, label: 'Ajustes' },
 ];
 
