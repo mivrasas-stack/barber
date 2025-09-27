@@ -22,7 +22,7 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <header className="sticky top-0 z-30 w-full border-b bg-background">
-        <div className="container mx-auto flex h-16 items-center justify-between px-6">
+        <div className="container flex h-16 items-center justify-between">
             <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary">
                 BarberParadise
             </Link>
