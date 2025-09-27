@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-barber",
+      "description": "A barber cutting a client's hair in a stylish, dark-toned barbershop.",
+      "imageUrl": "https://images.unsplash.com/photo-1578390432942-d323db577792?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxiYXJiZXIlMjBjdXR0aW5nfGVufDB8fHx8MTc1ODk4ODM0N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "barber cutting"
+    },
+    {
+      "id": "portfolio-beard",
+      "description": "Close-up of a barber meticulously trimming a client's beard.",
+      "imageUrl": "https://images.unsplash.com/photo-1621607512022-6aecc4fed814?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiYXJiZXIlMjBiZWFyZHxlbnwwfHx8fDE3NTg5MDcxMTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "barber beard"
+    },
+    {
+      "id": "portfolio-haircut",
+      "description": "A barber styling a client's hair after a fresh cut.",
+      "imageUrl": "https://images.unsplash.com/photo-1590509294910-32752e061399?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYXJiZXIlMjBzdHlsaW5nfGVufDB8fHx8MTc1ODk4ODM0N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "barber styling"
+    },
+    {
+      "id": "testimonial-avatar",
+      "description": "Portrait of a satisfied customer.",
+      "imageUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTg5NTE1NDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    }
+  ]
 }
