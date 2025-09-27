@@ -21,23 +21,23 @@ import { dummyServices } from "../data";
 export default function ServicesPage() {
   return (
     <>
-      <PageHeader title="Services">
+      <PageHeader title="Servicios">
         <Button size="sm" className="gap-1">
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Add Service
+            Añadir Servicio
           </span>
         </Button>
       </PageHeader>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Duration</TableHead>
+            <TableHead>Nombre</TableHead>
+            <TableHead>Descripción</TableHead>
+            <TableHead>Precio</TableHead>
+            <TableHead>Duración</TableHead>
             <TableHead>
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">Acciones</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -57,9 +57,9 @@ export default function ServicesPage() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <DropdownMenuItem>Eliminar</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

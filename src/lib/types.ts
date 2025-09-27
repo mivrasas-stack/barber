@@ -4,7 +4,7 @@ export type Appointment = {
   customerEmail: string;
   service: string;
   date: string;
-  status: "Pending" | "Confirmed" | "Cancelled" | "Completed";
+  status: "Pendiente" | "Confirmada" | "Cancelada" | "Completada";
 };
 
 export type Service = {
@@ -36,7 +36,7 @@ export type User = {
   id: string;
   name: string;
   email: string;
-  role: "Admin" | "Employee";
+  role: "Admin" | "Empleado";
   lastLogin: string;
 };
 
@@ -44,6 +44,6 @@ export type Transaction = {
   id: string;
   date: string;
   description: string;
-  type: "Income" | "Expense";
+  type: "Ingreso" | "Gasto";
   amount: number;
 };

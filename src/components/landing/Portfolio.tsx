@@ -10,8 +10,8 @@ export default function Portfolio() {
     <section id="portfolio" className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-primary">Discover Our Works</h2>
-          <p className="text-muted-foreground mt-2">A glimpse into our craft and passion.</p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-primary">Descubre Nuestros Trabajos</h2>
+          <p className="text-muted-foreground mt-2">Un vistazo a nuestro oficio y pasión.</p>
         </div>
         <div className="grid md:grid-cols-2 gap-8">
           {portfolioBeard && (

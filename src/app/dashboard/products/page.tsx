@@ -23,11 +23,11 @@ import { dummyProducts } from "../data";
 export default function ProductsPage() {
   return (
     <>
-      <PageHeader title="Products">
+      <PageHeader title="Productos">
         <Button size="sm" className="gap-1">
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Add Product
+            Añadir Producto
           </span>
         </Button>
       </PageHeader>
@@ -35,13 +35,13 @@ export default function ProductsPage() {
         <TableHeader>
           <TableRow>
             <TableHead className="hidden w-[100px] sm:table-cell">
-              <span className="sr-only">Image</span>
+              <span className="sr-only">Imagen</span>
             </TableHead>
-            <TableHead>Name</TableHead>
+            <TableHead>Nombre</TableHead>
             <TableHead>Stock</TableHead>
-            <TableHead>Price</TableHead>
+            <TableHead>Precio</TableHead>
             <TableHead>
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">Acciones</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -60,7 +60,7 @@ export default function ProductsPage() {
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>
                 <Badge variant={product.stock > 20 ? "secondary" : "destructive"}>
-                  {product.stock} in stock
+                  {product.stock} en stock
                 </Badge>
               </TableCell>
               <TableCell>${product.price.toFixed(2)}</TableCell>
@@ -73,9 +73,9 @@ export default function ProductsPage() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <DropdownMenuItem>Eliminar</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

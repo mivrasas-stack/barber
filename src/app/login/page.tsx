@@ -13,26 +13,26 @@ export default function LoginPage() {
           <div className="flex justify-center mb-4">
             <Scissors className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Admin Login</CardTitle>
-          <CardDescription>Enter your credentials to access the dashboard</CardDescription>
+          <CardTitle className="text-2xl">Acceso de Administrador</CardTitle>
+          <CardDescription>Ingresa tus credenciales para acceder al panel</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Correo Electrónico</Label>
               <Input id="email" type="email" placeholder="admin@example.com" required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <Input id="password" type="password" required />
             </div>
             <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link href="/dashboard">Log In</Link>
+              <Link href="/dashboard">Iniciar Sesión</Link>
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
             <Link href="/" className="underline text-muted-foreground hover:text-primary">
-              &larr; Back to website
+              &larr; Volver a la página web
             </Link>
           </div>
         </CardContent>

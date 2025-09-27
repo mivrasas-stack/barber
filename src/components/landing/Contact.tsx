@@ -4,18 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const contactDetails = [
   {
     icon: MapPin,
-    title: "Address",
+    title: "Dirección",
     lines: ["123 Wilkinson St, Upper West Side", "Manhattan, New York, NY 05010"],
   },
   {
     icon: Phone,
-    title: "Phone",
+    title: "Teléfono",
     lines: ["1.800.218.20.20"],
   },
   {
     icon: Clock,
-    title: "Opening Hours",
-    lines: ["Monday–Saturday: 9am–8pm", "Sunday: 9am–6pm"],
+    title: "Horario de Apertura",
+    lines: ["Lunes a Sábado: 9am–8pm", "Domingo: 9am–6pm"],
   },
 ];
 

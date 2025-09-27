@@ -16,39 +16,39 @@ import { dummyUsers } from "../data";
 export default function SettingsPage() {
   return (
     <>
-      <PageHeader title="Settings" />
+      <PageHeader title="Ajustes" />
       <Tabs defaultValue="users">
         <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="users">Users & Roles</TabsTrigger>
-          <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="profile">Perfil</TabsTrigger>
+          <TabsTrigger value="users">Usuarios y Roles</TabsTrigger>
+          <TabsTrigger value="billing">Facturación</TabsTrigger>
         </TabsList>
         <TabsContent value="profile" className="mt-6">
-            <p>Profile settings will be here.</p>
+            <p>Aquí estarán los ajustes del perfil.</p>
         </TabsContent>
         <TabsContent value="users" className="mt-6">
             <div className="flex justify-end mb-4">
                 <Button size="sm" className="gap-1">
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add User
+                    Añadir Usuario
                 </span>
                 </Button>
             </div>
             <Table>
                 <TableHeader>
                 <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Last Login</TableHead>
+                    <TableHead>Nombre</TableHead>
+                    <TableHead>Correo Electrónico</TableHead>
+                    <TableHead>Rol</TableHead>
+                    <TableHead>Último Acceso</TableHead>
                 </TableRow>
                 </TableHeader>
                 <TableBody>
                 {dummyUsers.map((user) => (
                     <TableRow key={user.id}>
                     <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell>{user.email.replace('nelsonbarber.com', 'barberparadise.com')}</TableCell>
+                    <TableCell>{user.email}</TableCell>
                     <TableCell>
                         <Badge variant={user.role === 'Admin' ? 'default' : 'secondary'}>{user.role}</Badge>
                     </TableCell>
@@ -59,7 +59,7 @@ export default function SettingsPage() {
             </Table>
         </TabsContent>
         <TabsContent value="billing" className="mt-6">
-            <p>Billing information will be here.</p>
+            <p>Aquí estará la información de facturación.</p>
         </TabsContent>
       </Tabs>
     </>

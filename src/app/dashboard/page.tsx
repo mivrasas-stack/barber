@@ -27,11 +27,11 @@ export default function Dashboard() {
 
   return (
     <>
-      <PageHeader title="Dashboard" />
+      <PageHeader title="Panel" />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -39,43 +39,43 @@ export default function Dashboard() {
               ${totalRevenue.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              +20.1% from last month
+              +20.1% desde el mes pasado
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Appointments</CardTitle>
+            <CardTitle className="text-sm font-medium">Citas</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">+{totalAppointments}</div>
             <p className="text-xs text-muted-foreground">
-              +180.1% from last month
+              +180.1% desde el mes pasado
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">New Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">Nuevos Clientes</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">+{newCustomers}</div>
             <p className="text-xs text-muted-foreground">
-              +19% from last month
+              +19% desde el mes pasado
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Most Popular Service</CardTitle>
+            <CardTitle className="text-sm font-medium">Servicio Más Popular</CardTitle>
             <Scissors className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Haircut + Shave</div>
+            <div className="text-2xl font-bold">Corte + Afeitado</div>
             <p className="text-xs text-muted-foreground">
-              Top service this month
+              Servicio principal este mes
             </p>
           </CardContent>
         </Card>
@@ -83,7 +83,7 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-6">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Sales Overview</CardTitle>
+            <CardTitle>Resumen de Ventas</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
             <ResponsiveContainer width="100%" height={350}>
@@ -105,9 +105,9 @@ export default function Dashboard() {
         </Card>
         <Card className="col-span-4 lg:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Appointments</CardTitle>
+            <CardTitle>Citas Recientes</CardTitle>
             <CardDescription>
-              You have {dummyAppointments.filter(a => a.status === 'Pending').length} pending appointments.
+              Tienes {dummyAppointments.filter(a => a.status === 'Pendiente').length} citas pendientes.
             </CardDescription>
           </CardHeader>
           <CardContent>

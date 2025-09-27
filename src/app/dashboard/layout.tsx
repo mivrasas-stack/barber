@@ -36,13 +36,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/dashboard/appointments', icon: Calendar, label: 'Appointments' },
-  { href: '/dashboard/services', icon: Scissors, label: 'Services' },
-  { href: '/dashboard/products', icon: ShoppingBag, label: 'Products' },
-  { href: '/dashboard/customers', icon: Users, label: 'Customers' },
-  { href: '/dashboard/accounting', icon: CreditCard, label: 'Accounting' },
-  { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Panel' },
+  { href: '/dashboard/appointments', icon: Calendar, label: 'Citas' },
+  { href: '/dashboard/services', icon: Scissors, label: 'Servicios' },
+  { href: '/dashboard/products', icon: ShoppingBag, label: 'Productos' },
+  { href: '/dashboard/customers', icon: Users, label: 'Clientes' },
+  { href: '/dashboard/accounting', icon: CreditCard, label: 'Contabilidad' },
+  { href: '/dashboard/settings', icon: Settings, label: 'Ajustes' },
 ];
 
 export default function DashboardLayout({
@@ -87,7 +87,7 @@ export default function DashboardLayout({
             <Link href="/" legacyBehavior passHref>
               <SidebarMenuButton>
                 <LogOut />
-                <span>Logout</span>
+                <span>Cerrar Sesión</span>
               </SidebarMenuButton>
             </Link>
           </SidebarMenu>
@@ -113,13 +113,13 @@ export default function DashboardLayout({
                 </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuItem>Ajustes</DropdownMenuItem>
+                <DropdownMenuItem>Soporte</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <Link href="/login">Logout</Link>
+                    <Link href="/login">Cerrar Sesión</Link>
                 </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

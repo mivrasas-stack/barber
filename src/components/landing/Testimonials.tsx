@@ -9,13 +9,13 @@ export default function Testimonials() {
     <section className="py-20 lg:py-32 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-primary">What Clients Say</h2>
+          <h2 className="text-4xl lg:text-5xl font-bold text-primary">Lo que dicen los clientes</h2>
         </div>
         <div className="max-w-3xl mx-auto">
           <Card className="border-accent bg-card p-8">
             <CardContent className="p-0 text-center">
               <blockquote className="text-xl italic text-foreground mb-6">
-                “Your works are really nice. I trust your skills and hope that the next project will be even better than the previous.”
+                “Tus trabajos son realmente buenos. Confío en tus habilidades y espero que el próximo proyecto sea aún mejor que el anterior.”
               </blockquote>
               <div className="flex items-center justify-center">
                 {avatar && (
