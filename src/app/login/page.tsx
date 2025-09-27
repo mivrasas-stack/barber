@@ -7,7 +7,7 @@ import { Scissors } from "lucide-react";
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="flex items-center justify-center min-h-screen bg-background px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
@@ -25,9 +25,6 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Contraseña</Label>
-                <Link href="#" className="ml-auto inline-block text-sm underline">
-                  ¿Olvidaste tu contraseña?
-                </Link>
               </div>
               <Input id="password" type="password" required />
             </div>
