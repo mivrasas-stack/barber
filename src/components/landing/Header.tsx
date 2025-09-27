@@ -22,7 +22,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="text-2xl font-bold font-headline tracking-wider text-primary">
-          Nelson Barber
+          BarberParadise
         </Link>
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navLinks.map((link) => (
@@ -51,7 +51,7 @@ export default function Header() {
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between p-4 border-b border-border">
                     <Link href="/" className="text-xl font-bold font-headline text-primary" onClick={() => setIsOpen(false)}>
-                        Nelson Barber
+                        BarberParadise
                     </Link>
                     <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
                         <X className="h-6 w-6" />

@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nelson Barber Digital",
+  title: "BarberParadise",
   description: "Modern & elegant barbershop.",
 };
 

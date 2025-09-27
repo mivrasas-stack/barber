@@ -61,7 +61,7 @@ export default function DashboardLayout({
               <Scissors className="h-6 w-6 text-primary" />
             </Button>
             <div className="flex flex-col">
-              <span className="text-lg font-semibold tracking-wider text-primary font-headline">Nelson Barber</span>
+              <span className="text-lg font-semibold tracking-wider text-primary font-headline">BarberParadise</span>
             </div>
           </div>
         </SidebarHeader>
@@ -108,7 +108,7 @@ export default function DashboardLayout({
                 >
                     <Avatar>
                         <AvatarImage src="https://picsum.photos/seed/admin/100/100" alt="Admin"/>
-                        <AvatarFallback>NB</AvatarFallback>
+                        <AvatarFallback>BP</AvatarFallback>
                     </Avatar>
                 </Button>
                 </DropdownMenuTrigger>

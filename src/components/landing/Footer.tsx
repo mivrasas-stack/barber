@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           <div>
             <h3 className="text-2xl font-bold font-headline tracking-wider text-primary mb-4">
-              Nelson Barber
+              BarberParadise
             </h3>
             <p className="text-muted-foreground text-sm">
               Crafting style since 2007. The finest grooming experience for the modern gentleman.
@@ -33,7 +33,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-accent text-center text-muted-foreground text-sm">
-          <p>&copy; {new Date().getFullYear()} Nelson Barber. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} BarberParadise. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

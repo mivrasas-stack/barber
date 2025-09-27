@@ -11,7 +11,7 @@ export default function AboutIntro() {
               Service Beyond Expectation
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              At Nelson Barber, we believe a haircut is more than just a routine task—it's a craft, an art form, and a statement of personal style. Established in 2007, we've dedicated ourselves to providing a premium grooming experience for the modern man. Our barbers are masters of their trade, combining traditional techniques with contemporary styling to deliver unparalleled results.
+              At BarberParadise, we believe a haircut is more than just a routine task—it's a craft, an art form, and a statement of personal style. Established in 2007, we've dedicated ourselves to providing a premium grooming experience for the modern man. Our barbers are masters of their trade, combining traditional techniques with contemporary styling to deliver unparalleled results.
             </p>
             <Button asChild variant="link" className="text-primary p-0 h-auto">
               <Link href="#">Read more about us &rarr;</Link>

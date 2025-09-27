@@ -48,7 +48,7 @@ export default function SettingsPage() {
                 {dummyUsers.map((user) => (
                     <TableRow key={user.id}>
                     <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.email.replace('nelsonbarber.com', 'barberparadise.com')}</TableCell>
                     <TableCell>
                         <Badge variant={user.role === 'Admin' ? 'default' : 'secondary'}>{user.role}</Badge>
                     </TableCell>
