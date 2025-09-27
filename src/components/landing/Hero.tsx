@@ -25,7 +25,7 @@ export default function Hero() {
           CONOCEMOS TU <br /> ESTILO MEJOR
         </h1>
         <Button asChild variant="outline" size="lg" className="mt-8 border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground text-lg px-8 py-6 rounded-none">
-          <Link href="/login">Hacer una Cita</Link>
+          <Link href="/login">Pedir una Cita</Link>
         </Button>
       </div>
     </section>

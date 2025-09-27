@@ -37,7 +37,10 @@ export default function Header() {
         </nav>
         <div className="hidden md:flex items-center space-x-4">
             <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                <Link href="/login">Cita</Link>
+                <Link href="/login">Pedir Cita</Link>
+            </Button>
+            <Button asChild>
+                <Link href="/login">Iniciar Sesión</Link>
             </Button>
         </div>
         <div className="md:hidden">
@@ -69,7 +72,10 @@ export default function Header() {
                     </Link>
                   ))}
                   <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" onClick={() => setIsOpen(false)}>
-                      <Link href="/login">Cita</Link>
+                      <Link href="/login">Pedir Cita</Link>
+                  </Button>
+                  <Button asChild onClick={() => setIsOpen(false)}>
+                      <Link href="/login">Iniciar Sesión</Link>
                   </Button>
                 </nav>
               </div>

@@ -10,7 +10,6 @@ import {
   Settings,
   CreditCard,
   LogOut,
-  UserCircle,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -115,11 +114,16 @@ export default function DashboardLayout({
                 <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Ajustes</DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href="/profile">Perfil</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link href="/dashboard/settings">Ajustes</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Soporte</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <Link href="/login">Cerrar Sesión</Link>
+                    <Link href="/">Cerrar Sesión</Link>
                 </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

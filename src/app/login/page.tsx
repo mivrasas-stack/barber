@@ -13,8 +13,8 @@ export default function LoginPage() {
           <div className="flex justify-center mb-4">
             <Scissors className="h-10 w-10 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Acceso de Administrador</CardTitle>
-          <CardDescription>Ingresa tus credenciales para acceder al panel</CardDescription>
+          <CardTitle className="text-2xl">Bienvenido de Vuelta</CardTitle>
+          <CardDescription>Ingresa a tu cuenta para gestionar tus citas</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4">
@@ -23,14 +23,26 @@ export default function LoginPage() {
               <Input id="email" type="email" placeholder="nelson@barberparadise.com" required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
+              <div className="flex items-center">
+                <Label htmlFor="password">Contraseña</Label>
+                <Link href="#" className="ml-auto inline-block text-sm underline">
+                  ¿Olvidaste tu contraseña?
+                </Link>
+              </div>
               <Input id="password" type="password" required />
             </div>
-            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link href="/dashboard">Iniciar Sesión</Link>
+            <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 as-child">
+              {/* This should be conditional based on user role */}
+              <Link href="/profile">Iniciar Sesión</Link>
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
+            ¿No tienes una cuenta?{" "}
+            <Link href="/register" className="underline">
+              Regístrate
+            </Link>
+          </div>
+          <div className="mt-2 text-center text-sm">
             <Link href="/" className="underline text-muted-foreground hover:text-primary">
               &larr; Volver a la página web
             </Link>
