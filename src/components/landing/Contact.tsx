@@ -31,8 +31,8 @@ export default function Contact() {
   return (
     <section id="contact" className="py-20 lg:py-32 bg-card">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div className="h-96 md:h-full rounded-lg overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-3 items-stretch">
+          <div className="h-96 md:h-full rounded-lg overflow-hidden md:rounded-r-none">
             <iframe
               src="https://maps.google.com/maps?q=Barber%20Paradise%20Studio%2C%20Cra.%2012%20%2318%2036%2C%20Funza%2C%20Cundinamarca&t=&z=17&ie=UTF8&iwloc=&output=embed"
               width="100%"
@@ -43,19 +43,17 @@ export default function Contact() {
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 text-center">
-            {contactDetails.map((detail, index) => (
-              <Card key={index} className="bg-transparent border-0 md:border-x border-accent first:border-l-0 last:border-r-0 rounded-none shadow-none first:sm:border-l-0 sm:last:border-r-0 sm:border-r">
-                <CardHeader className="items-center">
-                  <detail.icon className="w-10 h-10 text-primary mb-4" />
-                  <CardTitle className="text-2xl">{detail.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-muted-foreground">
-                    {detail.content}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {contactDetails.map((detail, index) => (
+            <Card key={index} className="bg-transparent border-0 md:border-l border-accent rounded-none shadow-none text-center flex flex-col justify-center py-8 md:py-0">
+              <CardHeader className="items-center">
+                <detail.icon className="w-10 h-10 text-primary mb-4" />
+                <CardTitle className="text-2xl">{detail.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-muted-foreground">
+                  {detail.content}
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
