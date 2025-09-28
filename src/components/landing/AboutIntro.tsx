@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Image from "next/image";
 
 export default function AboutIntro() {
   return (
@@ -15,10 +14,13 @@ export default function AboutIntro() {
             </p>
           </div>
           <div className="hidden md:block">
-            {/* Can be an image or some graphic element */}
-            <div className="w-full h-80 bg-accent rounded-lg flex items-center justify-center">
-              <p className="text-muted-foreground">Experiencia Premium</p>
-            </div>
+            <Image
+              src="https://images.pexels.com/photos/1570807/pexels-photo-1570807.jpeg"
+              alt="Barber applying shaving cream"
+              width={800}
+              height={600}
+              className="w-full h-auto object-cover aspect-[4/3] rounded-lg"
+            />
           </div>
         </div>
       </div>
