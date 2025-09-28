@@ -32,17 +32,19 @@ export default function Contact() {
     <section id="contact" className="py-20 lg:py-32 bg-card">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 items-stretch">
-          <div className="p-4 md:p-0 h-96 md:h-full rounded-lg overflow-hidden md:rounded-r-none">
-            <iframe
-              src="https://maps.google.com/maps?q=Barber%20Paradise%20Studio%2C%20Cra.%2012%20%2318%2036%2C%20Funza%2C%20Cundinamarca&t=&z=17&ie=UTF8&iwloc=&output=embed"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen={true}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
+          <Card className="bg-transparent border-0 rounded-none shadow-none">
+            <CardContent className="p-0 h-96 md:h-full rounded-lg overflow-hidden md:rounded-r-none">
+              <iframe
+                src="https://maps.google.com/maps?q=Barber%20Paradise%20Studio%2C%20Cra.%2012%20%2318%2036%2C%20Funza%2C%20Cundinamarca&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </CardContent>
+          </Card>
           {contactDetails.map((detail, index) => (
             <Card key={index} className="bg-transparent border-0 md:border-l border-accent rounded-none shadow-none text-center flex flex-col justify-center py-8 md:py-0">
               <CardHeader className="items-center">
