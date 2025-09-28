@@ -21,7 +21,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="h-96 md:h-full rounded-lg overflow-hidden">
             <iframe
-              src="https://maps.google.com/maps?q=Cra.%2012%20%2318%2036&t=&z=17&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=Cra.%2012%20%2318%2036%2C%20Funza%2C%20Cundinamarca&t=&z=17&ie=UTF8&iwloc=&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}
