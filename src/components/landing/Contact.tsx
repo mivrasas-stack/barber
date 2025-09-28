@@ -32,7 +32,7 @@ export default function Contact() {
     <section id="contact" className="py-20 lg:py-32 bg-card">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 items-stretch">
-          <div className="h-96 md:h-full rounded-lg overflow-hidden md:rounded-r-none">
+          <div className="p-4 md:p-0 h-96 md:h-full rounded-lg overflow-hidden md:rounded-r-none">
             <iframe
               src="https://maps.google.com/maps?q=Barber%20Paradise%20Studio%2C%20Cra.%2012%20%2318%2036%2C%20Funza%2C%20Cundinamarca&t=&z=17&ie=UTF8&iwloc=&output=embed"
               width="100%"
