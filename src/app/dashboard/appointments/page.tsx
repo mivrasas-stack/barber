@@ -1,3 +1,5 @@
+"use client";
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -18,18 +20,42 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { dummyAppointments } from "../data";
+import type { Appointment } from '@/lib/types';
+import { AddAppointmentForm } from '@/components/dashboard/AddAppointmentForm';
 
 export default function AppointmentsPage() {
+  const [appointments, setAppointments] = useState<Appointment[]>(dummyAppointments);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleAddAppointment = (newAppointment: Omit<Appointment, 'id' | 'status'>) => {
+    const appointmentWithId = { 
+      ...newAppointment, 
+      id: `APP${appointments.length + 1}`,
+      status: 'Pendiente' as const,
+    };
+    const updatedAppointments = [...appointments, appointmentWithId];
+    setAppointments(updatedAppointments);
+    dummyAppointments.push(appointmentWithId);
+    setIsFormOpen(false);
+  };
+
   return (
     <>
       <PageHeader title="Citas">
-        <Button size="sm" className="gap-1">
+        <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Añadir Cita
           </span>
         </Button>
       </PageHeader>
+
+      <AddAppointmentForm
+        isOpen={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        onAddAppointment={handleAddAppointment}
+      />
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -43,7 +69,7 @@ export default function AppointmentsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dummyAppointments.map((appointment) => (
+          {appointments.map((appointment) => (
             <TableRow key={appointment.id}>
               <TableCell>
                 <div className="font-medium">{appointment.customerName}</div>
