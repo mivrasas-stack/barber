@@ -1,4 +1,4 @@
-import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial } from "@/lib/types";
+import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder } from "@/lib/types";
 
 export const dummyAppointments: Appointment[] = [
   { id: 'APP001', customerName: 'John Doe', customerEmail: 'john.d@example.com', service: 'Corte de pelo + Afeitado', date: '2023-10-28 10:00', status: 'Confirmada' },
@@ -86,4 +86,11 @@ export const dummyTestimonials: Testimonial[] = [
         comment: 'Llevo años viniendo aquí y nunca me ha decepcionado. El servicio es siempre de primera y el resultado impecable.',
         avatarUrl: 'https://picsum.photos/seed/marcus/100/100',
     }
-]
+];
+
+
+export const dummyWaitingRoomOrders: WaitingRoomOrder[] = [
+    { id: 'ORD001', customerName: 'John Doe', code: '123456', total: 5500, status: 'Pendiente', items: [{ name: 'Coca-Cola', quantity: 1 }, { name: 'Papas Fritas', quantity: 1 }] },
+    { id: 'ORD002', customerName: 'Peter Jones', code: '654321', total: 2000, status: 'Confirmado', items: [{ name: 'Agua', quantity: 1 }] },
+    { id: 'ORD003', customerName: 'Sam Wilson', code: '987654', total: 7500, status: 'Pendiente', items: [{ name: 'Cerveza', quantity: 1 }, { name: 'Café', quantity: 1 }] },
+];

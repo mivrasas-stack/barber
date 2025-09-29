@@ -75,3 +75,12 @@ export type Testimonial = {
   comment: string;
   avatarUrl: string;
 };
+
+export type WaitingRoomOrder = {
+    id: string;
+    customerName: string;
+    items: { name: string; quantity: number }[];
+    total: number;
+    code: string;
+    status: 'Pendiente' | 'Confirmado';
+};
