@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UserWaitingRoom } from "@/components/profile/UserWaitingRoom"
 import { UserPoints } from "@/components/profile/UserPoints"
 import { UserBadges } from "@/components/profile/UserBadges"
-import { Edit, LogOut, Settings, ShoppingCart } from "lucide-react"
+import { Edit, LogOut, ShoppingCart } from "lucide-react"
 import Link from "next/link"
 import { UserAppointments } from "@/components/profile/UserAppointments"
 import { UserReviewForm } from "@/components/profile/UserReviewForm"
@@ -35,9 +35,6 @@ export default function ProfilePage() {
             <div className="flex items-center gap-4">
                 <UserWaitRoomCart />
                 <UserCart />
-                <Button variant="ghost" size="icon" asChild>
-                    <Link href="/dashboard/settings"><Settings className="h-5 w-5"/></Link>
-                </Button>
                 <Button variant="ghost" size="icon" asChild>
                     <Link href="/"><LogOut className="h-5 w-5"/></Link>
                 </Button>
