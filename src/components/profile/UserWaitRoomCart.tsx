@@ -23,11 +23,12 @@ export function UserWaitRoomCart() {
 
 
   const handleConfirmPayment = () => {
+    const paymentCode = Math.floor(100000 + Math.random() * 900000).toString();
     clearWaitRoom();
     setIsPaymentDialogOpen(false);
     toast({
-        title: "Pago Completado",
-        description: "El pago de los productos de la sala de espera ha sido registrado.",
+        title: "Pago Registrado - Presenta este código en caja",
+        description: `Tu código de pago es: ${paymentCode}`,
     })
   };
 
