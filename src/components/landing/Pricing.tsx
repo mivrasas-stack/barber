@@ -58,11 +58,6 @@ export default function Pricing() {
               <CarouselNext className="hidden sm:flex"/>
             </Carousel>
         </div>
-        <div className="text-center mt-12">
-          <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-            <Link href="#">Ver todos los precios</Link>
-          </Button>
-        </div>
       </div>
     </section>
   );
