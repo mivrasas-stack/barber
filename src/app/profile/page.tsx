@@ -22,6 +22,7 @@ import { UserAppointments } from "@/components/profile/UserAppointments"
 import { UserReviewForm } from "@/components/profile/UserReviewForm"
 import { UserProducts } from "@/components/profile/UserProducts"
 import { UserCart } from "@/components/profile/UserCart"
+import { UserWaitRoomCart } from "@/components/profile/UserWaitRoomCart"
 
 export default function ProfilePage() {
   return (
@@ -32,6 +33,7 @@ export default function ProfilePage() {
                 BarberParadise
             </Link>
             <div className="flex items-center gap-4">
+                <UserWaitRoomCart />
                 <UserCart />
                 <Button variant="ghost" size="icon" asChild>
                     <Link href="/dashboard/settings"><Settings className="h-5 w-5"/></Link>

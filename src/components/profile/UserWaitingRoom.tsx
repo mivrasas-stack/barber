@@ -11,14 +11,18 @@ import {
 } from "@/components/ui/card"
 import { dummyWaitingRoomProducts } from "@/app/dashboard/data"
 import { useToast } from "@/hooks/use-toast"
+import { useWaitRoom } from "@/hooks/use-wait-room"
+import type { WaitingRoomProduct } from "@/lib/types"
 
 export function UserWaitingRoom() {
   const { toast } = useToast()
+  const { addToWaitRoom } = useWaitRoom();
 
-  const handleOrder = (productName: string) => {
+  const handleOrder = (product: WaitingRoomProduct) => {
+    addToWaitRoom(product);
     toast({
       title: "Pedido Realizado",
-      description: `${productName} ha sido añadido a tu cuenta.`,
+      description: `${product.name} ha sido añadido a tu cuenta.`,
     })
   }
   
@@ -48,7 +52,7 @@ export function UserWaitingRoom() {
                         <p className="text-sm font-bold text-primary">
                         COP {product.price.toLocaleString("es-CO")}
                         </p>
-                        <Button variant="secondary" size="sm" className="w-full mt-2" onClick={() => handleOrder(product.name)}>
+                        <Button variant="secondary" size="sm" className="w-full mt-2" onClick={() => handleOrder(product)}>
                             Pedir
                         </Button>
                     </CardFooter>
