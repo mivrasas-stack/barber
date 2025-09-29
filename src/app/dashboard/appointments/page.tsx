@@ -39,6 +39,19 @@ export default function AppointmentsPage() {
     setIsFormOpen(false);
   };
 
+  const updateAppointmentStatus = (id: string, status: Appointment['status']) => {
+    const updatedAppointments = appointments.map(app => 
+      app.id === id ? { ...app, status } : app
+    );
+    setAppointments(updatedAppointments);
+    // Also update dummy data for consistency across app
+    const dummyIndex = dummyAppointments.findIndex(app => app.id === id);
+    if (dummyIndex !== -1) {
+        dummyAppointments[dummyIndex].status = status;
+    }
+  };
+
+
   return (
     <>
       <PageHeader title="Citas">
@@ -82,12 +95,16 @@ export default function AppointmentsPage() {
               <TableCell>
                 <Badge 
                   variant={
+                    appointment.status === 'Pagada' ? 'default' :
                     appointment.status === 'Completada' ? 'default' :
                     appointment.status === 'Confirmada' ? 'secondary':
                     appointment.status === 'Cancelada' ? 'destructive' :
                     'outline'
                   }
-                  className={appointment.status === 'Confirmada' ? 'bg-green-600/20 text-green-400 border-green-600/40' : ''}
+                  className={
+                    appointment.status === 'Confirmada' ? 'bg-green-600/20 text-green-400 border-green-600/40' : 
+                    appointment.status === 'Pagada' ? 'bg-green-500 text-white' : ''
+                }
                 >
                   {appointment.status}
                 </Badge>
@@ -103,8 +120,9 @@ export default function AppointmentsPage() {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuItem>Editar</DropdownMenuItem>
-                    <DropdownMenuItem>Confirmar</DropdownMenuItem>
-                    <DropdownMenuItem>Cancelar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateAppointmentStatus(appointment.id, 'Confirmada')}>Confirmar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateAppointmentStatus(appointment.id, 'Pagada')}>Marcar como Pagada</DropdownMenuItem>
+                    <DropdownMenuItem className="text-destructive" onClick={() => updateAppointmentStatus(appointment.id, 'Cancelada')}>Cancelar</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

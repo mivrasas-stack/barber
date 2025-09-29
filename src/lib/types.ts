@@ -4,7 +4,7 @@ export type Appointment = {
   customerEmail: string;
   service: string;
   date: string;
-  status: "Pendiente" | "Confirmada" | "Cancelada" | "Completada";
+  status: "Pendiente" | "Confirmada" | "Cancelada" | "Completada" | "Pagada";
 };
 
 export type Service = {
