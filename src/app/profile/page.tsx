@@ -18,6 +18,7 @@ import { UserBadges } from "@/components/profile/UserBadges"
 import { Edit, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { UserAppointments } from "@/components/profile/UserAppointments"
+import { UserReviewForm } from "@/components/profile/UserReviewForm"
 
 export default function ProfilePage() {
   return (
@@ -39,7 +40,7 @@ export default function ProfilePage() {
       </header>
       <main className="flex-1 items-start gap-4 p-4 sm:px-6 sm:py-8 md:gap-8">
           <div className="grid gap-4 md:grid-cols-3">
-              <div className="md:col-span-1">
+              <div className="md:col-span-1 grid gap-4">
                   <Card>
                   <CardHeader className="flex flex-col items-center text-center">
                       <Avatar className="h-24 w-24 mb-4">
@@ -57,6 +58,7 @@ export default function ProfilePage() {
                       <p>Miembro desde: 25 de Octubre, 2023</p>
                   </CardContent>
                   </Card>
+                  <UserReviewForm />
               </div>
               <div className="md:col-span-2">
                   <Tabs defaultValue="waiting-room">
