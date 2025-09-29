@@ -12,14 +12,18 @@ import {
 } from "@/components/ui/card"
 import { dummyProducts } from "@/app/dashboard/data"
 import { useToast } from "@/hooks/use-toast"
+import { useCart } from "@/hooks/use-cart"
+import type { Product } from "@/lib/types"
 
 export function UserProducts() {
   const { toast } = useToast()
+  const { addToCart } = useCart()
 
-  const handleAddToCart = (productName: string) => {
+  const handleAddToCart = (product: Product) => {
+    addToCart(product)
     toast({
       title: "Producto Añadido",
-      description: `${productName} ha sido añadido a tu carrito.`,
+      description: `${product.name} ha sido añadido a tu carrito.`,
     })
   }
   
@@ -49,7 +53,7 @@ export function UserProducts() {
                         <p className="text-sm font-bold text-primary">
                         COP {product.price.toLocaleString("es-CO")}
                         </p>
-                        <Button variant="secondary" size="sm" className="w-full mt-2" onClick={() => handleAddToCart(product.name)}>
+                        <Button variant="secondary" size="sm" className="w-full mt-2" onClick={() => handleAddToCart(product)}>
                             Añadir al carrito
                         </Button>
                     </CardFooter>
