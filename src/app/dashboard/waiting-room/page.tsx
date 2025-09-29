@@ -171,7 +171,7 @@ export default function WaitingRoomPage() {
                                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                                             <DropdownMenuItem onClick={() => confirmOrder(order.id)} disabled={order.status === 'Confirmado'}>Marcar como Confirmado</DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => handleViewDetails(order)}>Ver Detalles</DropdownMenuItem>
-                                            <DropdownMenuItem className="text-destructive" onClick={() => deleteOrder(order.id)}>Eliminar</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-destructive" onClick={() => deleteOrder(order.id)} disabled={order.status === 'Confirmado'}>Eliminar</DropdownMenuItem>
                                         </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -240,8 +240,7 @@ export default function WaitingRoomPage() {
                             <Button aria-haspopup="true" size="icon" variant="ghost">
                             <MoreHorizontal className="h-4 w-4" />
                             <span className="sr-only">Toggle menu</span>
-                            </Button>
-                        </DropdownMenuTrigger>
+                            </Button>                        </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                             <DropdownMenuItem>Editar</DropdownMenuItem>
@@ -264,5 +263,3 @@ export default function WaitingRoomPage() {
     </>
   );
 }
-
-    
