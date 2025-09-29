@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -20,7 +20,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
 import { dummyWaitingRoomProducts, dummyWaitingRoomOrders } from "../data";
 import type { WaitingRoomProduct, WaitingRoomOrder } from '@/lib/types';
 import { AddWaitingRoomProductForm } from '@/components/dashboard/AddWaitingRoomProductForm';
@@ -36,6 +36,7 @@ export default function WaitingRoomPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<WaitingRoomOrder | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
   const handleAddProduct = (newProduct: Omit<WaitingRoomProduct, 'id'>) => {
@@ -103,6 +104,14 @@ export default function WaitingRoomPage() {
     setIsDetailsOpen(true);
   }
 
+  const filteredOrders = useMemo(() => {
+    if (!searchTerm) return orders;
+    return orders.filter(order => 
+      order.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.code.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [orders, searchTerm]);
+
   return (
     <>
       <PageHeader title="Sala de Espera" />
@@ -130,7 +139,19 @@ export default function WaitingRoomPage() {
             <div className="md:col-span-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Historial de Pedidos</CardTitle>
+                        <div className="flex justify-between items-center">
+                            <CardTitle>Historial de Pedidos</CardTitle>
+                            <div className="relative w-full max-w-sm">
+                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                type="search"
+                                placeholder="Buscar por cliente o código..."
+                                className="w-full bg-background pl-8"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                        </div>
                     </CardHeader>
                     <CardContent>
                         <Table>
@@ -145,7 +166,7 @@ export default function WaitingRoomPage() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {orders.map((order) => (
+                                {filteredOrders.map((order) => (
                                 <TableRow key={order.id}>
                                     <TableCell className="font-medium">{order.customerName}</TableCell>
                                     <TableCell>{order.code}</TableCell>
