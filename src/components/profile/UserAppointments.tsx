@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { dummyAppointments } from "@/app/dashboard/data"
+import Link from "next/link"
 
 export function UserAppointments() {
   const userAppointments = dummyAppointments.filter(a => a.customerName === "John Doe");
@@ -47,7 +48,9 @@ export function UserAppointments() {
         ))}
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button>Agendar Nueva Cita</Button>
+        <Button asChild>
+          <Link href="/#services">Agendar Nueva Cita</Link>
+        </Button>
       </CardFooter>
     </Card>
   )

@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { UserAppointments } from "@/components/profile/UserAppointments"
+import { UserWaitingRoom } from "@/components/profile/UserWaitingRoom"
 import { UserPoints } from "@/components/profile/UserPoints"
 import { UserBadges } from "@/components/profile/UserBadges"
 import { Edit, LogOut, Settings } from "lucide-react"
@@ -58,14 +58,14 @@ export default function ProfilePage() {
                   </Card>
               </div>
               <div className="md:col-span-2">
-                  <Tabs defaultValue="appointments">
+                  <Tabs defaultValue="waiting-room">
                       <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="appointments">Citas</TabsTrigger>
+                      <TabsTrigger value="waiting-room">Sala de Espera</TabsTrigger>
                       <TabsTrigger value="points">Puntos</TabsTrigger>
                       <TabsTrigger value="badges">Insignias</TabsTrigger>
                       </TabsList>
-                      <TabsContent value="appointments">
-                          <UserAppointments />
+                      <TabsContent value="waiting-room">
+                          <UserWaitingRoom />
                       </TabsContent>
                       <TabsContent value="points">
                          <UserPoints />

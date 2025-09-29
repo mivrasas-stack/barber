@@ -1,4 +1,4 @@
-import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject } from "@/lib/types";
+import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct } from "@/lib/types";
 
 export const dummyAppointments: Appointment[] = [
   { id: 'APP001', customerName: 'John Doe', customerEmail: 'john.d@example.com', service: 'Corte de pelo + Afeitado', date: '2023-10-28 10:00', status: 'Confirmada' },
@@ -17,7 +17,7 @@ export const dummyServices: Service[] = [
 export const dummyProducts: Product[] = [
   { id: 'PRD001', name: 'Pomada Premium', imageUrl: 'https://picsum.photos/seed/pomade/100/100', price: 25000, stock: 15, stockMin: 10 },
   { id: 'PRD002', name: 'Aceite para Barba', imageUrl: 'https://picsum.photos/seed/beardoil/100/100', price: 30000, stock: 80, stockMin: 20 },
-  { id: 'PRD003', name: 'Bálsamo para Después de Afeitar', imageUrl: 'https://picsum.photos/seed/balm/100/100', price: 22000, stock: 120, stockMin: 15 },
+  { id: 'PRD003', name: 'Bálsamo para Después de Afeitar', imageUrl: 'https://picsum.photos/seed/balm/100/100', price: 120, stockMin: 15, price: 22000, stock: 120 },
 ];
 
 export const dummyCustomers: Customer[] = [
@@ -54,4 +54,15 @@ export const weeklySales = [
   { day: 'Vie', sales: 600000 },
   { day: 'Sáb', sales: 800000 },
   { day: 'Dom', sales: 200000 },
+];
+
+export const dummyWaitingRoomProducts: WaitingRoomProduct[] = [
+  { id: 'WR001', name: 'Coca-Cola', category: 'Gaseosas', price: 3000, imageUrl: 'https://picsum.photos/seed/cocacola/300/300' },
+  { id: 'WR002', name: 'Papas Fritas', category: 'Golosinas', price: 2500, imageUrl: 'https://picsum.photos/seed/chips/300/300' },
+  { id: 'WR003', name: 'Agua', category: 'Bebidas', price: 2000, imageUrl: 'https://picsum.photos/seed/water/300/300' },
+  { id: 'WR004', name: 'Café', category: 'Bebidas', price: 2500, imageUrl: 'https://picsum.photos/seed/coffee/300/300' },
+  { id: 'WR005', name: 'Galletas', category: 'Golosinas', price: 1500, imageUrl: 'https://picsum.photos/seed/cookies/300/300' },
+  { id: 'WR006', name: 'Jugo de Naranja', category: 'Bebidas', price: 3000, imageUrl: 'https://picsum.photos/seed/orangejuice/300/300' },
+  { id: 'WR007', name: 'Maní', category: 'Golosinas', price: 2000, imageUrl: 'https://picsum.photos/seed/peanuts/300/300' },
+  { id: 'WR008', name: 'Cerveza', category: 'Bebidas', price: 5000, imageUrl: 'https://picsum.photos/seed/beer/300/300' },
 ];

@@ -58,3 +58,11 @@ export type SavedObject = {
   dateReturned: string | null;
   status: "Guardado" | "Devuelto";
 };
+
+export type WaitingRoomProduct = {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  imageUrl: string;
+};
