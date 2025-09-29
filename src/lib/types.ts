@@ -65,6 +65,8 @@ export type WaitingRoomProduct = {
   category: string;
   price: number;
   imageUrl: string;
+  stock: number;
+  stockMin: number;
 };
 
 export type Testimonial = {

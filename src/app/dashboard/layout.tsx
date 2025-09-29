@@ -11,6 +11,7 @@ import {
   CreditCard,
   LogOut,
   Package,
+  ClipboardList,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -43,6 +44,7 @@ const navItems = [
   { href: '/dashboard/customers', icon: Users, label: 'Clientes' },
   { href: '/dashboard/accounting', icon: CreditCard, label: 'Contabilidad' },
   { href: '/dashboard/saved-objects', icon: Package, label: 'Guardar Objetos' },
+  { href: '/dashboard/waiting-room', icon: ClipboardList, label: 'Sala de Espera' },
   { href: '/dashboard/settings', icon: Settings, label: 'Ajustes' },
 ];
 

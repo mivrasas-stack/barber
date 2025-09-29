@@ -57,14 +57,14 @@ export const weeklySales = [
 ];
 
 export const dummyWaitingRoomProducts: WaitingRoomProduct[] = [
-  { id: 'WR001', name: 'Coca-Cola', category: 'Gaseosas', price: 3000, imageUrl: 'https://picsum.photos/seed/cocacola/300/300' },
-  { id: 'WR002', name: 'Papas Fritas', category: 'Golosinas', price: 2500, imageUrl: 'https://picsum.photos/seed/chips/300/300' },
-  { id: 'WR003', name: 'Agua', category: 'Bebidas', price: 2000, imageUrl: 'https://picsum.photos/seed/water/300/300' },
-  { id: 'WR004', name: 'Café', category: 'Bebidas', price: 2500, imageUrl: 'https://picsum.photos/seed/coffee/300/300' },
-  { id: 'WR005', name: 'Galletas', category: 'Golosinas', price: 1500, imageUrl: 'https://picsum.photos/seed/cookies/300/300' },
-  { id: 'WR006', name: 'Jugo de Naranja', category: 'Bebidas', price: 3000, imageUrl: 'https://picsum.photos/seed/orangejuice/300/300' },
-  { id: 'WR007', name: 'Maní', category: 'Golosinas', price: 2000, imageUrl: 'https://picsum.photos/seed/peanuts/300/300' },
-  { id: 'WR008', name: 'Cerveza', category: 'Bebidas', price: 5000, imageUrl: 'https://picsum.photos/seed/beer/300/300' },
+  { id: 'WR001', name: 'Coca-Cola', category: 'Gaseosas', price: 3000, imageUrl: 'https://picsum.photos/seed/cocacola/300/300', stock: 50, stockMin: 10 },
+  { id: 'WR002', name: 'Papas Fritas', category: 'Golosinas', price: 2500, imageUrl: 'https://picsum.photos/seed/chips/300/300', stock: 30, stockMin: 5 },
+  { id: 'WR003', name: 'Agua', category: 'Bebidas', price: 2000, imageUrl: 'https://picsum.photos/seed/water/300/300', stock: 100, stockMin: 20 },
+  { id: 'WR004', name: 'Café', category: 'Bebidas', price: 2500, imageUrl: 'https://picsum.photos/seed/coffee/300/300', stock: 40, stockMin: 10 },
+  { id: 'WR005', name: 'Galletas', category: 'Golosinas', price: 1500, imageUrl: 'https://picsum.photos/seed/cookies/300/300', stock: 60, stockMin: 15 },
+  { id: 'WR006', name: 'Jugo de Naranja', category: 'Bebidas', price: 3000, imageUrl: 'https://picsum.photos/seed/orangejuice/300/300', stock: 25, stockMin: 5 },
+  { id: 'WR007', name: 'Maní', category: 'Golosinas', price: 2000, imageUrl: 'https://picsum.photos/seed/peanuts/300/300', stock: 80, stockMin: 10 },
+  { id: 'WR008', name: 'Cerveza', category: 'Bebidas', price: 5000, imageUrl: 'https://picsum.photos/seed/beer/300/300', stock: 15, stockMin: 5 },
 ];
 
 export const dummyTestimonials: Testimonial[] = [
