@@ -27,6 +27,7 @@ const formSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
   price: z.coerce.number().min(0, 'El precio debe ser un número positivo'),
   stock: z.coerce.number().min(0, 'El stock debe ser un número positivo'),
+  stockMin: z.coerce.number().min(0, 'El stock mínimo debe ser un número positivo'),
   imageUrl: z.string().url('Debe ser una URL de imagen válida'),
 });
 
@@ -43,6 +44,7 @@ export function AddProductForm({ isOpen, onOpenChange, onAddProduct }: AddProduc
       name: '',
       price: 0,
       stock: 0,
+      stockMin: 0,
       imageUrl: '',
     },
   });
@@ -97,6 +99,19 @@ export function AddProductForm({ isOpen, onOpenChange, onAddProduct }: AddProduc
                   <FormLabel>Stock</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="Ej: 150" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="stockMin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Stock Mínimo</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="Ej: 10" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

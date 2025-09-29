@@ -15,9 +15,9 @@ export const dummyServices: Service[] = [
 ];
 
 export const dummyProducts: Product[] = [
-  { id: 'PRD001', name: 'Pomada Premium', imageUrl: 'https://picsum.photos/seed/pomade/100/100', price: 25000, stock: 150 },
-  { id: 'PRD002', name: 'Aceite para Barba', imageUrl: 'https://picsum.photos/seed/beardoil/100/100', price: 30000, stock: 80 },
-  { id: 'PRD003', name: 'Bálsamo para Después de Afeitar', imageUrl: 'https://picsum.photos/seed/balm/100/100', price: 22000, stock: 120 },
+  { id: 'PRD001', name: 'Pomada Premium', imageUrl: 'https://picsum.photos/seed/pomade/100/100', price: 25000, stock: 15, stockMin: 10 },
+  { id: 'PRD002', name: 'Aceite para Barba', imageUrl: 'https://picsum.photos/seed/beardoil/100/100', price: 30000, stock: 80, stockMin: 20 },
+  { id: 'PRD003', name: 'Bálsamo para Después de Afeitar', imageUrl: 'https://picsum.photos/seed/balm/100/100', price: 22000, stock: 120, stockMin: 15 },
 ];
 
 export const dummyCustomers: Customer[] = [

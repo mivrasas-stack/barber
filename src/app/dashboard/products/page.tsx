@@ -81,7 +81,7 @@ export default function ProductsPage() {
               </TableCell>
               <TableCell className="font-medium">{product.name}</TableCell>
               <TableCell>
-                <Badge variant={product.stock > 20 ? "secondary" : "destructive"}>
+                <Badge variant={product.stock > product.stockMin ? "secondary" : "destructive"}>
                   {product.stock} en stock
                 </Badge>
               </TableCell>

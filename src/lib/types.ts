@@ -22,6 +22,7 @@ export type Product = {
   imageUrl: string;
   price: number;
   stock: number;
+  stockMin: number;
 };
 
 export type Customer = {
