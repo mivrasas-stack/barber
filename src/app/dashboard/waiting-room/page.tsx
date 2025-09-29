@@ -27,11 +27,14 @@ import { AddWaitingRoomProductForm } from '@/components/dashboard/AddWaitingRoom
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from "@/hooks/use-toast";
+import { OrderDetailsDialog } from '@/components/dashboard/OrderDetailsDialog';
 
 export default function WaitingRoomPage() {
   const [products, setProducts] = useState<WaitingRoomProduct[]>(dummyWaitingRoomProducts);
   const [orders, setOrders] = useState<WaitingRoomOrder[]>(dummyWaitingRoomOrders);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<WaitingRoomOrder | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
   const { toast } = useToast();
 
@@ -93,6 +96,11 @@ export default function WaitingRoomPage() {
         title: "Pedido Eliminado",
         description: "El pedido ha sido eliminado del historial.",
     });
+  }
+  
+  const handleViewDetails = (order: WaitingRoomOrder) => {
+    setSelectedOrder(order);
+    setIsDetailsOpen(true);
   }
 
   return (
@@ -162,7 +170,7 @@ export default function WaitingRoomPage() {
                                         <DropdownMenuContent align="end">
                                             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                                             <DropdownMenuItem onClick={() => confirmOrder(order.id)} disabled={order.status === 'Confirmado'}>Marcar como Confirmado</DropdownMenuItem>
-                                            <DropdownMenuItem>Ver Detalles</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => handleViewDetails(order)}>Ver Detalles</DropdownMenuItem>
                                             <DropdownMenuItem className="text-destructive" onClick={() => deleteOrder(order.id)}>Eliminar</DropdownMenuItem>
                                         </DropdownMenuContent>
                                         </DropdownMenu>
@@ -247,6 +255,12 @@ export default function WaitingRoomPage() {
             </Table>
         </TabsContent>
       </Tabs>
+      
+      <OrderDetailsDialog 
+        isOpen={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        order={selectedOrder}
+      />
     </>
   );
 }
