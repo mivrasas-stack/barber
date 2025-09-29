@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { dummyProducts } from "@/app/dashboard/data";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Products() {
   return (
@@ -40,7 +41,9 @@ export default function Products() {
                 <p className="text-lg font-bold text-primary">
                   COP {product.price.toLocaleString("es-CO")}
                 </p>
-                <Button variant="outline">Comprar</Button>
+                <Button variant="outline" asChild>
+                  <Link href="/profile">Comprar</Link>
+                </Button>
               </CardFooter>
             </Card>
           ))}
