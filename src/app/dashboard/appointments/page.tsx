@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import * as XLSX from 'xlsx';
+import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -19,17 +20,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { File, MoreHorizontal, PlusCircle } from "lucide-react";
+import { File, MoreHorizontal, PlusCircle, Calendar as CalendarIcon, Filter, X } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { dummyAppointments } from "../data";
 import type { Appointment } from '@/lib/types';
 import { AddAppointmentForm } from '@/components/dashboard/AddAppointmentForm';
 import { PaymentDialog } from '@/components/dashboard/PaymentDialog';
+import { cn } from "@/lib/utils";
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>(dummyAppointments);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
 
   const handleAddAppointment = (newAppointment: Omit<Appointment, 'id' | 'status'>) => {
     const appointmentWithId = { 
@@ -67,13 +72,33 @@ export default function AppointmentsPage() {
     setSelectedAppointment(null);
   };
 
+  const filteredAppointments = useMemo(() => {
+    if (!dateRange.from && !dateRange.to) {
+      return appointments;
+    }
+    return appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      const from = dateRange.from ? new Date(dateRange.from.setHours(0, 0, 0, 0)) : null;
+      const to = dateRange.to ? new Date(dateRange.to.setHours(23, 59, 59, 999)) : null;
+
+      if (from && appointmentDate < from) return false;
+      if (to && appointmentDate > to) return false;
+      return true;
+    });
+  }, [appointments, dateRange]);
+
+
   const handleExport = () => {
-    const worksheet = XLSX.utils.json_to_sheet(appointments);
+    const dataToExport = filteredAppointments;
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Citas");
     XLSX.writeFile(workbook, "citas.xlsx");
   };
-
+  
+  const handleClearFilter = () => {
+    setDateRange({});
+  }
 
   return (
     <>
@@ -93,6 +118,62 @@ export default function AppointmentsPage() {
             </Button>
         </div>
       </PageHeader>
+
+      <div className="flex items-center gap-4 mb-6 p-4 border rounded-lg bg-card">
+        <Filter className="h-5 w-5 text-muted-foreground" />
+        <span className="font-semibold text-sm">Filtrar por fecha:</span>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[240px] justify-start text-left font-normal",
+                !dateRange.from && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {dateRange.from ? format(dateRange.from, "PPP") : <span>Desde</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={dateRange.from}
+              onSelect={(date) => setDateRange(prev => ({ ...prev, from: date }))}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[240px] justify-start text-left font-normal",
+                !dateRange.to && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {dateRange.to ? format(dateRange.to, "PPP") : <span>Hasta</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={dateRange.to}
+              onSelect={(date) => setDateRange(prev => ({ ...prev, to: date }))}
+              disabled={(date) =>
+                dateRange.from ? date < dateRange.from : false
+              }
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+        <Button onClick={handleClearFilter} variant="ghost" size="sm">
+          <X className="h-4 w-4 mr-2" /> Limpiar
+        </Button>
+      </div>
+
 
       <AddAppointmentForm
         isOpen={isFormOpen}
@@ -119,7 +200,7 @@ export default function AppointmentsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {appointments.map((appointment) => (
+          {filteredAppointments.map((appointment) => (
             <TableRow key={appointment.id}>
               <TableCell>
                 <div className="font-medium">{appointment.customerName}</div>
@@ -128,7 +209,7 @@ export default function AppointmentsPage() {
                 </div>
               </TableCell>
               <TableCell>{appointment.service}</TableCell>
-              <TableCell>{appointment.date}</TableCell>
+              <TableCell>{new Date(appointment.date).toLocaleString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</TableCell>
               <TableCell>
                 <Badge 
                   variant={

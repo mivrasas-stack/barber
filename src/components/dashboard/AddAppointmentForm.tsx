@@ -29,7 +29,7 @@ const formSchema = z.object({
   customerName: z.string().min(1, 'El nombre del cliente es requerido'),
   customerEmail: z.string().email('Debe ser un correo electrónico válido'),
   service: z.string().min(1, 'El servicio es requerido'),
-  date: z.string().min(1, 'La fecha es requerida'),
+  date: z.string().min(1, 'La fecha es requerida').refine(val => !isNaN(Date.parse(val)), { message: "Fecha inválida" }),
 });
 
 interface AddAppointmentFormProps {
@@ -50,7 +50,10 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onAddAppointment }: A
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddAppointment(values);
+    onAddAppointment({
+        ...values,
+        date: new Date(values.date).toISOString()
+    });
     form.reset();
   }
 
