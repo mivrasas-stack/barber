@@ -66,3 +66,10 @@ export type WaitingRoomProduct = {
   price: number;
   imageUrl: string;
 };
+
+export type Testimonial = {
+  id: string;
+  customerName: string;
+  comment: string;
+  avatarUrl: string;
+};

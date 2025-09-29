@@ -1,4 +1,4 @@
-import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct } from "@/lib/types";
+import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial } from "@/lib/types";
 
 export const dummyAppointments: Appointment[] = [
   { id: 'APP001', customerName: 'John Doe', customerEmail: 'john.d@example.com', service: 'Corte de pelo + Afeitado', date: '2023-10-28 10:00', status: 'Confirmada' },
@@ -17,7 +17,7 @@ export const dummyServices: Service[] = [
 export const dummyProducts: Product[] = [
   { id: 'PRD001', name: 'Pomada Premium', imageUrl: 'https://picsum.photos/seed/pomade/100/100', price: 25000, stock: 15, stockMin: 10 },
   { id: 'PRD002', name: 'Aceite para Barba', imageUrl: 'https://picsum.photos/seed/beardoil/100/100', price: 30000, stock: 80, stockMin: 20 },
-  { id: 'PRD003', name: 'Bálsamo para Después de Afeitar', imageUrl: 'https://picsum.photos/seed/balm/100/100', price: 120, stockMin: 15, price: 22000, stock: 120 },
+  { id: 'PRD003', name: 'Bálsamo para Después de Afeitar', imageUrl: 'https://picsum.photos/seed/balm/100/100', price: 22000, stock: 120, stockMin: 15 },
 ];
 
 export const dummyCustomers: Customer[] = [
@@ -66,3 +66,24 @@ export const dummyWaitingRoomProducts: WaitingRoomProduct[] = [
   { id: 'WR007', name: 'Maní', category: 'Golosinas', price: 2000, imageUrl: 'https://picsum.photos/seed/peanuts/300/300' },
   { id: 'WR008', name: 'Cerveza', category: 'Bebidas', price: 5000, imageUrl: 'https://picsum.photos/seed/beer/300/300' },
 ];
+
+export const dummyTestimonials: Testimonial[] = [
+    {
+        id: 'TST001',
+        customerName: 'Thomas Jackson',
+        comment: 'Tus trabajos son realmente buenos. Confío en tus habilidades y espero que el próximo proyecto sea aún mejor que el anterior.',
+        avatarUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTg5NTE1NDl8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    },
+    {
+        id: 'TST002',
+        customerName: 'Alex Thompson',
+        comment: 'La mejor barbería de la ciudad. El ambiente es genial y los barberos son auténticos profesionales. ¡Volveré pronto!',
+        avatarUrl: 'https://picsum.photos/seed/alex/100/100',
+    },
+    {
+        id: 'TST003',
+        customerName: 'Marcus Holloway',
+        comment: 'Llevo años viniendo aquí y nunca me ha decepcionado. El servicio es siempre de primera y el resultado impecable.',
+        avatarUrl: 'https://picsum.photos/seed/marcus/100/100',
+    }
+]
