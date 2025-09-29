@@ -73,6 +73,28 @@ export default function WaitingRoomPage() {
     }
   };
 
+  const confirmOrder = (orderId: string) => {
+    const orderIndex = orders.findIndex(order => order.id === orderId);
+    if (orderIndex !== -1) {
+        const updatedOrders = [...orders];
+        updatedOrders[orderIndex].status = 'Confirmado';
+        setOrders(updatedOrders);
+        toast({
+            title: "Pedido Confirmado",
+            description: `El pedido de ${updatedOrders[orderIndex].customerName} ha sido confirmado.`,
+        });
+    }
+  }
+
+  const deleteOrder = (orderId: string) => {
+    const updatedOrders = orders.filter(order => order.id !== orderId);
+    setOrders(updatedOrders);
+    toast({
+        title: "Pedido Eliminado",
+        description: "El pedido ha sido eliminado del historial.",
+    });
+  }
+
   return (
     <>
       <PageHeader title="Sala de Espera" />
@@ -109,7 +131,9 @@ export default function WaitingRoomPage() {
                                     <TableHead>Cliente</TableHead>
                                     <TableHead>Código</TableHead>
                                     <TableHead>Total</TableHead>
+                                    <TableHead>Método de Pago</TableHead>
                                     <TableHead>Estado</TableHead>
+                                    <TableHead><span className="sr-only">Acciones</span></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -118,6 +142,7 @@ export default function WaitingRoomPage() {
                                     <TableCell className="font-medium">{order.customerName}</TableCell>
                                     <TableCell>{order.code}</TableCell>
                                     <TableCell>COP {order.total.toLocaleString('es-CO')}</TableCell>
+                                    <TableCell>{order.paymentMethod}</TableCell>
                                     <TableCell>
                                     <Badge 
                                         variant={order.status === 'Confirmado' ? 'secondary' : 'outline'}
@@ -125,6 +150,22 @@ export default function WaitingRoomPage() {
                                     >
                                         {order.status}
                                     </Badge>
+                                    </TableCell>
+                                     <TableCell>
+                                        <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button aria-haspopup="true" size="icon" variant="ghost">
+                                            <MoreHorizontal className="h-4 w-4" />
+                                            <span className="sr-only">Toggle menu</span>
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                                            <DropdownMenuItem onClick={() => confirmOrder(order.id)} disabled={order.status === 'Confirmado'}>Marcar como Confirmado</DropdownMenuItem>
+                                            <DropdownMenuItem>Ver Detalles</DropdownMenuItem>
+                                            <DropdownMenuItem className="text-destructive" onClick={() => deleteOrder(order.id)}>Eliminar</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                        </DropdownMenu>
                                     </TableCell>
                                 </TableRow>
                                 ))}
@@ -209,3 +250,5 @@ export default function WaitingRoomPage() {
     </>
   );
 }
+
+    

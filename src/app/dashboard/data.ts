@@ -90,7 +90,9 @@ export const dummyTestimonials: Testimonial[] = [
 
 
 export const dummyWaitingRoomOrders: WaitingRoomOrder[] = [
-    { id: 'ORD001', customerName: 'John Doe', code: '123456', total: 5500, status: 'Pendiente', items: [{ name: 'Coca-Cola', quantity: 1 }, { name: 'Papas Fritas', quantity: 1 }] },
-    { id: 'ORD002', customerName: 'Peter Jones', code: '654321', total: 2000, status: 'Confirmado', items: [{ name: 'Agua', quantity: 1 }] },
-    { id: 'ORD003', customerName: 'Sam Wilson', code: '987654', total: 7500, status: 'Pendiente', items: [{ name: 'Cerveza', quantity: 1 }, { name: 'Café', quantity: 1 }] },
+    { id: 'ORD001', customerName: 'John Doe', code: '123456', total: 5500, status: 'Pendiente', paymentMethod: 'Efectivo', items: [{ name: 'Coca-Cola', quantity: 1 }, { name: 'Papas Fritas', quantity: 1 }] },
+    { id: 'ORD002', customerName: 'Peter Jones', code: '654321', total: 2000, status: 'Confirmado', paymentMethod: 'Nequi', items: [{ name: 'Agua', quantity: 1 }] },
+    { id: 'ORD003', customerName: 'Sam Wilson', code: '987654', total: 7500, status: 'Pendiente', paymentMethod: 'Daviplata', items: [{ name: 'Cerveza', quantity: 1 }, { name: 'Café', quantity: 1 }] },
 ];
+
+    

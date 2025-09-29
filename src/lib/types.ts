@@ -79,8 +79,11 @@ export type Testimonial = {
 export type WaitingRoomOrder = {
     id: string;
     customerName: string;
-    items: { name: string; quantity: number }[];
+    items?: { name: string; quantity: number }[];
     total: number;
     code: string;
     status: 'Pendiente' | 'Confirmado';
+    paymentMethod: 'Nequi' | 'Daviplata' | 'Efectivo' | 'Tarjeta' | null;
 };
+
+    
