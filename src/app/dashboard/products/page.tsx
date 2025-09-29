@@ -1,3 +1,5 @@
+"use client";
+import React, { useState } from 'react';
 import Image from "next/image";
 import {
   Table,
@@ -19,18 +21,38 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { dummyProducts } from "../data";
+import type { Product } from '@/lib/types';
+import { AddProductForm } from '@/components/dashboard/AddProductForm';
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>(dummyProducts);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleAddProduct = (newProduct: Omit<Product, 'id'>) => {
+    const productWithId = { ...newProduct, id: `PRD${products.length + 1}` };
+    const updatedProducts = [...products, productWithId];
+    setProducts(updatedProducts);
+    dummyProducts.push(productWithId);
+    setIsFormOpen(false);
+  };
+
   return (
     <>
       <PageHeader title="Productos">
-        <Button size="sm" className="gap-1">
+        <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Añadir Producto
           </span>
         </Button>
       </PageHeader>
+
+      <AddProductForm 
+        isOpen={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        onAddProduct={handleAddProduct}
+      />
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -46,7 +68,7 @@ export default function ProductsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dummyProducts.map((product) => (
+          {products.map((product) => (
             <TableRow key={product.id}>
               <TableCell className="hidden sm:table-cell">
                 <Image
