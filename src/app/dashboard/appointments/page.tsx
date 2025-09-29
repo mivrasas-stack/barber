@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import * as XLSX from 'xlsx';
 import {
   Table,
   TableBody,
@@ -18,7 +19,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { File, MoreHorizontal, PlusCircle } from "lucide-react";
 import { dummyAppointments } from "../data";
 import type { Appointment } from '@/lib/types';
 import { AddAppointmentForm } from '@/components/dashboard/AddAppointmentForm';
@@ -66,16 +67,31 @@ export default function AppointmentsPage() {
     setSelectedAppointment(null);
   };
 
+  const handleExport = () => {
+    const worksheet = XLSX.utils.json_to_sheet(appointments);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Citas");
+    XLSX.writeFile(workbook, "citas.xlsx");
+  };
+
 
   return (
     <>
       <PageHeader title="Citas">
-        <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
-          <PlusCircle className="h-3.5 w-3.5" />
-          <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-            Añadir Cita
-          </span>
-        </Button>
+        <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" className="gap-1" onClick={handleExport}>
+              <File className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Exportar
+              </span>
+            </Button>
+            <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Añadir Cita
+              </span>
+            </Button>
+        </div>
       </PageHeader>
 
       <AddAppointmentForm
