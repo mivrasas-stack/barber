@@ -17,6 +17,7 @@ import { UserPoints } from "@/components/profile/UserPoints"
 import { UserBadges } from "@/components/profile/UserBadges"
 import { Edit, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
+import { UserAppointments } from "@/components/profile/UserAppointments"
 
 export default function ProfilePage() {
   return (
@@ -59,13 +60,17 @@ export default function ProfilePage() {
               </div>
               <div className="md:col-span-2">
                   <Tabs defaultValue="waiting-room">
-                      <TabsList className="grid w-full grid-cols-3">
+                      <TabsList className="grid w-full grid-cols-4">
                       <TabsTrigger value="waiting-room">Sala de Espera</TabsTrigger>
+                      <TabsTrigger value="appointments">Citas</TabsTrigger>
                       <TabsTrigger value="points">Puntos</TabsTrigger>
                       <TabsTrigger value="badges">Insignias</TabsTrigger>
                       </TabsList>
                       <TabsContent value="waiting-room">
                           <UserWaitingRoom />
+                      </TabsContent>
+                      <TabsContent value="appointments">
+                          <UserAppointments />
                       </TabsContent>
                       <TabsContent value="points">
                          <UserPoints />
