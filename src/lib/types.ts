@@ -13,6 +13,7 @@ export type Service = {
   description: string;
   price: number;
   duration: number; // in minutes
+  imageUrl?: string;
 };
 
 export type Product = {

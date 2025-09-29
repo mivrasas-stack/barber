@@ -8,10 +8,10 @@ export const dummyAppointments: Appointment[] = [
 ];
 
 export const dummyServices: Service[] = [
-  { id: 'SRV01', name: 'Corte de pelo', description: 'Corte de pelo y peinado clásico para hombres.', price: 40000, duration: 30 },
-  { id: 'SRV02', name: 'Afeitado', description: 'Afeitado tradicional con toalla caliente.', price: 35000, duration: 30 },
-  { id: 'SRV03', name: 'Corte de pelo + Afeitado', description: 'El paquete completo de aseo.', price: 70000, duration: 60 },
-  { id: 'SRV04', name: 'Corte de barba', description: 'Dale forma y estilo a tu barba.', price: 15000, duration: 15 },
+  { id: 'SRV01', name: 'Corte de pelo', description: 'Corte de pelo y peinado clásico para hombres.', price: 40000, duration: 30, imageUrl: 'https://picsum.photos/seed/haircut/600/400' },
+  { id: 'SRV02', name: 'Afeitado', description: 'Afeitado tradicional con toalla caliente.', price: 35000, duration: 30, imageUrl: 'https://picsum.photos/seed/shave/600/400' },
+  { id: 'SRV03', name: 'Corte de pelo + Afeitado', description: 'El paquete completo de aseo.', price: 70000, duration: 60, imageUrl: 'https://picsum.photos/seed/fullservice/600/400' },
+  { id: 'SRV04', name: 'Corte de barba', description: 'Dale forma y estilo a tu barba.', price: 15000, duration: 15, imageUrl: 'https://picsum.photos/seed/beardtrim/600/400' },
 ];
 
 export const dummyProducts: Product[] = [
