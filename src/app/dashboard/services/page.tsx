@@ -1,3 +1,5 @@
+"use client";
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -17,18 +19,41 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { dummyServices } from "../data";
+import { AddServiceForm } from '@/components/dashboard/AddServiceForm';
+import type { Service } from '@/lib/types';
 
 export default function ServicesPage() {
+  const [services, setServices] = useState<Service[]>(dummyServices);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleAddService = (newService: Omit<Service, 'id'>) => {
+    const serviceWithId = { ...newService, id: `SRV${services.length + 1}` };
+    const updatedServices = [...services, serviceWithId];
+    setServices(updatedServices);
+    // This is a temporary solution to update the data for the landing page.
+    // In a real application, this data would be fetched from a database.
+    // We are modifying the "dummyServices" array directly.
+    dummyServices.push(serviceWithId);
+    setIsFormOpen(false);
+  };
+
   return (
     <>
       <PageHeader title="Servicios">
-        <Button size="sm" className="gap-1">
+        <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Añadir Servicio
           </span>
         </Button>
       </PageHeader>
+      
+      <AddServiceForm 
+        isOpen={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        onAddService={handleAddService}
+      />
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -42,7 +67,7 @@ export default function ServicesPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dummyServices.map((service) => (
+          {services.map((service) => (
             <TableRow key={service.id}>
               <TableCell className="font-medium">{service.name}</TableCell>
               <TableCell>{service.description}</TableCell>
