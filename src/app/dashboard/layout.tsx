@@ -26,7 +26,6 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,35 +99,12 @@ export default function DashboardLayout({
             <div className="relative ml-auto flex-1 md:grow-0">
                 {/* Optional Search Bar */}
             </div>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    className="overflow-hidden rounded-full"
-                >
-                    <Avatar>
-                        <AvatarImage src="https://picsum.photos/seed/admin/100/100" alt="Admin"/>
-                        <AvatarFallback>BP</AvatarFallback>
-                    </Avatar>
-                </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    <Link href="/profile">Perfil</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                    <Link href="/dashboard/settings">Ajustes</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>Soporte</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                    <Link href="/">Cerrar Sesión</Link>
-                </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Button asChild variant="outline">
+                <Link href="/">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Cerrar Sesión
+                </Link>
+            </Button>
         </header>
         <main className="flex-1 p-4 sm:px-6 sm:py-0 ">{children}</main>
       </SidebarInset>
