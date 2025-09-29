@@ -47,6 +47,9 @@ export default function Pricing() {
                             <p className="text-xl font-bold text-primary mt-2">
                                 COP {service.price.toLocaleString('es-CO')}
                             </p>
+                            <Button asChild className="mt-4">
+                                <Link href="/login">Contratar</Link>
+                            </Button>
                           </div>
                         </CardContent>
                       </Card>
