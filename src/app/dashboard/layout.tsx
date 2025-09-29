@@ -86,14 +86,12 @@ export default function DashboardLayout({
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          <SidebarMenu>
             <Link href="/" legacyBehavior passHref>
-              <SidebarMenuButton>
+              <SidebarMenuButton tooltip="Cerrar Sesión">
                 <LogOut />
                 <span>Cerrar Sesión</span>
               </SidebarMenuButton>
             </Link>
-          </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
