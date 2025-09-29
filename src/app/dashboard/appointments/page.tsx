@@ -22,10 +22,13 @@ import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { dummyAppointments } from "../data";
 import type { Appointment } from '@/lib/types';
 import { AddAppointmentForm } from '@/components/dashboard/AddAppointmentForm';
+import { PaymentDialog } from '@/components/dashboard/PaymentDialog';
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>(dummyAppointments);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
   const handleAddAppointment = (newAppointment: Omit<Appointment, 'id' | 'status'>) => {
     const appointmentWithId = { 
@@ -44,11 +47,23 @@ export default function AppointmentsPage() {
       app.id === id ? { ...app, status } : app
     );
     setAppointments(updatedAppointments);
-    // Also update dummy data for consistency across app
     const dummyIndex = dummyAppointments.findIndex(app => app.id === id);
     if (dummyIndex !== -1) {
         dummyAppointments[dummyIndex].status = status;
     }
+  };
+
+  const handleOpenPaymentDialog = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setIsPaymentDialogOpen(true);
+  };
+
+  const handleConfirmPayment = () => {
+    if (selectedAppointment) {
+      updateAppointmentStatus(selectedAppointment.id, 'Pagada');
+    }
+    setIsPaymentDialogOpen(false);
+    setSelectedAppointment(null);
   };
 
 
@@ -67,6 +82,12 @@ export default function AppointmentsPage() {
         isOpen={isFormOpen}
         onOpenChange={setIsFormOpen}
         onAddAppointment={handleAddAppointment}
+      />
+
+      <PaymentDialog
+        isOpen={isPaymentDialogOpen}
+        onOpenChange={setIsPaymentDialogOpen}
+        onConfirm={handleConfirmPayment}
       />
 
       <Table>
@@ -103,7 +124,7 @@ export default function AppointmentsPage() {
                   }
                   className={
                     appointment.status === 'Confirmada' ? 'bg-green-600/20 text-green-400 border-green-600/40' : 
-                    appointment.status === 'Pagada' ? 'bg-green-500 text-white' : ''
+                    appointment.status === 'Pagada' ? 'bg-green-500 text-primary-foreground' : ''
                 }
                 >
                   {appointment.status}
@@ -112,7 +133,7 @@ export default function AppointmentsPage() {
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost">
+                    <Button aria-haspopup="true" size="icon" variant="ghost" disabled={appointment.status === 'Pagada'}>
                       <MoreHorizontal className="h-4 w-4" />
                       <span className="sr-only">Toggle menu</span>
                     </Button>
@@ -121,7 +142,7 @@ export default function AppointmentsPage() {
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                     <DropdownMenuItem>Editar</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => updateAppointmentStatus(appointment.id, 'Confirmada')}>Confirmar</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateAppointmentStatus(appointment.id, 'Pagada')}>Marcar como Pagada</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleOpenPaymentDialog(appointment)}>Proceder al pago</DropdownMenuItem>
                     <DropdownMenuItem className="text-destructive" onClick={() => updateAppointmentStatus(appointment.id, 'Cancelada')}>Cancelar</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
