@@ -1,3 +1,5 @@
+"use client";
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -18,18 +20,47 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { dummySavedObjects } from "../data";
+import type { SavedObject } from '@/lib/types';
+import { AddSavedObjectForm } from '@/components/dashboard/AddSavedObjectForm';
 
 export default function SavedObjectsPage() {
+  const [savedObjects, setSavedObjects] = useState<SavedObject[]>(dummySavedObjects);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleAddObject = (newObject: Omit<SavedObject, 'id' | 'dateStored' | 'dateReturned' | 'status'>) => {
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+    const objectWithId = { 
+        ...newObject, 
+        id: `OBJ${savedObjects.length + 1}`,
+        dateStored: formattedDate,
+        dateReturned: null,
+        status: 'Guardado' as const,
+    };
+    const updatedObjects = [...savedObjects, objectWithId];
+    setSavedObjects(updatedObjects);
+    dummySavedObjects.push(objectWithId);
+    setIsFormOpen(false);
+  };
+
   return (
     <>
       <PageHeader title="Guardar Objetos">
-        <Button size="sm" className="gap-1">
+        <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Añadir Objeto
           </span>
         </Button>
       </PageHeader>
+
+      <AddSavedObjectForm
+        isOpen={isFormOpen}
+        onOpenChange={setIsFormOpen}
+        onAddObject={handleAddObject}
+      />
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -44,7 +75,7 @@ export default function SavedObjectsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {dummySavedObjects.map((item) => (
+          {savedObjects.map((item) => (
             <TableRow key={item.id}>
               <TableCell className="font-medium">{item.customerName}</TableCell>
               <TableCell>{item.objectName}</TableCell>
