@@ -26,14 +26,6 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Panel' },
@@ -88,7 +80,7 @@ export default function DashboardLayout({
             <Link href="/" legacyBehavior passHref>
               <SidebarMenuButton tooltip="Cerrar Sesión">
                 <LogOut />
-                <span>Cerrar Sesión</span>
+                <span className='sr-only'>Cerrar Sesión</span>
               </SidebarMenuButton>
             </Link>
         </SidebarFooter>
@@ -99,10 +91,10 @@ export default function DashboardLayout({
             <div className="relative ml-auto flex-1 md:grow-0">
                 {/* Optional Search Bar */}
             </div>
-            <Button asChild variant="outline">
+            <Button asChild variant="ghost" size="icon">
                 <Link href="/">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Cerrar Sesión
+                    <LogOut className="h-5 w-5" />
+                    <span className="sr-only">Cerrar Sesión</span>
                 </Link>
             </Button>
         </header>
