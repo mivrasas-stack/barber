@@ -11,10 +11,26 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { dummyAppointments } from "@/app/dashboard/data"
 import Link from "next/link"
+import { CancelAppointmentDialog } from "./CancelAppointmentDialog"
+import { useState } from "react"
+import type { Appointment } from "@/lib/types"
 
 export function UserAppointments() {
-  const userAppointments = dummyAppointments.filter(a => a.customerName === "John Doe");
-  
+  const [appointments, setAppointments] = useState<Appointment[]>(dummyAppointments.filter(a => a.customerName === "John Doe"));
+
+  const handleCancelAppointment = (appointmentId: string) => {
+    const updatedAppointments = appointments.map(app => 
+        app.id === appointmentId ? { ...app, status: 'Cancelada' as const } : app
+    );
+    setAppointments(updatedAppointments);
+
+    // Update dummy data as well
+    const dummyIndex = dummyAppointments.findIndex(app => app.id === appointmentId);
+    if (dummyIndex !== -1) {
+        dummyAppointments[dummyIndex].status = 'Cancelada';
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -22,11 +38,11 @@ export function UserAppointments() {
         <CardDescription>Aquí puedes ver tu historial de citas y gestionar las próximas.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {userAppointments.map(appointment => (
+        {appointments.map(appointment => (
           <div key={appointment.id} className="flex items-center justify-between p-4 rounded-lg border">
             <div>
               <p className="font-semibold">{appointment.service}</p>
-              <p className="text-sm text-muted-foreground">{appointment.date}</p>
+              <p className="text-sm text-muted-foreground">{new Date(appointment.date).toLocaleString('es-CO', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
             </div>
             <div className="flex items-center gap-2">
                  <Badge 
@@ -36,12 +52,15 @@ export function UserAppointments() {
                     appointment.status === 'Cancelada' ? 'destructive' :
                     'outline'
                   }
-                  className={appointment.status === 'Confirmada' ? 'bg-green-600/20 text-green-400 border-green-600/40' : ''}
+                  className={
+                    appointment.status === 'Confirmada' ? 'bg-green-600/20 text-green-400 border-green-600/40' : 
+                    appointment.status === 'Pagada' ? 'bg-green-500 text-primary-foreground' : ''
+                }
                 >
                   {appointment.status}
                 </Badge>
                 {appointment.status === "Confirmada" && (
-                    <Button variant="outline" size="sm">Cancelar</Button>
+                    <CancelAppointmentDialog onConfirm={() => handleCancelAppointment(appointment.id)} />
                 )}
             </div>
           </div>
