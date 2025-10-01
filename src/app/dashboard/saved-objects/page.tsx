@@ -43,6 +43,33 @@ export default function SavedObjectsPage() {
     dummySavedObjects.push(objectWithId);
     setIsFormOpen(false);
   };
+  
+  const handleMarkAsReturned = (objectId: string) => {
+    const today = new Date().toISOString().split('T')[0];
+    const updatedObjects = savedObjects.map(obj => 
+      obj.id === objectId 
+        ? { ...obj, status: 'Devuelto' as const, dateReturned: today }
+        : obj
+    );
+    setSavedObjects(updatedObjects);
+
+    const dummyIndex = dummySavedObjects.findIndex(obj => obj.id === objectId);
+    if (dummyIndex !== -1) {
+      dummySavedObjects[dummyIndex].status = 'Devuelto';
+      dummySavedObjects[dummyIndex].dateReturned = today;
+    }
+  };
+
+  const handleDeleteObject = (objectId: string) => {
+    const updatedObjects = savedObjects.filter(obj => obj.id !== objectId);
+    setSavedObjects(updatedObjects);
+
+    const dummyIndex = dummySavedObjects.findIndex(obj => obj.id === objectId);
+    if (dummyIndex !== -1) {
+      dummySavedObjects.splice(dummyIndex, 1);
+    }
+  };
+
 
   return (
     <>
@@ -101,8 +128,18 @@ export default function SavedObjectsPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                    <DropdownMenuItem>Marcar como Devuelto</DropdownMenuItem>
-                    <DropdownMenuItem>Eliminar</DropdownMenuItem>
+                    <DropdownMenuItem 
+                        onClick={() => handleMarkAsReturned(item.id)}
+                        disabled={item.status === 'Devuelto'}
+                    >
+                        Marcar como Devuelto
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                        onClick={() => handleDeleteObject(item.id)}
+                        className="text-destructive"
+                    >
+                        Eliminar
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
