@@ -35,9 +35,27 @@ export const dummyUsers: User[] = [
 
 export const dummyTransactions: Transaction[] = [
     { id: 'TRN001', date: '2023-10-27', description: 'Ventas del día - Efectivo', type: 'Ingreso', amount: 450000 },
-    { id: 'TRN002', date: '2023-10-27', description: 'Reabastecimiento de producto - Pomada', type: 'Gasto', amount: 200000 },
     { id: 'TRN003', date: '2023-10-26', description: 'Ventas del día - Tarjeta', type: 'Ingreso', amount: 780000 },
     { id: 'TRN004', date: '2023-10-26', description: 'Alquiler', type: 'Gasto', amount: 500000 },
+    { id: 'TRN005', date: '2023-10-25', description: 'Pago de Servicios Públicos', type: 'Gasto', amount: 150000 },
+];
+
+export const serviceTransactions: Transaction[] = [
+    { id: 'TRN_SRV_001', date: '2023-10-27', description: 'Corte de pelo + Afeitado (John Doe)', type: 'Ingreso', amount: 70000 },
+    { id: 'TRN_SRV_002', date: '2023-10-27', description: 'Corte de barba (Peter Jones)', type: 'Ingreso', amount: 15000 },
+    { id: 'TRN_SRV_003', date: '2023-10-26', description: 'Corte de pelo (Cliente Casual)', type: 'Ingreso', amount: 40000 },
+];
+
+export const productTransactions: Transaction[] = [
+    { id: 'TRN_PROD_001', date: '2023-10-27', description: 'Venta - Pomada Premium x2', type: 'Ingreso', amount: 50000 },
+    { id: 'TRN_PROD_002', date: '2023-10-27', description: 'Reabastecimiento - Aceite para Barba', type: 'Gasto', amount: 300000 },
+    { id: 'TRN_PROD_003', date: '2023-10-26', description: 'Venta - Bálsamo x1, Aceite x1', type: 'Ingreso', amount: 52000 },
+];
+
+export const waitingRoomTransactions: Transaction[] = [
+    { id: 'TRN_WR_001', date: '2023-10-27', description: 'Venta - Coca-Cola x2', type: 'Ingreso', amount: 6000 },
+    { id: 'TRN_WR_002', date: '2023-10-27', description: 'Venta - Papas Fritas x1', type: 'Ingreso', amount: 2500 },
+    { id: 'TRN_WR_003', date: '2023-10-26', description: 'Venta - Café x1, Cerveza x1', type: 'Ingreso', amount: 7500 },
 ];
 
 export const dummySavedObjects: SavedObject[] = [
