@@ -155,3 +155,5 @@ export function AddWaitingRoomProductForm({ isOpen, onOpenChange, onAddProduct }
     </Dialog>
   );
 }
+
+  
