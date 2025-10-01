@@ -86,4 +86,11 @@ export type WaitingRoomOrder = {
     paymentMethod: 'Nequi' | 'Daviplata' | 'Efectivo' | 'Tarjeta' | null;
 };
 
+export type PortfolioItem = {
+    id: string;
+    imageUrl: string;
+    description: string;
+    category: string;
+};
+
     

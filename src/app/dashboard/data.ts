@@ -1,4 +1,4 @@
-import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder } from "@/lib/types";
+import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder, PortfolioItem } from "@/lib/types";
 
 export const dummyAppointments: Appointment[] = [
   { id: 'APP001', customerName: 'John Doe', customerEmail: 'john.d@example.com', service: 'Corte de pelo + Afeitado', date: '2023-10-28 10:00', status: 'Confirmada' },
@@ -95,4 +95,18 @@ export const dummyWaitingRoomOrders: WaitingRoomOrder[] = [
     { id: 'ORD003', customerName: 'Sam Wilson', code: '987654', total: 7500, status: 'Pendiente', paymentMethod: 'Daviplata', items: [{ name: 'Cerveza', quantity: 1 }, { name: 'Café', quantity: 1 }] },
 ];
 
+export const dummyPortfolioItems: PortfolioItem[] = [
+    {
+        id: 'PORT001',
+        imageUrl: 'https://images.unsplash.com/photo-1621607512022-6aecc4fed814?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxiYXJiZXIlMjBiZWFyZHxlbnwwfHx8fDE3NTg5MDcxMTJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
+        description: 'Close-up of a barber meticulously trimming a client\'s beard.',
+        category: 'Beard',
+    },
+    {
+        id: 'PORT002',
+        imageUrl: 'https://images.unsplash.com/photo-1590509294910-32752e061399?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYXJiZXIlMjBzdHlsaW5nfGVufDB8fHx8MTc1ODk4ODM0N3ww&ixlib=rb-4.1.0&q=80&w=1080',
+        description: 'A barber styling a client\'s hair after a fresh cut.',
+        category: 'Haircut',
+    }
+];
     
