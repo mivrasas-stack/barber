@@ -32,21 +32,42 @@ import { cn } from "@/lib/utils";
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>(dummyAppointments);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
 
-  const handleAddAppointment = (newAppointment: Omit<Appointment, 'id' | 'status'>) => {
-    const appointmentWithId = { 
-      ...newAppointment, 
-      id: `APP${appointments.length + 1}`,
-      status: 'Pendiente' as const,
-    };
-    const updatedAppointments = [...appointments, appointmentWithId];
-    setAppointments(updatedAppointments);
-    dummyAppointments.push(appointmentWithId);
-    setIsFormOpen(false);
+  const handleOpenForm = (appointment: Appointment | null = null) => {
+    setEditingAppointment(appointment);
+    setIsFormOpen(true);
   };
+
+  const handleSaveAppointment = (appointmentData: Omit<Appointment, 'id' | 'status'> | Appointment) => {
+    if ('id' in appointmentData) {
+      // Editing existing appointment
+      const updatedAppointments = appointments.map(app => 
+        app.id === appointmentData.id ? { ...app, ...appointmentData } : app
+      );
+      setAppointments(updatedAppointments);
+      const dummyIndex = dummyAppointments.findIndex(app => app.id === appointmentData.id);
+      if (dummyIndex !== -1) {
+          dummyAppointments[dummyIndex] = { ...dummyAppointments[dummyIndex], ...appointmentData };
+      }
+    } else {
+      // Adding new appointment
+      const newAppointment = { 
+        ...appointmentData, 
+        id: `APP${appointments.length + 1}`,
+        status: 'Pendiente' as const,
+      };
+      const updatedAppointments = [...appointments, newAppointment];
+      setAppointments(updatedAppointments);
+      dummyAppointments.push(newAppointment);
+    }
+    setIsFormOpen(false);
+    setEditingAppointment(null);
+  };
+
 
   const updateAppointmentStatus = (id: string, status: Appointment['status']) => {
     const updatedAppointments = appointments.map(app => 
@@ -110,7 +131,7 @@ export default function AppointmentsPage() {
                 Exportar
               </span>
             </Button>
-            <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
+            <Button size="sm" className="gap-1" onClick={() => handleOpenForm()}>
               <PlusCircle className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                 Añadir Cita
@@ -177,8 +198,12 @@ export default function AppointmentsPage() {
 
       <AddAppointmentForm
         isOpen={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        onAddAppointment={handleAddAppointment}
+        onOpenChange={(isOpen) => {
+          setIsFormOpen(isOpen);
+          if (!isOpen) setEditingAppointment(null);
+        }}
+        onSaveAppointment={handleSaveAppointment}
+        existingAppointment={editingAppointment}
       />
 
       <PaymentDialog
@@ -237,7 +262,7 @@ export default function AppointmentsPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleOpenForm(appointment)}>Editar</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => updateAppointmentStatus(appointment.id, 'Confirmada')}>Confirmar</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleOpenPaymentDialog(appointment)}>Proceder al pago</DropdownMenuItem>
                     <DropdownMenuItem className="text-destructive" onClick={() => updateAppointmentStatus(appointment.id, 'Cancelada')}>Cancelar</DropdownMenuItem>

@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -35,10 +35,11 @@ const formSchema = z.object({
 interface AddAppointmentFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onAddAppointment: (appointment: Omit<Appointment, 'id' | 'status'>) => void;
+  onSaveAppointment: (appointment: Omit<Appointment, 'id' | 'status'> | Appointment) => void;
+  existingAppointment: Appointment | null;
 }
 
-export function AddAppointmentForm({ isOpen, onOpenChange, onAddAppointment }: AddAppointmentFormProps) {
+export function AddAppointmentForm({ isOpen, onOpenChange, onSaveAppointment, existingAppointment }: AddAppointmentFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,11 +50,40 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onAddAppointment }: A
     },
   });
 
+  useEffect(() => {
+    if (existingAppointment) {
+      const date = new Date(existingAppointment.date);
+      // Format to "YYYY-MM-DDTHH:mm" which is required by datetime-local input
+      const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}T${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+      
+      form.reset({
+        customerName: existingAppointment.customerName,
+        customerEmail: existingAppointment.customerEmail,
+        service: existingAppointment.service,
+        date: formattedDate,
+      });
+    } else {
+      form.reset({
+        customerName: '',
+        customerEmail: '',
+        service: '',
+        date: '',
+      });
+    }
+  }, [existingAppointment, form, isOpen]);
+
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddAppointment({
+    const dataToSave = {
         ...values,
-        date: new Date(values.date).toISOString()
-    });
+        date: new Date(values.date).toISOString(),
+    };
+
+    if (existingAppointment) {
+        onSaveAppointment({ ...existingAppointment, ...dataToSave });
+    } else {
+        onSaveAppointment(dataToSave);
+    }
     form.reset();
   }
 
@@ -61,9 +91,9 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onAddAppointment }: A
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Añadir Nueva Cita</DialogTitle>
+          <DialogTitle>{existingAppointment ? 'Editar Cita' : 'Añadir Nueva Cita'}</DialogTitle>
           <DialogDescription>
-            Completa la información para agendar una nueva cita.
+            {existingAppointment ? 'Modifica la información de la cita.' : 'Completa la información para agendar una nueva cita.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -131,7 +161,7 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onAddAppointment }: A
             />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-              <Button type="submit">Añadir Cita</Button>
+              <Button type="submit">{existingAppointment ? 'Guardar Cambios' : 'Añadir Cita'}</Button>
             </DialogFooter>
           </form>
         </Form>

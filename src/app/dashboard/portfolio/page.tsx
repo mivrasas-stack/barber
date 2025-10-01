@@ -26,19 +26,46 @@ import { AddPortfolioItemForm } from '@/components/dashboard/AddPortfolioItemFor
 export default function PortfolioPage() {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>(dummyPortfolioItems);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<PortfolioItem | null>(null);
 
-  const handleAddPortfolioItem = (newItem: Omit<PortfolioItem, 'id'>) => {
-    const itemWithId = { ...newItem, id: `PORT${portfolioItems.length + 1}` };
-    const updatedItems = [...portfolioItems, itemWithId];
-    setPortfolioItems(updatedItems);
-    dummyPortfolioItems.push(itemWithId);
+  const handleOpenForm = (item: PortfolioItem | null = null) => {
+    setEditingItem(item);
+    setIsFormOpen(true);
+  };
+
+  const handleSaveItem = (itemData: Omit<PortfolioItem, 'id'> | PortfolioItem) => {
+    if ('id' in itemData) {
+      // Editing existing item
+      const updatedItems = portfolioItems.map(p => p.id === itemData.id ? { ...p, ...itemData } : p);
+      setPortfolioItems(updatedItems);
+      const dummyIndex = dummyPortfolioItems.findIndex(p => p.id === itemData.id);
+      if (dummyIndex !== -1) {
+          dummyPortfolioItems[dummyIndex] = { ...dummyPortfolioItems[dummyIndex], ...itemData };
+      }
+    } else {
+      // Adding new item
+      const newItem = { ...itemData, id: `PORT${portfolioItems.length + 1}` };
+      const updatedItems = [...portfolioItems, newItem];
+      setPortfolioItems(updatedItems);
+      dummyPortfolioItems.push(newItem);
+    }
     setIsFormOpen(false);
+    setEditingItem(null);
+  };
+
+  const handleDeleteItem = (itemId: string) => {
+    const updatedItems = portfolioItems.filter(p => p.id !== itemId);
+    setPortfolioItems(updatedItems);
+    const dummyIndex = dummyPortfolioItems.findIndex(p => p.id === itemId);
+    if (dummyIndex !== -1) {
+      dummyPortfolioItems.splice(dummyIndex, 1);
+    }
   };
 
   return (
     <>
       <PageHeader title="Portafolio">
-        <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
+        <Button size="sm" className="gap-1" onClick={() => handleOpenForm()}>
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Añadir Trabajo
@@ -48,8 +75,12 @@ export default function PortfolioPage() {
 
       <AddPortfolioItemForm
         isOpen={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        onAddPortfolioItem={handleAddPortfolioItem}
+        onOpenChange={(isOpen) => {
+          setIsFormOpen(isOpen);
+          if (!isOpen) setEditingItem(null);
+        }}
+        onSaveItem={handleSaveItem}
+        existingItem={editingItem}
       />
 
       <Table>
@@ -89,8 +120,8 @@ export default function PortfolioPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                    <DropdownMenuItem>Editar</DropdownMenuItem>
-                    <DropdownMenuItem>Eliminar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleOpenForm(item)}>Editar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDeleteItem(item.id)}>Eliminar</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

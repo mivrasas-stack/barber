@@ -25,22 +25,47 @@ import type { Service } from '@/lib/types';
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>(dummyServices);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingService, setEditingService] = useState<Service | null>(null);
 
-  const handleAddService = (newService: Omit<Service, 'id'>) => {
-    const serviceWithId = { ...newService, id: `SRV${services.length + 1}` };
-    const updatedServices = [...services, serviceWithId];
-    setServices(updatedServices);
-    // This is a temporary solution to update the data for the landing page.
-    // In a real application, this data would be fetched from a database.
-    // We are modifying the "dummyServices" array directly.
-    dummyServices.push(serviceWithId);
-    setIsFormOpen(false);
+  const handleOpenForm = (service: Service | null = null) => {
+    setEditingService(service);
+    setIsFormOpen(true);
   };
+
+  const handleSaveService = (serviceData: Omit<Service, 'id'> | Service) => {
+    if ('id' in serviceData) {
+      // Editing existing service
+      const updatedServices = services.map(s => s.id === serviceData.id ? { ...s, ...serviceData } : s);
+      setServices(updatedServices);
+      const dummyIndex = dummyServices.findIndex(s => s.id === serviceData.id);
+      if (dummyIndex !== -1) {
+          dummyServices[dummyIndex] = { ...dummyServices[dummyIndex], ...serviceData };
+      }
+    } else {
+      // Adding new service
+      const newService = { ...serviceData, id: `SRV${services.length + 1}` };
+      const updatedServices = [...services, newService];
+      setServices(updatedServices);
+      dummyServices.push(newService);
+    }
+    setIsFormOpen(false);
+    setEditingService(null);
+  };
+
+  const handleDeleteService = (serviceId: string) => {
+    const updatedServices = services.filter(s => s.id !== serviceId);
+    setServices(updatedServices);
+    const dummyIndex = dummyServices.findIndex(s => s.id === serviceId);
+    if (dummyIndex !== -1) {
+      dummyServices.splice(dummyIndex, 1);
+    }
+  };
+
 
   return (
     <>
       <PageHeader title="Servicios">
-        <Button size="sm" className="gap-1" onClick={() => setIsFormOpen(true)}>
+        <Button size="sm" className="gap-1" onClick={() => handleOpenForm()}>
           <PlusCircle className="h-3.5 w-3.5" />
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
             Añadir Servicio
@@ -50,8 +75,12 @@ export default function ServicesPage() {
       
       <AddServiceForm 
         isOpen={isFormOpen}
-        onOpenChange={setIsFormOpen}
-        onAddService={handleAddService}
+        onOpenChange={(isOpen) => {
+            setIsFormOpen(isOpen);
+            if (!isOpen) setEditingService(null);
+        }}
+        onSaveService={handleSaveService}
+        existingService={editingService}
       />
 
       <Table>
@@ -83,8 +112,8 @@ export default function ServicesPage() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                    <DropdownMenuItem>Editar</DropdownMenuItem>
-                    <DropdownMenuItem>Eliminar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleOpenForm(service)}>Editar</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleDeleteService(service.id)}>Eliminar</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

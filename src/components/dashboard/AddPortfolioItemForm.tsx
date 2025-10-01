@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -33,10 +33,11 @@ const formSchema = z.object({
 interface AddPortfolioItemFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onAddPortfolioItem: (item: Omit<PortfolioItem, 'id'>) => void;
+  onSaveItem: (item: Omit<PortfolioItem, 'id'> | PortfolioItem) => void;
+  existingItem: PortfolioItem | null;
 }
 
-export function AddPortfolioItemForm({ isOpen, onOpenChange, onAddPortfolioItem }: AddPortfolioItemFormProps) {
+export function AddPortfolioItemForm({ isOpen, onOpenChange, onSaveItem, existingItem }: AddPortfolioItemFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,8 +47,24 @@ export function AddPortfolioItemForm({ isOpen, onOpenChange, onAddPortfolioItem 
     },
   });
 
+  useEffect(() => {
+    if (existingItem) {
+      form.reset(existingItem);
+    } else {
+      form.reset({
+        imageUrl: '',
+        description: '',
+        category: '',
+      });
+    }
+  }, [existingItem, form, isOpen]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddPortfolioItem(values);
+    if (existingItem) {
+        onSaveItem({ ...existingItem, ...values });
+    } else {
+        onSaveItem(values);
+    }
     form.reset();
   }
 
@@ -55,9 +72,9 @@ export function AddPortfolioItemForm({ isOpen, onOpenChange, onAddPortfolioItem 
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Añadir Nuevo Trabajo al Portafolio</DialogTitle>
+          <DialogTitle>{existingItem ? 'Editar Trabajo' : 'Añadir Nuevo Trabajo'}</DialogTitle>
           <DialogDescription>
-            Completa la información para agregar un nuevo trabajo.
+            {existingItem ? 'Modifica la información del trabajo.' : 'Completa la información para agregar un nuevo trabajo.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -103,7 +120,7 @@ export function AddPortfolioItemForm({ isOpen, onOpenChange, onAddPortfolioItem 
             />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-              <Button type="submit">Añadir Trabajo</Button>
+              <Button type="submit">{existingItem ? 'Guardar Cambios' : 'Añadir Trabajo'}</Button>
             </DialogFooter>
           </form>
         </Form>

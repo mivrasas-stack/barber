@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -34,10 +34,11 @@ const formSchema = z.object({
 interface AddProductFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onAddProduct: (product: Omit<Product, 'id'>) => void;
+  onSaveProduct: (product: Omit<Product, 'id'> | Product) => void;
+  existingProduct: Product | null;
 }
 
-export function AddProductForm({ isOpen, onOpenChange, onAddProduct }: AddProductFormProps) {
+export function AddProductForm({ isOpen, onOpenChange, onSaveProduct, existingProduct }: AddProductFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,8 +50,26 @@ export function AddProductForm({ isOpen, onOpenChange, onAddProduct }: AddProduc
     },
   });
 
+  useEffect(() => {
+    if (existingProduct) {
+      form.reset(existingProduct);
+    } else {
+      form.reset({
+        name: '',
+        price: 0,
+        stock: 0,
+        stockMin: 0,
+        imageUrl: '',
+      });
+    }
+  }, [existingProduct, form, isOpen]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddProduct(values);
+    if (existingProduct) {
+        onSaveProduct({ ...existingProduct, ...values });
+    } else {
+        onSaveProduct(values);
+    }
     form.reset();
   }
 
@@ -58,9 +77,9 @@ export function AddProductForm({ isOpen, onOpenChange, onAddProduct }: AddProduc
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Añadir Nuevo Producto</DialogTitle>
+          <DialogTitle>{existingProduct ? 'Editar Producto' : 'Añadir Nuevo Producto'}</DialogTitle>
           <DialogDescription>
-            Completa la información para agregar un nuevo producto.
+            {existingProduct ? 'Modifica la información del producto.' : 'Completa la información para agregar un nuevo producto.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -132,7 +151,7 @@ export function AddProductForm({ isOpen, onOpenChange, onAddProduct }: AddProduc
             />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-              <Button type="submit">Añadir Producto</Button>
+              <Button type="submit">{existingProduct ? 'Guardar Cambios' : 'Añadir Producto'}</Button>
             </DialogFooter>
           </form>
         </Form>

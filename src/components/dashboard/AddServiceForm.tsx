@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -34,10 +34,11 @@ const formSchema = z.object({
 interface AddServiceFormProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  onAddService: (service: Omit<Service, 'id'>) => void;
+  onSaveService: (service: Omit<Service, 'id'> | Service) => void;
+  existingService: Service | null;
 }
 
-export function AddServiceForm({ isOpen, onOpenChange, onAddService }: AddServiceFormProps) {
+export function AddServiceForm({ isOpen, onOpenChange, onSaveService, existingService }: AddServiceFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,8 +50,26 @@ export function AddServiceForm({ isOpen, onOpenChange, onAddService }: AddServic
     },
   });
 
+  useEffect(() => {
+    if (existingService) {
+        form.reset(existingService);
+    } else {
+        form.reset({
+            name: '',
+            description: '',
+            price: 0,
+            duration: 0,
+            imageUrl: '',
+        });
+    }
+  }, [existingService, form, isOpen]);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddService(values);
+    if (existingService) {
+        onSaveService({ ...existingService, ...values });
+    } else {
+        onSaveService(values);
+    }
     form.reset();
   }
 
@@ -58,9 +77,9 @@ export function AddServiceForm({ isOpen, onOpenChange, onAddService }: AddServic
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Añadir Nuevo Servicio</DialogTitle>
+          <DialogTitle>{existingService ? 'Editar Servicio' : 'Añadir Nuevo Servicio'}</DialogTitle>
           <DialogDescription>
-            Completa la información para agregar un nuevo servicio.
+             {existingService ? 'Modifica la información del servicio.' : 'Completa la información para agregar un nuevo servicio.'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -132,7 +151,7 @@ export function AddServiceForm({ isOpen, onOpenChange, onAddService }: AddServic
             />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-              <Button type="submit">Añadir Servicio</Button>
+              <Button type="submit">{existingService ? 'Guardar Cambios' : 'Añadir Servicio'}</Button>
             </DialogFooter>
           </form>
         </Form>
