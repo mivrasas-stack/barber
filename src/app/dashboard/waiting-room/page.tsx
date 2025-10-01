@@ -28,12 +28,14 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from "@/hooks/use-toast";
 import { OrderDetailsDialog } from '@/components/dashboard/OrderDetailsDialog';
+import { ManualOrderForm } from '@/components/dashboard/ManualOrderForm';
 
 export default function WaitingRoomPage() {
   const [products, setProducts] = useState<WaitingRoomProduct[]>(dummyWaitingRoomProducts);
   const [orders, setOrders] = useState<WaitingRoomOrder[]>(dummyWaitingRoomOrders);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isManualOrderFormOpen, setIsManualOrderFormOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<WaitingRoomOrder | null>(null);
   const [verificationCode, setVerificationCode] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -104,6 +106,23 @@ export default function WaitingRoomPage() {
     setIsDetailsOpen(true);
   }
 
+  const handleAddManualOrder = (newOrderData: Omit<WaitingRoomOrder, 'id' | 'code' | 'status'>) => {
+    const newOrder: WaitingRoomOrder = {
+      ...newOrderData,
+      id: `ORD${orders.length + 1}`,
+      code: Math.floor(100000 + Math.random() * 900000).toString(),
+      status: 'Confirmado', 
+    };
+    const updatedOrders = [newOrder, ...orders];
+    setOrders(updatedOrders);
+    dummyWaitingRoomOrders.unshift(newOrder); 
+    setIsManualOrderFormOpen(false);
+    toast({
+      title: "Pedido Manual Creado",
+      description: `Se ha creado y confirmado el pedido para ${newOrder.customerName}.`
+    });
+  };
+
   const filteredOrders = useMemo(() => {
     if (!searchTerm) return orders;
     return orders.filter(order => 
@@ -120,7 +139,7 @@ export default function WaitingRoomPage() {
           <TabsTrigger value="orders">Pedidos</TabsTrigger>
           <TabsTrigger value="manage-products">Gestionar Productos</TabsTrigger>
         </TabsList>
-        <TabsContent value="orders" className="mt-6 grid gap-6 md:grid-cols-2">
+        <TabsContent value="orders" className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card>
                 <CardHeader>
                     <CardTitle>Verificar Código de Pago</CardTitle>
@@ -136,7 +155,19 @@ export default function WaitingRoomPage() {
                     <Button onClick={handleVerifyCode}>Confirmar Pedido</Button>
                 </CardContent>
             </Card>
-            <div className="md:col-span-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Crear Pedido Manual</CardTitle>
+                    <CardDescription>Registra un pedido para clientes en el punto físico.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button className="w-full" onClick={() => setIsManualOrderFormOpen(true)}>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Crear Nuevo Pedido
+                    </Button>
+                </CardContent>
+            </Card>
+            <div className="md:col-span-2 lg:col-span-3">
                 <Card>
                     <CardHeader>
                         <div className="flex justify-between items-center">
@@ -280,6 +311,12 @@ export default function WaitingRoomPage() {
         isOpen={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
         order={selectedOrder}
+      />
+      <ManualOrderForm
+        isOpen={isManualOrderFormOpen}
+        onOpenChange={setIsManualOrderFormOpen}
+        products={products}
+        onAddOrder={handleAddManualOrder}
       />
     </>
   );
