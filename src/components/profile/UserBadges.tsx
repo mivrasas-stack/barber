@@ -1,3 +1,7 @@
+
+"use client";
+
+import React, { useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -12,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useToast } from "@/hooks/use-toast";
 
 const badges = [
     { icon: Star, title: "Primer Corte", description: "Completaste tu primera cita.", earned: true },
@@ -21,6 +26,26 @@ const badges = [
 ]
 
 export function UserBadges() {
+  const { toast } = useToast();
+
+  useEffect(() => {
+    badges.forEach(badge => {
+      const badgeKey = `badge-earned-${badge.title.replace(/\s+/g, '-')}`;
+      if (badge.earned && !sessionStorage.getItem(badgeKey)) {
+        toast({
+          title: "¡Insignia Desbloqueada!",
+          description: (
+            <div className="flex items-center gap-2">
+              <badge.icon className="h-6 w-6 text-primary" />
+              <p>¡Felicidades! Has ganado la insignia: <strong>{badge.title}</strong></p>
+            </div>
+          ),
+        });
+        sessionStorage.setItem(badgeKey, 'true');
+      }
+    });
+  }, [toast]);
+
   return (
     <Card>
       <CardHeader>
