@@ -7,6 +7,7 @@ import Pricing from '@/components/landing/Pricing';
 import Testimonials from '@/components/landing/Testimonials';
 import Footer from '@/components/landing/Footer';
 import Products from '@/components/landing/Products';
+import { PromoAlert } from '@/components/landing/PromoAlert';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         <Pricing />
         <Products />
         <Testimonials />
+        <PromoAlert />
       </main>
       <Footer />
     </div>
