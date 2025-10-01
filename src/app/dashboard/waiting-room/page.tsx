@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import Image from "next/image";
+import * as XLSX from 'xlsx';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -20,7 +21,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
+import { MoreHorizontal, PlusCircle, Search, File } from "lucide-react";
 import { dummyWaitingRoomProducts, dummyWaitingRoomOrders } from "../data";
 import type { WaitingRoomProduct, WaitingRoomOrder } from '@/lib/types';
 import { AddWaitingRoomProductForm } from '@/components/dashboard/AddWaitingRoomProductForm';
@@ -131,6 +132,22 @@ export default function WaitingRoomPage() {
     );
   }, [orders, searchTerm]);
 
+  const handleExport = () => {
+    const dataToExport = filteredOrders.map(order => ({
+      'ID Pedido': order.id,
+      'Cliente': order.customerName,
+      'Código': order.code,
+      'Total': order.total,
+      'Método de Pago': order.paymentMethod,
+      'Estado': order.status,
+      'Artículos': order.items?.map(item => `${item.name} (x${item.quantity})`).join(', ') || ''
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Pedidos");
+    XLSX.writeFile(workbook, "pedidos_sala_espera.xlsx");
+  };
+
   return (
     <>
       <PageHeader title="Sala de Espera" />
@@ -164,6 +181,18 @@ export default function WaitingRoomPage() {
                     <Button className="w-full" onClick={() => setIsManualOrderFormOpen(true)}>
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Crear Nuevo Pedido
+                    </Button>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Exportar Ventas</CardTitle>
+                    <CardDescription>Descarga un archivo Excel con el historial de todos los pedidos.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button className="w-full" variant="outline" onClick={handleExport}>
+                        <File className="mr-2 h-4 w-4" />
+                        Exportar a Excel
                     </Button>
                 </CardContent>
             </Card>
