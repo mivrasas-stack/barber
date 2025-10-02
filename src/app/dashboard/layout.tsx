@@ -13,6 +13,7 @@ import {
   Package,
   ClipboardList,
   Briefcase,
+  UserCheck,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -34,6 +35,7 @@ const navItems = [
   { href: '/dashboard/services', icon: Scissors, label: 'Servicios' },
   { href: '/dashboard/products', icon: ShoppingBag, label: 'Productos' },
   { href: '/dashboard/customers', icon: Users, label: 'Clientes' },
+  { href: '/dashboard/barberos', icon: UserCheck, label: 'Barberos' },
   { href: '/dashboard/accounting', icon: CreditCard, label: 'Contabilidad' },
   { href: '/dashboard/saved-objects', icon: Package, label: 'Guardar Objetos' },
   { href: '/dashboard/waiting-room', icon: ClipboardList, label: 'Sala de Espera' },
@@ -106,5 +108,3 @@ export default function DashboardLayout({
     </SidebarProvider>
   );
 }
-
-  
