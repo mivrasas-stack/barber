@@ -5,6 +5,7 @@ export type Appointment = {
   service: string;
   date: string;
   status: "Pendiente" | "Confirmada" | "Cancelada" | "Completada" | "Pagada";
+  barberId: string;
 };
 
 export type Service = {
@@ -93,6 +94,11 @@ export type PortfolioItem = {
     category: string;
 };
 
+export type Barber = {
+    id: string;
+    name: string;
+    avatarUrl: string;
+};
     
 
   

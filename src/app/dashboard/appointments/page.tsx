@@ -23,11 +23,12 @@ import {
 import { File, MoreHorizontal, PlusCircle, Calendar as CalendarIcon, Filter, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { dummyAppointments } from "../data";
+import { dummyAppointments, dummyBarbers } from "../data";
 import type { Appointment } from '@/lib/types';
 import { AddAppointmentForm } from '@/components/dashboard/AddAppointmentForm';
 import { PaymentDialog } from '@/components/dashboard/PaymentDialog';
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>(dummyAppointments);
@@ -51,7 +52,7 @@ export default function AppointmentsPage() {
       setAppointments(updatedAppointments);
       const dummyIndex = dummyAppointments.findIndex(app => app.id === appointmentData.id);
       if (dummyIndex !== -1) {
-          dummyAppointments[dummyIndex] = { ...dummyAppointments[dummyIndex], ...appointmentData };
+          dummyAppointments[dummyIndex] = { ...dummyAppointments[dummyIndex], ...appointmentData as Appointment };
       }
     } else {
       // Adding new appointment
@@ -60,9 +61,9 @@ export default function AppointmentsPage() {
         id: `APP${appointments.length + 1}`,
         status: 'Pendiente' as const,
       };
-      const updatedAppointments = [...appointments, newAppointment];
+      const updatedAppointments = [...appointments, newAppointment as Appointment];
       setAppointments(updatedAppointments);
-      dummyAppointments.push(newAppointment);
+      dummyAppointments.push(newAppointment as Appointment);
     }
     setIsFormOpen(false);
     setEditingAppointment(null);
@@ -119,6 +120,10 @@ export default function AppointmentsPage() {
   
   const handleClearFilter = () => {
     setDateRange({});
+  }
+
+  const getBarberById = (barberId: string) => {
+    return dummyBarbers.find(b => b.id === barberId);
   }
 
   return (
@@ -217,6 +222,7 @@ export default function AppointmentsPage() {
           <TableRow>
             <TableHead>Cliente</TableHead>
             <TableHead>Servicio</TableHead>
+            <TableHead>Barbero</TableHead>
             <TableHead>Fecha</TableHead>
             <TableHead>Estado</TableHead>
             <TableHead>
@@ -225,52 +231,66 @@ export default function AppointmentsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredAppointments.map((appointment) => (
-            <TableRow key={appointment.id}>
-              <TableCell>
-                <div className="font-medium">{appointment.customerName}</div>
-                <div className="hidden text-sm text-muted-foreground md:inline">
-                  {appointment.customerEmail}
-                </div>
-              </TableCell>
-              <TableCell>{appointment.service}</TableCell>
-              <TableCell>{new Date(appointment.date).toLocaleString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</TableCell>
-              <TableCell>
-                <Badge 
-                  variant={
-                    appointment.status === 'Pagada' ? 'default' :
-                    appointment.status === 'Completada' ? 'default' :
-                    appointment.status === 'Confirmada' ? 'secondary':
-                    appointment.status === 'Cancelada' ? 'destructive' :
-                    'outline'
+          {filteredAppointments.map((appointment) => {
+            const barber = getBarberById(appointment.barberId);
+            return (
+              <TableRow key={appointment.id}>
+                <TableCell>
+                  <div className="font-medium">{appointment.customerName}</div>
+                  <div className="hidden text-sm text-muted-foreground md:inline">
+                    {appointment.customerEmail}
+                  </div>
+                </TableCell>
+                <TableCell>{appointment.service}</TableCell>
+                <TableCell>
+                  {barber ? (
+                     <div className="flex items-center gap-2">
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={barber.avatarUrl} alt={barber.name} />
+                            <AvatarFallback>{barber.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <span>{barber.name}</span>
+                    </div>
+                  ) : 'N/A'}
+                </TableCell>
+                <TableCell>{new Date(appointment.date).toLocaleString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</TableCell>
+                <TableCell>
+                  <Badge 
+                    variant={
+                      appointment.status === 'Pagada' ? 'default' :
+                      appointment.status === 'Completada' ? 'default' :
+                      appointment.status === 'Confirmada' ? 'secondary':
+                      appointment.status === 'Cancelada' ? 'destructive' :
+                      'outline'
+                    }
+                    className={
+                      appointment.status === 'Confirmada' ? 'bg-green-600/20 text-green-400 border-green-600/40' : 
+                      appointment.status === 'Pagada' ? 'bg-green-500 text-primary-foreground' : ''
                   }
-                  className={
-                    appointment.status === 'Confirmada' ? 'bg-green-600/20 text-green-400 border-green-600/40' : 
-                    appointment.status === 'Pagada' ? 'bg-green-500 text-primary-foreground' : ''
-                }
-                >
-                  {appointment.status}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost" disabled={appointment.status === 'Pagada'}>
-                      <MoreHorizontal className="h-4 w-4" />
-                      <span className="sr-only">Toggle menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => handleOpenForm(appointment)}>Editar</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateAppointmentStatus(appointment.id, 'Confirmada')}>Confirmar</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleOpenPaymentDialog(appointment)}>Proceder al pago</DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive" onClick={() => updateAppointmentStatus(appointment.id, 'Cancelada')}>Cancelar</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
+                  >
+                    {appointment.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button aria-haspopup="true" size="icon" variant="ghost" disabled={appointment.status === 'Pagada'}>
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Toggle menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                      <DropdownMenuItem onClick={() => handleOpenForm(appointment)}>Editar</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => updateAppointmentStatus(appointment.id, 'Confirmada')}>Confirmar</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleOpenPaymentDialog(appointment)}>Proceder al pago</DropdownMenuItem>
+                      <DropdownMenuItem className="text-destructive" onClick={() => updateAppointmentStatus(appointment.id, 'Cancelada')}>Cancelar</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </>

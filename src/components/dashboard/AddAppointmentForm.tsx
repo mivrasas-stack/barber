@@ -22,7 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { Appointment } from '@/lib/types';
-import { dummyServices } from '@/app/dashboard/data';
+import { dummyServices, dummyBarbers } from '@/app/dashboard/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const formSchema = z.object({
@@ -30,6 +30,7 @@ const formSchema = z.object({
   customerEmail: z.string().email('Debe ser un correo electrónico válido'),
   service: z.string().min(1, 'El servicio es requerido'),
   date: z.string().min(1, 'La fecha es requerida').refine(val => !isNaN(Date.parse(val)), { message: "Fecha inválida" }),
+  barberId: z.string().min(1, "El barbero es requerido"),
 });
 
 interface AddAppointmentFormProps {
@@ -47,6 +48,7 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onSaveAppointment, ex
       customerEmail: '',
       service: '',
       date: '',
+      barberId: '',
     },
   });
 
@@ -61,6 +63,7 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onSaveAppointment, ex
         customerEmail: existingAppointment.customerEmail,
         service: existingAppointment.service,
         date: formattedDate,
+        barberId: existingAppointment.barberId,
       });
     } else {
       form.reset({
@@ -68,6 +71,7 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onSaveAppointment, ex
         customerEmail: '',
         service: '',
         date: '',
+        barberId: '',
       });
     }
   }, [existingAppointment, form, isOpen]);
@@ -139,6 +143,28 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onSaveAppointment, ex
                     <SelectContent>
                       {dummyServices.map(service => (
                         <SelectItem key={service.id} value={service.name}>{service.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="barberId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Barbero</FormLabel>
+                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona un barbero" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {dummyBarbers.map(barber => (
+                        <SelectItem key={barber.id} value={barber.id}>{barber.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>

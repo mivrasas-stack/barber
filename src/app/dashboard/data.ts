@@ -1,10 +1,16 @@
-import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder, PortfolioItem } from "@/lib/types";
+import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder, PortfolioItem, Barber } from "@/lib/types";
+
+export const dummyBarbers: Barber[] = [
+    { id: 'BBR001', name: 'Carlos', avatarUrl: 'https://picsum.photos/seed/carlos/100/100' },
+    { id: 'BBR002', name: 'Roberto', avatarUrl: 'https://picsum.photos/seed/roberto/100/100' },
+    { id: 'BBR003', name: 'Miguel', avatarUrl: 'https://picsum.photos/seed/miguel/100/100' },
+];
 
 export const dummyAppointments: Appointment[] = [
-  { id: 'APP001', customerName: 'John Doe', customerEmail: 'john.d@example.com', service: 'Corte de pelo + Afeitado', date: '2023-10-28 10:00', status: 'Confirmada' },
-  { id: 'APP002', customerName: 'Peter Jones', customerEmail: 'peter.j@example.com', service: 'Corte de barba', date: '2023-10-28 11:30', status: 'Completada' },
-  { id: 'APP003', customerName: 'Sam Wilson', customerEmail: 'sam.w@example.com', service: 'Corte de pelo', date: '2023-10-29 14:00', status: 'Pendiente' },
-  { id: 'APP004', customerName: 'Bruce Wayne', customerEmail: 'bruce.w@example.com', service: 'Afeitado', date: '2023-10-30 09:00', status: 'Cancelada' },
+  { id: 'APP001', customerName: 'John Doe', customerEmail: 'john.d@example.com', service: 'Corte de pelo + Afeitado', date: '2023-10-28 10:00', status: 'Confirmada', barberId: 'BBR001' },
+  { id: 'APP002', customerName: 'Peter Jones', customerEmail: 'peter.j@example.com', service: 'Corte de barba', date: '2023-10-28 11:30', status: 'Completada', barberId: 'BBR002' },
+  { id: 'APP003', customerName: 'Sam Wilson', customerEmail: 'sam.w@example.com', service: 'Corte de pelo', date: '2023-10-29 14:00', status: 'Pendiente', barberId: 'BBR001' },
+  { id: 'APP004', customerName: 'Bruce Wayne', customerEmail: 'bruce.w@example.com', service: 'Afeitado', date: '2023-10-30 09:00', status: 'Cancelada', barberId: 'BBR003' },
 ];
 
 export const dummyServices: Service[] = [
