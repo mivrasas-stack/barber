@@ -106,4 +106,38 @@ export function BookAppointmentForm({ isOpen, onOpenChange, onSaveAppointment }:
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona tu barbero preferido" />
-                      </T
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {dummyBarbers.map(barber => (
+                        <SelectItem key={barber.id} value={barber.id}>{barber.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+             <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fecha y Hora</FormLabel>
+                  <FormControl>
+                    <Input type="datetime-local" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
+              <Button type="submit">Agendar Cita</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
