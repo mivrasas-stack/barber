@@ -26,7 +26,7 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-4">Síguenos</h4>
             <div className="flex justify-center md:justify-start space-x-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary"><Facebook /></Link>
+              <Link href="/admin/candidates/35ba52a9-ddce-4829-ab75-871d67889a04" className="text-muted-foreground hover:text-primary"><Facebook /></Link>
               <Link href="#" className="text-muted-foreground hover:text-primary"><Instagram /></Link>
               <Link href="#" className="text-muted-foreground hover:text-primary"><Twitter /></Link>
             </div>
