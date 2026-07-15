@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { PremiumButton } from '@/components/ui/premium-button';
 import type { Appointment } from '@/lib/types';
 import { dummyServices, dummyBarbers } from '@/app/dashboard/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -132,8 +132,8 @@ export function BookAppointmentForm({ isOpen, onOpenChange, onSaveAppointment }:
               )}
             />
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-              <Button type="submit">Agendar Cita</Button>
+              <PremiumButton type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</PremiumButton>
+              <PremiumButton type="submit">Agendar Cita</PremiumButton>
             </DialogFooter>
           </form>
         </Form>

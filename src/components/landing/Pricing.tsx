@@ -1,66 +1,236 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import Link from "next/link";
-import { dummyServices } from "@/app/dashboard/data";
+"use client";
+
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Check, X, Info } from "lucide-react";
+import { PremiumButton } from "@/components/ui/premium-button";
+
+type BillingCycle = "mensual" | "semestral" | "anual";
 
 export default function Pricing() {
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("anual");
+
+  const plans = [
+    {
+      name: "Corte Clásico",
+      target: "Barberos independientes",
+      desc: "Digitaliza tu agenda y lleva el control de tus ingresos sin complicaciones.",
+      price: {
+        mensual: 49900,
+        semestral: 269000,
+        anual: 499000
+      },
+      features: [
+        "Hasta 2 barberos",
+        "Agenda inteligente",
+        "Reservas online",
+        "Recordatorios (Email/App)",
+        "Soporte por Email"
+      ],
+      cta: "Comenzar Ahora",
+      highlight: false
+    },
+    {
+      name: "Barber Club",
+      target: "Barberías en crecimiento",
+      desc: "Automatiza tus procesos, controla a tu equipo y vende más productos.",
+      price: {
+        mensual: 99900,
+        semestral: 539000,
+        anual: 999000
+      },
+      features: [
+        "Hasta 7 barberos",
+        "Caja y POS",
+        "Control de Comisiones",
+        "Inventario básico",
+        "Confirmaciones WhatsApp"
+      ],
+      cta: "Subir de Nivel",
+      highlight: true,
+      badge: "MÁS VENDIDO"
+    },
+    {
+      name: "Black Label",
+      target: "Franquicias y VIP",
+      desc: "Inteligencia artificial y herramientas corporativas para escalar tu franquicia.",
+      price: {
+        mensual: 189900,
+        semestral: 1025000,
+        anual: 1899000
+      },
+      features: [
+        "Usuarios ilimitados",
+        "Gestión Multi-sede",
+        "Fidelización y Membresías",
+        "Inteligencia Artificial",
+        "Manager Dedicado"
+      ],
+      cta: "Contactar Ventas",
+      highlight: false,
+      badge: "EXPERIENCIA VIP"
+    }
+  ];
+
+  const compareFeatures = [
+    { name: "Usuarios (Barberos)", plans: ["Hasta 2", "Hasta 7", "Ilimitados"] },
+    { name: "Sedes", plans: ["1 Sede", "1 Sede", "Múltiples"] },
+    { name: "Agenda & Reservas Online", plans: [true, true, true] },
+    { name: "Recordatorios App/Email", plans: [true, true, true] },
+    { name: "Confirmaciones WhatsApp", plans: [false, "Limitado", "Ilimitado"] },
+    { name: "Caja, POS e Inventario", plans: [false, true, true] },
+    { name: "Control de Comisiones", plans: [false, true, true] },
+    { name: "Roles y Permisos", plans: [false, true, true] },
+    { name: "Fidelización / Membresías", plans: [false, false, true] },
+    { name: "Inteligencia Artificial", plans: [false, false, true] },
+    { name: "Soporte Técnico", plans: ["Email", "Chat Prioritario", "Manager Dedicado 24/7"] },
+  ];
+
   return (
-    <section id="services" className="py-20 lg:py-32 bg-card">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-primary">Nuestros Precios</h2>
-          <p className="text-muted-foreground mt-2">Servicios de calidad a precios competitivos.</p>
+    <section id="pricing" className="py-24 lg:py-32 bg-background relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 blur-[150px] rounded-[100%] pointer-events-none" />
+
+      <div className="container mx-auto px-6 md:px-12 relative z-10">
+        
+        {/* Header Section */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="text-primary font-medium tracking-[0.2em] uppercase text-sm mb-4"
+          >
+            Planes y Precios
+          </motion.p>
+          <motion.h2 
+            initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-bold font-headline text-foreground mb-6 uppercase tracking-wider"
+          >
+            Invierte en el crecimiento de tu Barbería
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}
+            className="text-muted-foreground text-lg font-light"
+          >
+            Diseñado para escalar contigo. Desde el barbero independiente hasta las franquicias más exclusivas de Colombia.
+          </motion.p>
         </div>
-        <div className="flex justify-center">
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
+
+        {/* Billing Toggle */}
+        <div className="flex justify-center mb-16">
+          <div className="bg-foreground/5 border border-border rounded-full p-1.5 flex items-center gap-1">
+            <button 
+              onClick={() => setBillingCycle("mensual")}
+              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${billingCycle === "mensual" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
             >
-              <CarouselContent>
-                {dummyServices.map((service) => (
-                  <CarouselItem key={service.id} className="md:basis-1/2 lg:basis-1/3">
-                    <div className="p-1">
-                      <Card className="overflow-hidden border-accent">
-                        <CardContent className="flex flex-col aspect-square items-center justify-center p-0">
-                          {service.imageUrl && (
-                              <Image
-                                src={service.imageUrl}
-                                alt={service.name}
-                                width={600}
-                                height={400}
-                                className="w-full h-48 object-cover"
-                              />
-                          )}
-                          <div className="p-4 flex-grow flex flex-col justify-between">
-                            <h3 className="text-lg font-semibold text-foreground">{service.name}</h3>
-                            <p className="text-xl font-bold text-primary mt-2">
-                                COP {service.price.toLocaleString('es-CO')}
-                            </p>
-                            <Button asChild className="mt-4">
-                                <Link href="/login">Contratar</Link>
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden sm:flex"/>
-              <CarouselNext className="hidden sm:flex"/>
-            </Carousel>
+              Mensual
+            </button>
+            <button 
+              onClick={() => setBillingCycle("semestral")}
+              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${billingCycle === "semestral" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Semestral <span className="hidden sm:inline-block ml-1 text-[10px] bg-background/20 px-2 py-0.5 rounded-full">-10%</span>
+            </button>
+            <button 
+              onClick={() => setBillingCycle("anual")}
+              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${billingCycle === "anual" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+            >
+              Anual <span className="hidden sm:inline-block ml-1 text-[10px] bg-background/20 px-2 py-0.5 rounded-full text-foreground">-16%</span>
+            </button>
+          </div>
         </div>
+
+        {/* Pricing Cards */}
+        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto mb-32">
+          {plans.map((plan, i) => (
+            <motion.div 
+              key={plan.name}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.15 }}
+              className={`relative rounded-3xl p-8 flex flex-col ${plan.highlight ? 'bg-gradient-to-b from-primary/10 to-foreground/5 border-primary border-2 shadow-[0_0_30px_rgba(200,155,60,0.15)] transform lg:-translate-y-4' : 'bg-foreground/[0.02] border border-border hover:border-foreground/20'}`}
+            >
+              {plan.badge && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-primary-foreground text-xs font-bold tracking-widest uppercase rounded-full">
+                  {plan.badge}
+                </div>
+              )}
+              
+              <div className="text-center mb-8 pt-4">
+                <h3 className="text-2xl font-headline text-foreground uppercase tracking-wider mb-2">{plan.name}</h3>
+                <p className="text-primary/80 text-sm font-medium tracking-wide mb-6">{plan.target}</p>
+                <div className="flex justify-center items-end gap-1 mb-4">
+                  <span className="text-lg text-muted-foreground mb-1">COP</span>
+                  <span className="text-5xl font-bold text-foreground tracking-tight">
+                    {plan.price[billingCycle].toLocaleString("es-CO")}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground uppercase tracking-widest">
+                  por mes, facturado {billingCycle}mente
+                </p>
+              </div>
+
+              <p className="text-muted-foreground text-sm font-light text-center mb-8 min-h-[60px]">
+                {plan.desc}
+              </p>
+
+              <div className="space-y-4 flex-grow mb-8">
+                {plan.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <Check className={`w-5 h-5 flex-shrink-0 ${plan.highlight ? 'text-primary' : 'text-muted-foreground'}`} />
+                    <span className="text-sm text-foreground/80 font-light">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              <PremiumButton variant={plan.highlight ? "default" : "outline"} className="w-full">
+                {plan.cta}
+              </PremiumButton>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Comparison Table */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="max-w-5xl mx-auto"
+        >
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-headline text-foreground uppercase tracking-widest">Comparar Funciones</h3>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="py-6 px-4 text-muted-foreground font-medium tracking-wide w-1/3">Características</th>
+                  <th className="py-6 px-4 text-center font-headline text-foreground tracking-widest uppercase w-2/9">Corte Clásico</th>
+                  <th className="py-6 px-4 text-center font-headline text-primary tracking-widest uppercase w-2/9">Barber Club</th>
+                  <th className="py-6 px-4 text-center font-headline text-foreground tracking-widest uppercase w-2/9">Black Label</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {compareFeatures.map((row, i) => (
+                  <tr key={i} className="hover:bg-foreground/[0.02] transition-colors">
+                    <td className="py-5 px-4 text-sm text-foreground/80 font-light">{row.name}</td>
+                    {row.plans.map((val, idx) => (
+                      <td key={idx} className="py-5 px-4 text-center">
+                        {typeof val === 'boolean' ? (
+                          val ? <Check className="w-5 h-5 text-primary mx-auto" /> : <X className="w-5 h-5 text-muted-foreground mx-auto" />
+                        ) : (
+                          <span className="text-sm text-muted-foreground font-light">{val}</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );

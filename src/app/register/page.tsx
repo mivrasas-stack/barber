@@ -48,7 +48,7 @@ export default function RegisterPage() {
               <Input id="password" type="password" />
             </div>
             <Button type="submit" className="w-full as-child">
-                <Link href="/profile">Crear Cuenta</Link>
+                <Link href="/portal">Crear Cuenta</Link>
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">

@@ -1,75 +1,61 @@
+"use client";
+
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { dummyProducts } from "@/app/dashboard/data";
-import { Button } from "@/components/ui/button";
+import { PremiumButton } from "@/components/ui/premium-button";
 import Link from "next/link";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 export default function Products() {
   return (
-    <section id="products" className="py-20 lg:py-32 bg-background">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-primary">
-            Nuestros Productos
-          </h2>
-          <p className="text-muted-foreground mt-2">
-            Productos de alta calidad para tu cuidado personal.
+    <section id="products" className="py-24 lg:py-40 bg-secondary">
+      <div className="container mx-auto px-6 md:px-12">
+        <div className="text-center mb-24">
+          <p className="text-primary font-medium tracking-[0.2em] uppercase text-sm mb-4">
+            Boutique
           </p>
+          <h2 className="text-5xl lg:text-7xl font-bold font-headline text-foreground">
+            CUIDADO PREMIUM
+          </h2>
         </div>
-        <div className="flex justify-center">
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {dummyProducts.map((product, index) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.1, duration: 0.8 }}
+              className="group flex flex-col items-center text-center"
             >
-              <CarouselContent>
-                {dummyProducts.map((product) => (
-                  <CarouselItem key={product.id} className="md:basis-1/2 lg:basis-1/3">
-                    <div className="p-1 h-full">
-                      <Card className="overflow-hidden border-accent flex flex-col h-full">
-                        <CardHeader>
-                          <CardTitle className="text-lg truncate">{product.name}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-0 flex-grow">
-                          <Image
-                            alt={product.name}
-                            className="aspect-square object-cover w-full"
-                            height="300"
-                            src={product.imageUrl}
-                            width="300"
-                          />
-                        </CardContent>
-                        <CardFooter className="flex justify-between items-center p-4">
-                          <p className="text-lg font-bold text-primary">
-                            COP {product.price.toLocaleString("es-CO")}
-                          </p>
-                          <Button variant="outline" asChild>
-                            <Link href="/profile">Comprar</Link>
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden sm:flex"/>
-              <CarouselNext className="hidden sm:flex"/>
-            </Carousel>
+              <div className="relative w-full aspect-square mb-10 bg-background/50 rounded-3xl overflow-hidden p-12 transition-colors duration-500 group-hover:bg-foreground/5">
+                <div className="relative w-full h-full transform transition-transform duration-700 group-hover:scale-110 group-hover:-translate-y-4">
+                  <Image
+                    src={product.imageUrl}
+                    alt={product.name}
+                    fill
+                    className="object-contain filter drop-shadow-2xl"
+                  />
+                </div>
+              </div>
+              
+              <h3 className="text-2xl font-headline text-foreground mb-2">{product.name}</h3>
+              <p className="text-muted-foreground text-sm font-light mb-6 line-clamp-2 max-w-xs mx-auto">
+                Formulado con los ingredientes más puros para mantener tu estilo de forma impecable durante todo el día.
+              </p>
+              
+              <div className="mt-auto flex flex-col items-center gap-6 w-full">
+                <span className="text-2xl font-light text-foreground">
+                  COP {product.price.toLocaleString("es-CO")}
+                </span>
+                
+                <PremiumButton asChild variant="outline" className="w-full max-w-[200px] rounded-full group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-300">
+                  <Link href="/portal">Añadir al Carrito</Link>
+                </PremiumButton>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

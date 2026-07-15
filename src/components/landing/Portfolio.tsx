@@ -1,62 +1,52 @@
-"use client"
-import React from "react";
+"use client";
+
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { dummyPortfolioItems } from "@/app/dashboard/data";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 export default function Portfolio() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
-
   return (
-    <section id="portfolio" className="py-20 lg:py-32 bg-background">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-primary">Descubre Nuestros Trabajos</h2>
-          <p className="text-muted-foreground mt-2">Un vistazo a nuestro oficio y pasión.</p>
+    <section id="portfolio" className="py-24 lg:py-40 bg-background">
+      <div className="container mx-auto px-6 md:px-12">
+        <div className="text-center mb-20">
+          <p className="text-primary font-medium tracking-[0.2em] uppercase text-sm mb-4">
+            Lookbook
+          </p>
+          <h2 className="text-5xl lg:text-7xl font-bold font-headline text-foreground">
+            NUESTRO ARTE
+          </h2>
         </div>
-        <div className="flex justify-center">
-            <Carousel
-              plugins={[plugin.current]}
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-4xl xl:max-w-6xl"
-              onMouseEnter={plugin.current.stop}
-              onMouseLeave={plugin.current.reset}
+
+        {/* Masonry Layout Approximation with Columns */}
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+          {dummyPortfolioItems.map((item, index) => (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: (index % 3) * 0.1, duration: 0.8 }}
+              className="relative group overflow-hidden break-inside-avoid bg-foreground/5"
             >
-              <CarouselContent>
-                {dummyPortfolioItems.map((item) => (
-                  <CarouselItem key={item.id} className="md:basis-1/2">
-                    <div className="p-1 h-full">
-                        <Card className="overflow-hidden border-accent">
-                            <CardContent className="p-0">
-                                <Image
-                                src={item.imageUrl}
-                                alt={item.description}
-                                width={800}
-                                height={600}
-                                className="w-full h-auto object-cover aspect-[4/3]"
-                                />
-                            </CardContent>
-                        </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden sm:flex"/>
-              <CarouselNext className="hidden sm:flex"/>
-            </Carousel>
+              <Image
+                src={item.imageUrl}
+                alt={item.description || "Portfolio item"}
+                width={800}
+                height={1000}
+                className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+              />
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+                <p className="text-primary font-medium text-sm tracking-widest uppercase translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
+                  Estilo
+                </p>
+                <h3 className="text-white text-2xl font-headline translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  {item.description || "Corte Clásico"}
+                </h3>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

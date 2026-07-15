@@ -1,4 +1,11 @@
+export type Location = { id: string; name: string; address: string; revenue: number };
 import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder, PortfolioItem, Barber } from "@/lib/types";
+
+export const dummyLocations: Location[] = [
+    { id: 'LOC001', name: 'Sede Principal (Centro)', address: 'Av. El Dorado #12-34', revenue: 5423000 },
+    { id: 'LOC002', name: 'Sede Norte (VIP)', address: 'Calle 116 #15-50', revenue: 3200000 },
+    { id: 'LOC003', name: 'Sede Sur', address: 'Av. Boyacá #45-67', revenue: 1850000 },
+];
 
 export const dummyBarbers: Barber[] = [
     { id: 'BBR001', name: 'Carlos', avatarUrl: 'https://picsum.photos/seed/carlos/100/100' },
@@ -31,12 +38,15 @@ export const dummyCustomers: Customer[] = [
   { id: 'CUS002', name: 'Peter Jones', email: 'peter.j@example.com', phone: '555-0102', totalAppointments: 12, totalSpent: 840000 },
   { id: 'CUS003', name: 'Sam Wilson', email: 'sam.w@example.com', phone: '555-0103', totalAppointments: 2, totalSpent: 80000 },
   { id: 'CUS004', name: 'Bruce Wayne', email: 'bruce.w@example.com', phone: '555-0104', totalAppointments: 25, totalSpent: 2500000 },
+  { id: 'CUS005', name: 'Test Customer', email: 'customer@test.com', phone: '555-0105', totalAppointments: 0, totalSpent: 0 },
 ];
 
 export const dummyUsers: User[] = [
     { id: 'USR001', name: 'Nelson', email: 'nelson@barberparadise.com', role: 'Admin', lastLogin: '2023-10-27 10:00 AM' },
     { id: 'USR002', name: 'Jack', email: 'jack@barberparadise.com', role: 'Empleado', lastLogin: '2023-10-27 09:30 AM' },
     { id: 'USR003', name: 'Daniel', email: 'daniel@barberparadise.com', role: 'Empleado', lastLogin: '2023-10-26 05:00 PM' },
+    { id: 'USR004', name: 'Test Admin', email: 'admin@test.com', role: 'Admin', lastLogin: '2023-10-28 08:00 AM' },
+    { id: 'USR005', name: 'Test Employee', email: 'employee@test.com', role: 'Empleado', lastLogin: '2023-10-28 08:30 AM' },
 ];
 
 export const dummyTransactions: Transaction[] = [

@@ -1,71 +1,112 @@
-
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuFooter,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { ShoppingCart, Trash2 } from 'lucide-react'
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { ShoppingCart, Trash2, X } from 'lucide-react'
 import { useCart } from '@/hooks/use-cart'
 import { Badge } from '../ui/badge'
+import { PremiumButton } from '@/components/ui/premium-button'
 
 export function UserCart() {
   const { cartItems, removeFromCart, cartTotal, cartCount } = useCart();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <ShoppingCart className="h-5 w-5" />
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <button className="relative group p-2 transition-colors hover:text-white text-muted-foreground focus:outline-none">
+          <ShoppingCart className="h-5 w-5 group-hover:scale-110 transition-transform" />
           {cartCount > 0 && (
-            <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 justify-center rounded-full p-0">{cartCount}</Badge>
+            <Badge variant="destructive" className="absolute top-0 right-0 h-4 w-4 flex items-center justify-center rounded-full p-0 text-[10px] bg-primary text-primary-foreground border-none">
+                {cartCount}
+            </Badge>
           )}
-          <span className="sr-only">Carrito de compras</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80" align="end">
-        <DropdownMenuLabel>Mi Carrito</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {cartItems.length > 0 ? (
-          <>
-            <div className="max-h-64 overflow-y-auto p-1">
-                {cartItems.map(item => (
-                <DropdownMenuItem key={item.id} className="flex justify-between items-center gap-2">
-                    <div className="flex items-center gap-2">
-                        <Image src={item.imageUrl} alt={item.name} width={40} height={40} className="rounded-md" />
-                        <div>
-                            <p className="font-medium truncate max-w-28">{item.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                                {item.quantity} x COP {item.price.toLocaleString('es-CO')}
-                            </p>
-                        </div>
-                    </div>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => {e.stopPropagation(); removeFromCart(item.id)}}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
-                </DropdownMenuItem>
-                ))}
-            </div>
-            <DropdownMenuSeparator />
-            <div className="p-2">
-                <div className="flex justify-between font-bold text-lg mb-4">
-                    <span>Total:</span>
-                    <span>COP {cartTotal.toLocaleString('es-CO')}</span>
+          <span className="sr-only">Bolsa de Compras</span>
+        </button>
+      </DialogTrigger>
+      
+      {/* We use standard DialogContent but remove its default styling completely by overriding classes */}
+      <DialogContent className="sm:max-w-2xl bg-black/80 backdrop-blur-2xl border-white/10 p-0 overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8)] [&>button]:hidden">
+        
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col max-h-[80vh]">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between p-8 border-b border-white/5">
+                <div>
+                    <h2 className="text-2xl font-headline tracking-widest uppercase text-white">
+                        La Bolsa
+                    </h2>
+                    <p className="text-muted-foreground font-light text-xs tracking-wider mt-1 uppercase">Tus selecciones exclusivas</p>
                 </div>
-                <Button className="w-full">Proceder al Pago</Button>
+                <button 
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 text-white/40 hover:text-white hover:bg-white/5 rounded-full transition-all"
+                >
+                    <X className="h-5 w-5" />
+                </button>
             </div>
-          </>
-        ) : (
-          <p className="p-4 text-center text-sm text-muted-foreground">Tu carrito está vacío.</p>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto scrollbar-hide p-8">
+                {cartItems.length > 0 ? (
+                    <div className="space-y-6">
+                        {cartItems.map(item => (
+                        <div key={item.id} className="flex justify-between items-center gap-6 group p-4 border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-300">
+                            <div className="flex items-center gap-6">
+                                <div className="relative h-24 w-24 bg-transparent flex items-center justify-center overflow-hidden">
+                                    <Image src={item.imageUrl} alt={item.name} fill className="object-contain filter drop-shadow-lg group-hover:scale-110 transition-transform duration-500" />
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="font-headline tracking-wide text-white text-xl">{item.name}</p>
+                                    <p className="text-sm font-light text-primary tracking-widest uppercase">
+                                        Cantidad: {item.quantity}
+                                    </p>
+                                    <p className="text-muted-foreground font-light text-sm">
+                                        COP {item.price.toLocaleString('es-CO')} c/u
+                                    </p>
+                                </div>
+                            </div>
+                            <button 
+                                className="p-3 text-white/20 hover:text-destructive hover:bg-destructive/10 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                                onClick={() => removeFromCart(item.id)}
+                            >
+                                <Trash2 className="h-5 w-5" />
+                            </button>
+                        </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="h-48 flex flex-col items-center justify-center text-muted-foreground space-y-6">
+                        <div className="w-20 h-20 rounded-full border border-white/5 flex items-center justify-center bg-white/5">
+                            <ShoppingCart className="h-8 w-8 text-white/20" />
+                        </div>
+                        <p className="font-light tracking-widest uppercase text-sm">Aún no has elegido ningún producto.</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Footer */}
+            {cartItems.length > 0 && (
+                <div className="p-8 border-t border-white/5 bg-white/[0.02]">
+                    <div className="flex justify-between items-end mb-8">
+                        <span className="text-sm font-light tracking-widest uppercase text-muted-foreground">Subtotal a pagar</span>
+                        <span className="text-3xl font-headline text-white tracking-wide">COP {cartTotal.toLocaleString('es-CO')}</span>
+                    </div>
+                    <PremiumButton className="w-full justify-center py-6">
+                        Proceder al Checkout Seguro
+                    </PremiumButton>
+                </div>
+            )}
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }

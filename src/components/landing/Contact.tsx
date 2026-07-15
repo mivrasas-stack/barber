@@ -1,63 +1,45 @@
-import { Clock, MapPin, Phone } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import Image from "next/image";
+"use client";
 
-const contactDetails = [
-  {
-    icon: () => (
-        <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" width={40} height={40} className="mb-4"/>
-    ),
-    title: "WhatsApp",
-    content: (
-        <Link href="https://wa.me/573224414646" target="_blank" rel="noopener noreferrer" className="hover:underline">
-            +57 322 441 4646
-        </Link>
-    ),
-  },
-  {
-    icon: (props: any) => <Clock {...props} />,
-    title: "Horario de Apertura",
-    content: (
-        <>
-            <p>Lunes a Sábado: 9am–8pm</p>
-            <p>Domingo: 9am–6pm</p>
-        </>
-    ),
-  },
-];
+import { motion } from "framer-motion";
+import { PremiumButton } from "@/components/ui/premium-button";
+import Link from "next/link";
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-20 lg:py-32 bg-card">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 items-stretch">
-          <Card className="bg-transparent border-0 rounded-none shadow-none">
-            <CardContent className="p-0 h-96 md:h-full rounded-lg overflow-hidden md:rounded-r-none">
-              <iframe
-                src="https://maps.google.com/maps?q=Barber%20Paradise%20Studio%2C%20Cra.%2012%20%2318%2036%2C%20Funza%2C%20Cundinamarca&t=&z=17&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={true}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </CardContent>
-          </Card>
-          {contactDetails.map((detail, index) => (
-            <Card key={index} className="bg-transparent border-0 md:border-l border-accent rounded-none shadow-none text-center flex flex-col justify-center py-8 md:py-0">
-              <CardHeader className="items-center">
-                <detail.icon className="w-10 h-10 text-primary mb-4" />
-                <CardTitle className="text-2xl">{detail.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-muted-foreground">
-                  {detail.content}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+    <section className="relative py-32 lg:py-48 bg-background overflow-hidden flex items-center justify-center min-h-[80vh]">
+      {/* Cinematic Lighting Effect */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full max-h-[400px] bg-primary/20 blur-[120px] rounded-full pointer-events-none mix-blend-screen" />
       </div>
+
+      <div className="container relative z-10 mx-auto px-6 md:px-12 text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-5xl mx-auto space-y-12"
+        >
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-bold font-headline text-foreground leading-none tracking-wide">
+            ¿LISTO PARA TU <br className="hidden md:block" />
+            <span className="text-primary">NUEVO ESTILO?</span>
+          </h2>
+          
+          <p className="text-xl md:text-2xl text-muted-foreground font-light max-w-2xl mx-auto">
+            Únete al selecto grupo de clientes que han descubierto su mejor versión.
+          </p>
+
+          <div className="pt-8">
+            <PremiumButton asChild size="lg" className="w-full sm:w-auto min-w-[240px]">
+              <Link href="/login">Reservar Cita Ahora</Link>
+            </PremiumButton>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Decorative borders */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
     </section>
   );
 }
