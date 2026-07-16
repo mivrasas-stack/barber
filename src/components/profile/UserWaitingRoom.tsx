@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useWaitRoom } from "@/hooks/use-wait-room"
 import type { WaitingRoomProduct } from "@/lib/types"
 import { PremiumButton } from "@/components/ui/premium-button"
+import { Coffee } from "lucide-react"
 
 export function UserWaitingRoom() {
   const { toast } = useToast()
@@ -19,46 +20,53 @@ export function UserWaitingRoom() {
   }
   
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
-      <div className="pb-6 border-b border-white/10">
-        <h2 className="text-3xl font-headline text-white tracking-wide">LOUNGE VIP</h2>
-        <p className="text-muted-foreground font-light mt-1">Disfruta de nuestra selección de cortesía mientras esperas.</p>
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-white/10">
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <Coffee className="w-5 h-5 text-primary" />
+            <h2 className="text-3xl font-headline text-white tracking-widest uppercase">LOUNGE VIP</h2>
+          </div>
+          <p className="text-muted-foreground font-light">Disfruta de nuestra selección de cortesía mientras esperas tu turno.</p>
+        </div>
       </div>
       
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {dummyWaitingRoomProducts.map((product, index) => (
               <div 
                 key={product.id} 
-                className="group relative flex flex-col bg-transparent overflow-hidden"
+                className="group relative flex flex-col bg-white/[0.02] border border-white/5 rounded-2xl overflow-hidden hover:bg-white/[0.05] hover:border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                  <div className="relative aspect-square w-full overflow-hidden bg-white/5">
+                  <div className="relative aspect-[4/5] w-full overflow-hidden">
                       <Image
                         alt={product.name}
                         fill
                         src={product.imageUrl}
-                        className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                        className="object-cover opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
                       />
-                      {/* Dark gradient overlay at the bottom */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-80" />
                       
-                      <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col items-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                          <PremiumButton 
-                            variant="glass" 
-                            size="sm" 
-                            className="w-full h-10 text-xs"
-                            onClick={() => handleOrder(product)}
-                          >
-                              Solicitar
-                          </PremiumButton>
+                      {/* Price Tag */}
+                      <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full">
+                          <span className="text-xs font-headline tracking-widest text-primary">
+                            COP {product.price.toLocaleString("es-CO")}
+                          </span>
                       </div>
-                  </div>
-                  
-                  <div className="flex flex-col items-center justify-center p-4 text-center border border-white/5 border-t-0 bg-white/5 group-hover:bg-white/10 transition-colors duration-300">
-                      <h3 className="text-lg font-headline text-white tracking-wide mb-1">{product.name}</h3>
-                      <p className="text-sm font-light text-primary">
-                        COP {product.price.toLocaleString("es-CO")}
-                      </p>
+
+                      <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col">
+                          <h3 className="text-xl font-headline text-white tracking-wide mb-1 drop-shadow-md">{product.name}</h3>
+                          <div className="h-0 group-hover:h-12 opacity-0 group-hover:opacity-100 transition-all duration-500 overflow-hidden flex items-end mt-2">
+                              <PremiumButton 
+                                variant="glass" 
+                                size="sm" 
+                                className="w-full text-xs font-bold uppercase tracking-widest bg-white/10 hover:bg-white/20 text-white border-white/20"
+                                onClick={() => handleOrder(product)}
+                              >
+                                  Solicitar
+                              </PremiumButton>
+                          </div>
+                      </div>
                   </div>
               </div>
           ))}
@@ -66,3 +74,4 @@ export function UserWaitingRoom() {
     </div>
   )
 }
+

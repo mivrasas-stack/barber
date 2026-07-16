@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Settings, Server, Globe, ShieldAlert, Key, Database, RefreshCcw, Save } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function SaaSGlobalSettingsPage() {
   return (
@@ -74,8 +75,16 @@ export default function SaaSGlobalSettingsPage() {
                                   <Input defaultValue="support@barberparadise.com" type="email" className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-amber-500/50" />
                               </div>
                               <div className="space-y-3">
-                                  <label className="text-xs font-headline tracking-widest text-white/40 uppercase">Moneda Base (Suscripciones)</label>
-                                  <Input defaultValue="USD" className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-amber-500/50" />
+                                  <label className="text-xs font-headline tracking-widest text-white/40 uppercase">Moneda Base (Barberías)</label>
+                                  <Select defaultValue="COP">
+                                    <SelectTrigger className="bg-white/5 border-white/10 text-white h-12 rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 focus:ring-offset-0 focus:ring-offset-transparent">
+                                      <SelectValue placeholder="Seleccionar Moneda" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-neutral-900 border-white/10 text-white rounded-xl">
+                                      <SelectItem value="USD" className="focus:bg-white/10 focus:text-amber-400 cursor-pointer">Dólar Estadounidense (USD)</SelectItem>
+                                      <SelectItem value="COP" className="focus:bg-white/10 focus:text-amber-400 cursor-pointer">Peso Colombiano (COP)</SelectItem>
+                                    </SelectContent>
+                                  </Select>
                               </div>
                           </div>
                       </CardContent>

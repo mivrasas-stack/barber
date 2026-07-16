@@ -23,15 +23,15 @@ export default function PortalLayout({
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="fixed top-0 left-0 w-full flex items-center justify-between px-6 sm:px-8 lg:px-12 py-4 z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5"
+        className="fixed top-0 left-0 w-full flex items-center justify-between px-6 sm:px-8 lg:px-12 z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5 h-[72px]"
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 md:gap-4">
+        <Link href="/portal" className="flex items-center gap-3 md:gap-4 hover:opacity-80 transition-opacity">
           <img src="/logo.png" alt="MIVRA BARBER Logo" className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl object-cover shadow-[0_0_20px_rgba(245,158,11,0.2)]" />
           <span className="font-bold tracking-widest text-base sm:text-xl md:text-2xl uppercase text-white">
             Cliente<span className="text-amber-500">Portal</span>
           </span>
-        </div>
+        </Link>
 
         {/* Right side actions */}
         <div className="flex items-center gap-4">
@@ -48,7 +48,7 @@ export default function PortalLayout({
         </div>
       </motion.div>
 
-      <div className="relative z-10 w-full pt-24 flex-1 flex flex-col">
+      <div className="relative z-10 w-full pt-[72px] flex-1 flex flex-col">
         {children}
       </div>
     </div>

@@ -11,7 +11,7 @@ export default function Hero() {
   const heroImage = PlaceHolderImages.find((p) => p.id === "hero-barber");
 
   return (
-    <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
       {/* Background Image with Parallax & Zoom effect */}
       {heroImage && (
         <motion.div 
@@ -36,25 +36,25 @@ export default function Hero() {
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
 
       {/* Content */}
-      <div className="relative z-20 flex h-full w-full flex-col items-center justify-center text-center px-4">
+      <div className="relative z-20 flex w-full flex-col items-center justify-center text-center px-4 pt-32 pb-24 min-h-screen">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-6 max-w-5xl"
+          className="space-y-4 md:space-y-6 max-w-5xl"
         >
-          <p className="text-primary font-medium tracking-[0.3em] uppercase text-sm md:text-base">
+          <p className="text-primary font-medium tracking-[0.3em] uppercase text-xs md:text-sm lg:text-base">
             Estilo & Perfección
           </p>
           
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-headline font-bold text-white leading-[0.9] tracking-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-headline font-bold text-white leading-[0.95] tracking-tight">
             NO HACEMOS CORTES <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/40">
               CREAMOS IDENTIDAD
             </span>
           </h1>
 
-          <p className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mt-8">
+          <p className="text-white/70 text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed mt-6 md:mt-8">
             Experimenta el arte del grooming tradicional combinado con la sofisticación moderna en un ambiente de absoluta exclusividad.
           </p>
         </motion.div>

@@ -134,7 +134,7 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onSaveAppointment, ex
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Servicio</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona un servicio" />
@@ -156,7 +156,7 @@ export function AddAppointmentForm({ isOpen, onOpenChange, onSaveAppointment, ex
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Barbero</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona un barbero" />

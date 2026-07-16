@@ -106,82 +106,66 @@ export default function ClientPortalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080808] flex flex-col relative overflow-x-hidden font-sans">
-      {/* Background ambient glow */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[50vw] max-w-[900px] max-h-[600px] bg-amber-500/[0.04] rounded-full blur-[160px] pointer-events-none" />
-
-
+    <div className="flex-1 bg-[#080808] flex flex-col relative overflow-x-hidden font-sans min-h-[calc(100vh-72px)] w-full pt-4 md:pt-10">
+      
 
       {/* Main Content - Launchpad */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-8 md:py-10 z-10 w-full max-w-7xl mx-auto">
-        {/* Hero heading */}
-        <motion.div
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-4 md:py-8 z-10 w-full max-w-7xl mx-auto">
+        
+        <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-8 relative"
+          className="text-center mb-2 md:mb-4 relative w-full shrink-0"
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-amber-500/20 blur-[100px] rounded-full pointer-events-none" />
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline text-white mb-4 tracking-widest uppercase relative z-10 leading-normal">
+          
+          <h1 className="text-[clamp(1.5rem,3.5vw,3.5rem)] font-headline text-white mb-2 tracking-widest uppercase relative z-10 leading-tight">
             Bienvenido a <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-              ClientePortal
-            </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">ClientePortal</span>
           </h1>
-          <p className="text-white/40 font-light text-sm sm:text-base md:text-xl tracking-wide max-w-2xl mx-auto relative z-10">
+          <p className="text-white/40 font-light text-[clamp(0.75rem,1.2vw,1rem)] tracking-wide max-w-2xl mx-auto relative z-10 px-4">
             Gestiona tus citas, revisa tu turno en tiempo real, explora la boutique y consulta tus recompensas.
           </p>
         </motion.div>
 
         {/* Modules Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {modules.map((mod, i) => {
-            const c = colorMap[mod.color] ?? colorMap['amber'];
-            return (
-              <button
-                key={mod.tab}
-                onClick={() => setActiveTab(mod.tab)}
-                className="block group outline-none text-left w-full"
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 w-full items-stretch py-4">
+          {modules.map((mod, i) => (
+            <button key={mod.tab} onClick={() => setActiveTab(mod.tab)} className="block group outline-none w-full text-left">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 + (i * 0.1) }}
+                className="relative h-full bg-[#0A0A0A] border border-white/5 rounded-[16px] md:rounded-[24px] p-4 md:p-5 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:bg-white/[0.02] group-hover:border-amber-500/30 group-focus:border-amber-500/50"
               >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-                  className={`relative h-full bg-[#0A0A0A] border border-white/5 rounded-[24px] p-6 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:bg-white/[0.02] ${c.border} cursor-pointer`}
-                >
-                  {/* Hover Glow */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                  <div
-                    className="absolute -top-10 -right-10 w-32 h-32 blur-[50px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{ background: c.glow }}
-                  />
+                {/* Hover Glow Effects */}
+                <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                
+                {/* Icon Wrapper */}
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-[16px] md:rounded-[24px] bg-black border border-white/10 flex items-center justify-center mb-3 md:mb-5 group-hover:scale-110 group-hover:bg-amber-950/30 group-hover:border-amber-500/30 group-hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] transition-all duration-500 z-10 relative">
+                  <mod.icon className="w-6 h-6 md:w-8 md:h-8 text-white/50 group-hover:text-amber-400 transition-colors duration-500" />
+                </div>
+                
+                {/* Typography */}
+                <h3 className="text-[clamp(0.875rem,1.5vw,1.25rem)] font-headline tracking-widest uppercase text-white mb-1 md:mb-2 z-10 group-hover:text-amber-100 transition-colors">
+                  {mod.name}
+                </h3>
+                <p className="text-[clamp(0.65rem,1vw,0.875rem)] font-light tracking-wide text-white/40 z-10 group-hover:text-white/60 transition-colors px-2">
+                  {mod.desc}
+                </p>
 
-                  {/* Icon */}
-                  <div
-                    className={`w-16 h-16 md:w-20 md:h-20 rounded-[24px] bg-black border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 ${c.bg} transition-all duration-500 z-10 relative`}
-                  >
-                    <mod.icon className={`w-10 h-10 md:w-12 md:h-12 text-white/50 group-hover:${c.icon.replace('text-', '')} transition-colors duration-500 ${c.icon} opacity-50 group-hover:opacity-100`} />
-                  </div>
-
-                  {/* Text */}
-                  <h3 className="text-xl md:text-2xl font-extrabold tracking-widest uppercase text-white mb-3 z-10 group-hover:text-amber-100 transition-colors">
-                    {mod.name}
-                  </h3>
-                  <p className="text-sm md:text-base font-medium tracking-wider text-white/60 z-10 group-hover:text-white/90 transition-colors">
-                    {mod.desc}
-                  </p>
-
-                  {/* Bottom line */}
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent group-hover:w-1/2 transition-all duration-500" />
-                </motion.div>
-              </button>
-            );
-          })}
+                {/* Bottom Highlight Line */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent group-hover:w-1/2 transition-all duration-500" />
+              </motion.div>
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Footer */}
-      <div className="py-4 w-full text-center text-white/30 text-[10px] font-bold tracking-widest uppercase z-10 opacity-60">
+      <div className="py-2 w-full text-center text-white/30 text-[10px] font-bold tracking-widest uppercase z-10 opacity-60 shrink-0">
         © 2026 Barber Paradise • Portal Exclusivo para Clientes
       </div>
     </div>
@@ -215,49 +199,26 @@ function ClientPortalDetail({
   onBack: () => void;
 }) {
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-slate-200 flex flex-col font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#0A0A0A] text-slate-200 flex flex-col font-sans relative overflow-x-hidden">
       {/* Ambient glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* Header */}
-      <header className="sticky top-0 z-30 w-full bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5 py-4">
-        <div className="container mx-auto flex items-center justify-between px-6 md:px-12">
-          <div className="flex items-center gap-4">
+      {/* Back Navigation */}
+      <div className="w-full bg-transparent pt-6 pb-2">
+        <div className="container mx-auto px-6 md:px-12">
             <button
               onClick={onBack}
-              className="text-white/60 hover:text-white transition-colors flex items-center gap-2 group"
+              className="text-white/60 hover:text-white transition-colors flex items-center gap-3 group w-fit"
             >
-              <div className="p-2 bg-white/5 rounded-lg group-hover:bg-white/10 transition-colors">
-                <ArrowLeft className="w-5 h-5" />
+              <div className="p-2 bg-white/5 border border-white/10 rounded-lg group-hover:bg-white/10 transition-colors">
+                <ArrowLeft className="w-4 h-4" />
               </div>
-              <span className="text-sm font-light tracking-widest uppercase hidden sm:block">
-                Inicio Portal
+              <span className="text-xs font-headline tracking-widest uppercase">
+                Volver al Inicio
               </span>
             </button>
-            <div className="h-6 w-px bg-white/10 hidden md:block" />
-            <button
-              onClick={onBack}
-              className="text-xl md:text-2xl font-bold tracking-widest text-white hover:text-amber-500 transition-colors flex items-center gap-2"
-            >
-              BARBER <span className="text-amber-500">PARADISE</span>
-            </button>
-          </div>
-          <div className="flex items-center gap-4 md:gap-6">
-            <UserWaitRoomCart />
-            <UserCart />
-            <div className="h-6 w-px bg-white/10 hidden sm:block" />
-            <Link
-              href="/"
-              className="group flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-medium"
-            >
-              <span className="hidden sm:inline">Cerrar Sesión</span>
-              <div className="p-2 bg-white/5 rounded-lg group-hover:bg-red-500/10 group-hover:text-red-400 transition-colors">
-                <LogOut className="h-4 w-4" />
-              </div>
-            </Link>
-          </div>
         </div>
-      </header>
+      </div>
 
       {/* User Banner */}
       <div className="relative border-b border-white/5 overflow-hidden">
@@ -268,83 +229,83 @@ function ClientPortalDetail({
         <div className="absolute -top-20 -right-20 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="container mx-auto px-6 md:px-12 py-12 lg:py-16 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
+          <div className="flex flex-col xl:flex-row items-center justify-between gap-10 lg:gap-16 w-full">
             
             {/* Profile Info (Left) */}
-            <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-              <div className="relative group">
+            <div className="flex flex-col sm:flex-row items-center gap-6 md:gap-8 text-center sm:text-left w-full xl:w-auto justify-center xl:justify-start">
+              <div className="relative group shrink-0">
                 <div className="absolute inset-0 bg-amber-500/30 rounded-full blur-2xl group-hover:bg-amber-500/50 transition-colors duration-700" />
                 <div className="absolute -inset-2 bg-gradient-to-br from-amber-500/20 to-transparent rounded-full animate-spin-slow opacity-50" style={{ animationDuration: '10s' }} />
-                <Avatar className="relative h-32 w-32 md:h-40 md:w-40 border-2 border-amber-500/40 p-1 bg-[#0A0A0A] shadow-[0_0_40px_rgba(245,158,11,0.15)] transition-transform duration-500 group-hover:scale-105">
+                <Avatar className="relative h-24 w-24 sm:h-32 sm:w-32 md:h-40 md:w-40 border-2 border-amber-500/40 p-1 bg-[#0A0A0A] shadow-[0_0_40px_rgba(245,158,11,0.15)] transition-transform duration-500 group-hover:scale-105">
                   <div className="w-full h-full rounded-full border border-white/10 overflow-hidden relative">
                     <AvatarImage src="https://picsum.photos/seed/user-profile/200/200" alt="John Doe" className="object-cover" />
-                    <AvatarFallback className="bg-neutral-900 text-white font-bold text-4xl">JD</AvatarFallback>
+                    <AvatarFallback className="bg-neutral-900 text-white font-bold text-2xl sm:text-4xl">JD</AvatarFallback>
                   </div>
                 </Avatar>
                 {/* Small level badge */}
-                <div className="absolute -bottom-2 md:-bottom-4 left-1/2 -translate-x-1/2 bg-[#0A0A0A] border border-amber-500/50 px-4 py-1 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)] z-20">
-                  <span className="text-amber-500 font-bold text-xs tracking-widest">LVL 12</span>
+                <div className="absolute -bottom-2 md:-bottom-4 left-1/2 -translate-x-1/2 bg-[#0A0A0A] border border-amber-500/50 px-3 py-1 md:px-4 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)] z-20 whitespace-nowrap">
+                  <span className="text-amber-500 font-bold text-[10px] md:text-xs tracking-widest">LVL 12</span>
                 </div>
               </div>
 
-              <div className="space-y-4 mt-4 md:mt-0">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/10 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.05)] backdrop-blur-sm">
-                  <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.8)]" />
-                  <span className="text-amber-500 font-medium tracking-[0.2em] uppercase text-[10px]">Miembro Black Tier</span>
+              <div className="space-y-3 md:space-y-4 mt-2 sm:mt-0 flex-1 min-w-0 flex flex-col items-center sm:items-start">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/10 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.05)] backdrop-blur-sm w-fit">
+                  <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.8)] shrink-0" />
+                  <span className="text-amber-500 font-medium tracking-[0.2em] uppercase text-[9px] md:text-[10px]">Miembro Black Tier</span>
                 </div>
-                <div>
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-widest uppercase drop-shadow-md">
+                <div className="w-full flex flex-col items-center sm:items-start">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-widest uppercase drop-shadow-md truncate w-full text-center sm:text-left">
                     JOHN DOE
                   </h1>
-                  <p className="text-slate-400 font-light tracking-wide flex flex-wrap items-center justify-center md:justify-start gap-3 mt-2">
-                    <span>john.d@example.com</span>
-                    <span className="w-1 h-1 bg-white/20 rounded-full hidden sm:block" />
-                    <span className="text-amber-500/70">Cliente VIP desde 2023</span>
+                  <p className="text-slate-400 font-light tracking-wide flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-start gap-1 sm:gap-3 mt-2 text-xs sm:text-sm text-center sm:text-left">
+                    <span className="truncate max-w-[200px] sm:max-w-none">john.d@example.com</span>
+                    <span className="w-1 h-1 bg-white/20 rounded-full hidden sm:block shrink-0 mt-2" />
+                    <span className="text-amber-500/70 shrink-0">Cliente VIP desde 2023</span>
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Showcase & Stats (Right) */}
-            <div className="flex flex-col sm:flex-row items-center gap-8 w-full lg:w-auto">
+            <div className="flex flex-col lg:flex-row items-center gap-6 w-full xl:w-auto justify-center xl:justify-end">
               
               {/* Badges Showcase (Game Profile Style) */}
-              <div className="flex flex-col items-center sm:items-start space-y-3 p-6 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-sm w-full sm:w-auto relative overflow-hidden group">
+              <div className="flex flex-col items-center lg:items-start space-y-3 p-5 md:p-6 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-sm w-full sm:w-auto relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none group-hover:bg-amber-500/10 transition-colors" />
-                <span className="text-[10px] tracking-[0.2em] uppercase text-slate-400 font-bold">Vitrina de Logros</span>
-                <div className="flex gap-3">
+                <span className="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-slate-400 font-bold z-10 text-center w-full lg:text-left">Vitrina de Logros</span>
+                <div className="flex gap-3 z-10 justify-center w-full lg:justify-start">
                   {/* Badge 1 */}
-                  <div className="group/badge relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer">
+                  <div className="group/badge relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer shrink-0">
                     <div className="absolute inset-0 bg-amber-500/20 rounded-xl rotate-45 group-hover/badge:rotate-90 transition-transform duration-500 border border-amber-500/30" />
-                    <Star className="w-5 h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
+                    <Star className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
                   </div>
                   {/* Badge 2 */}
-                  <div className="group/badge relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer">
+                  <div className="group/badge relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer shrink-0">
                     <div className="absolute inset-0 bg-amber-500/20 rounded-xl rotate-45 group-hover/badge:rotate-90 transition-transform duration-500 border border-amber-500/30" />
-                    <Scissors className="w-5 h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
+                    <Scissors className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
                   </div>
                   {/* Badge 3 */}
-                  <div className="group/badge relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer">
+                  <div className="group/badge relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer shrink-0">
                     <div className="absolute inset-0 bg-amber-500/20 rounded-xl rotate-45 group-hover/badge:rotate-90 transition-transform duration-500 border border-amber-500/30" />
-                    <Award className="w-5 h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
+                    <Award className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
                   </div>
                 </div>
               </div>
 
               {/* Stats & Actions */}
-              <div className="flex flex-col gap-4 w-full sm:w-auto">
-                <div className="flex gap-6 text-center sm:text-left bg-[#0A0A0A] p-5 rounded-3xl border border-white/5 shadow-inner">
-                  <div className="space-y-1">
-                    <p className="text-slate-500 text-[9px] tracking-[0.2em] uppercase font-bold">Pts Totales</p>
-                    <p className="text-2xl font-black text-white tracking-widest">12<span className="text-amber-500">K</span></p>
+              <div className="flex flex-col sm:flex-row lg:flex-col gap-4 w-full sm:w-auto">
+                <div className="flex gap-4 md:gap-6 justify-center sm:justify-start bg-[#0A0A0A] p-4 md:p-5 rounded-3xl border border-white/5 shadow-inner w-full sm:w-auto">
+                  <div className="space-y-1 text-center sm:text-left flex-1 sm:flex-none">
+                    <p className="text-slate-500 text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-bold">Pts Totales</p>
+                    <p className="text-xl md:text-2xl font-black text-white tracking-widest">12<span className="text-amber-500">K</span></p>
                   </div>
-                  <div className="w-px h-10 bg-white/10 hidden sm:block my-auto" />
-                  <div className="space-y-1">
-                    <p className="text-slate-500 text-[9px] tracking-[0.2em] uppercase font-bold">Visitas</p>
-                    <p className="text-2xl font-black text-white tracking-widest">14</p>
+                  <div className="w-px h-8 md:h-10 bg-white/10 hidden sm:block my-auto" />
+                  <div className="space-y-1 text-center sm:text-left flex-1 sm:flex-none">
+                    <p className="text-slate-500 text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-bold">Visitas</p>
+                    <p className="text-xl md:text-2xl font-black text-white tracking-widest">14</p>
                   </div>
                 </div>
-                <PremiumButton variant="outline" size="sm" className="w-full px-6 rounded-2xl border-white/10 hover:border-amber-500/50 hover:bg-amber-500/5 text-xs tracking-widest h-10 font-bold uppercase">
+                <PremiumButton variant="outline" size="sm" className="w-full px-6 rounded-2xl border-white/10 hover:border-amber-500/50 hover:bg-amber-500/5 text-[10px] md:text-xs tracking-widest h-10 md:h-12 font-bold uppercase whitespace-nowrap">
                   Editar Perfil
                 </PremiumButton>
               </div>

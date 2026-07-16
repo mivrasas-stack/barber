@@ -47,25 +47,27 @@ export function UserBadges() {
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out space-y-12">
       
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-white/5 relative">
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none" />
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-white/10 relative">
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-48 h-48 bg-amber-500/10 blur-[60px] rounded-full pointer-events-none" />
         <div className="relative z-10 text-center md:text-left">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-[0.2em] uppercase text-white mb-2">
-            Logros <span className="text-amber-500">Desbloqueados</span>
-          </h2>
-          <p className="text-white/40 font-light tracking-wide text-sm md:text-base">
-            Insignias y reconocimientos a tu lealtad e impecable estilo.
+          <div className="flex flex-col items-center md:items-start gap-2 mb-2">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold tracking-[0.2em] uppercase text-white">
+              Logros <span className="bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 text-transparent bg-clip-text">Desbloqueados</span>
+            </h2>
+          </div>
+          <p className="text-white/60 font-light tracking-wide text-sm md:text-base max-w-xl">
+            Insignias y reconocimientos exclusivos a tu lealtad e impecable estilo. Cada galardón cuenta tu historia en Barber Paradise.
           </p>
         </div>
-        <div className="relative z-10 flex items-center gap-4 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-full">
+        <div className="relative z-10 flex items-center gap-6 bg-black/40 backdrop-blur-md border border-white/10 px-8 py-4 rounded-2xl shadow-xl">
           <div className="flex flex-col text-center">
-            <span className="text-xl font-bold text-white">{badges.filter(b => b.earned).length}</span>
-            <span className="text-[10px] tracking-widest text-slate-400 uppercase">Obtenidos</span>
+            <span className="text-2xl font-headline text-amber-400 font-bold drop-shadow-md">{badges.filter(b => b.earned).length}</span>
+            <span className="text-[10px] tracking-widest text-white/40 uppercase">Obtenidos</span>
           </div>
-          <div className="w-px h-8 bg-white/10" />
+          <div className="w-px h-10 bg-white/10" />
           <div className="flex flex-col text-center">
-            <span className="text-xl font-bold text-white/40">{badges.length}</span>
-            <span className="text-[10px] tracking-widest text-slate-400 uppercase">Total</span>
+            <span className="text-2xl font-headline text-white/40 font-bold">{badges.length}</span>
+            <span className="text-[10px] tracking-widest text-white/40 uppercase">Total</span>
           </div>
         </div>
       </div>
@@ -79,37 +81,37 @@ export function UserBadges() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.05 }}
-                  className="group relative flex flex-col items-center justify-center p-6 h-56 md:h-64 cursor-pointer outline-none"
+                  className="group relative flex flex-col items-center justify-center p-6 h-64 md:h-72 cursor-pointer outline-none bg-white/[0.01] hover:bg-white/[0.03] border border-transparent hover:border-white/5 rounded-3xl transition-all duration-500"
                 >
                   {/* Badge Container */}
-                  <div className={`relative w-24 h-24 md:w-32 md:h-32 mb-6 flex items-center justify-center transition-all duration-500 z-10 ${
-                    badge.earned ? 'group-hover:-translate-y-2' : ''
+                  <div className={`relative w-28 h-28 md:w-36 md:h-36 mb-8 flex items-center justify-center transition-all duration-700 z-10 ${
+                    badge.earned ? 'group-hover:-translate-y-3 group-hover:scale-105' : ''
                   }`}>
                     
                     {/* Background Shape */}
                     {badge.earned ? (
                       <>
                         {/* Glow */}
-                        <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="absolute inset-0 bg-amber-500/20 blur-2xl rounded-full opacity-40 group-hover:opacity-100 transition-opacity duration-700" />
                         
                         {/* Outer Ring */}
-                        <div className="absolute inset-0 rounded-full border border-amber-500/30 group-hover:border-amber-500/60 group-hover:rotate-45 transition-all duration-700 bg-[#0A0A0A]" />
+                        <div className="absolute inset-0 rounded-full border border-amber-500/30 group-hover:border-amber-400/80 group-hover:rotate-90 transition-all duration-1000 bg-black/80 backdrop-blur-sm shadow-[inset_0_0_20px_rgba(245,158,11,0.2)]" />
                         
-                        {/* Inner Hexagon / Diamond effect via rotate */}
-                        <div className="absolute inset-2 rounded-full border border-amber-500/20 bg-gradient-to-br from-amber-500/10 to-transparent group-hover:-rotate-45 transition-all duration-700 flex items-center justify-center">
-                          <badge.icon className="h-8 w-8 md:h-10 md:w-10 text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)] group-hover:scale-110 transition-transform duration-500" />
+                        {/* Inner Diamond */}
+                        <div className="absolute inset-3 rounded-full border border-amber-500/20 bg-gradient-to-br from-amber-500/20 via-transparent to-amber-900/40 group-hover:-rotate-90 transition-all duration-1000 flex items-center justify-center">
+                          <badge.icon className="h-10 w-10 md:h-12 md:w-12 text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.6)] group-hover:scale-110 transition-transform duration-700" />
                         </div>
                       </>
                     ) : (
                       <>
                         {/* Dashed Outer Ring for unearned */}
-                        <div className="absolute inset-0 rounded-full border-2 border-dashed border-white/10 group-hover:border-white/20 transition-all duration-500 bg-[#0A0A0A]" />
+                        <div className="absolute inset-0 rounded-full border-2 border-dashed border-white/10 group-hover:border-white/20 transition-all duration-700 bg-black/40 backdrop-blur-sm" />
                         
                         {/* Inner locked state */}
-                        <div className="absolute inset-2 rounded-full bg-white/[0.02] flex items-center justify-center group-hover:bg-white/[0.05] transition-colors duration-500">
-                          <badge.icon className="h-8 w-8 md:h-10 md:w-10 text-white/10 group-hover:text-white/20 transition-colors duration-500" />
-                          <div className="absolute -bottom-2 -right-2 bg-[#0A0A0A] p-1.5 rounded-full border border-white/10 group-hover:border-white/20 transition-colors duration-500">
-                            <Lock className="w-3 h-3 text-white/30" />
+                        <div className="absolute inset-3 rounded-full bg-white/[0.02] flex items-center justify-center group-hover:bg-white/[0.05] transition-colors duration-700">
+                          <badge.icon className="h-10 w-10 md:h-12 md:w-12 text-white/10 group-hover:text-white/20 transition-colors duration-700" />
+                          <div className="absolute -bottom-1 -right-1 bg-[#0A0A0A] p-2 rounded-full border border-white/10 group-hover:border-white/20 transition-colors duration-700 shadow-xl">
+                            <Lock className="w-4 h-4 text-white/30" />
                           </div>
                         </div>
                       </>
@@ -117,25 +119,27 @@ export function UserBadges() {
                   </div>
 
                   {/* Text */}
-                  <div className="text-center relative z-10 w-full space-y-2">
-                    <h3 className={`text-xs md:text-sm font-bold tracking-widest uppercase transition-colors duration-500 ${
+                  <div className="text-center relative z-10 w-full space-y-3">
+                    <h3 className={`text-xs md:text-sm font-headline tracking-widest uppercase transition-colors duration-500 ${
                       badge.earned ? 'text-white group-hover:text-amber-400' : 'text-white/30'
                     }`}>
                       {badge.title}
                     </h3>
-                    <div className={`h-0.5 w-4 mx-auto rounded-full transition-all duration-500 ${
-                      badge.earned ? 'bg-amber-500 group-hover:w-8' : 'bg-white/10'
+                    <div className={`h-1 w-4 mx-auto rounded-full transition-all duration-700 ${
+                      badge.earned ? 'bg-gradient-to-r from-amber-500 to-amber-200 group-hover:w-12 shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-white/10'
                     }`} />
                   </div>
                 </motion.div>
               </TooltipTrigger>
               <TooltipContent 
                 side="bottom" 
-                className="bg-[#111] border-white/10 text-white/70 px-4 py-3 rounded-xl shadow-2xl max-w-[200px] text-center"
+                className="bg-black/90 backdrop-blur-xl border-white/10 text-white/80 px-5 py-4 rounded-2xl shadow-2xl max-w-[220px] text-center"
               >
-                <p className="text-xs tracking-wide leading-relaxed">{badge.description}</p>
+                <p className="text-sm tracking-wide leading-relaxed font-light">{badge.description}</p>
                 {!badge.earned && (
-                  <p className="text-[10px] uppercase tracking-widest text-amber-500 mt-2 font-bold">Por desbloquear</p>
+                  <div className="mt-3 inline-block bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                    <p className="text-[10px] uppercase tracking-widest text-amber-500 font-bold">Por desbloquear</p>
+                  </div>
                 )}
               </TooltipContent>
             </Tooltip>
@@ -145,3 +149,4 @@ export function UserBadges() {
     </div>
   )
 }
+

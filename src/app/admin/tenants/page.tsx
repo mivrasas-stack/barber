@@ -1,8 +1,16 @@
 "use client";
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Building2, Search, Filter, MoreHorizontal, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Building2, Search, Filter, MoreHorizontal, ShieldCheck, ShieldAlert, Eye, Edit, BarChart, Trash2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const tenantsData = [
   { id: 1, name: 'The Royal Barber', owner: 'Carlos Torres', location: 'Bogotá, Colombia', plan: 'Black Label', status: 'Active', date: '10/07/2026' },
@@ -106,9 +114,51 @@ export default function TenantsPage() {
                                   )}
                               </td>
                               <td className="px-8 py-6 text-right">
-                                  <button className="text-white/40 hover:text-white transition-colors p-2">
-                                      <MoreHorizontal className="w-5 h-5" />
-                                  </button>
+                                  <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                          <button className="text-white/40 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5">
+                                              <MoreHorizontal className="w-5 h-5" />
+                                          </button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end" className="w-48 bg-[#0a0a0a] border-white/10 text-white shadow-xl shadow-black/50 rounded-xl p-1">
+                                          <DropdownMenuLabel className="text-xs uppercase tracking-widest text-white/40 font-headline">Acciones</DropdownMenuLabel>
+                                          <DropdownMenuSeparator className="bg-white/10" />
+                                          
+                                          <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-white/5 focus:bg-white/5 text-sm py-2 rounded-lg transition-colors">
+                                              <Eye className="w-4 h-4 text-amber-500" />
+                                              <span>Ver Detalles</span>
+                                          </DropdownMenuItem>
+                                          
+                                          <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-white/5 focus:bg-white/5 text-sm py-2 rounded-lg transition-colors">
+                                              <Edit className="w-4 h-4 text-blue-500" />
+                                              <span>Editar Información</span>
+                                          </DropdownMenuItem>
+                                          
+                                          <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-white/5 focus:bg-white/5 text-sm py-2 rounded-lg transition-colors">
+                                              <BarChart className="w-4 h-4 text-purple-500" />
+                                              <span>Reporte Financiero</span>
+                                          </DropdownMenuItem>
+                                          
+                                          <DropdownMenuSeparator className="bg-white/10" />
+                                          
+                                          {tenant.status === 'Active' ? (
+                                            <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-amber-500/10 focus:bg-amber-500/10 text-amber-500 text-sm py-2 rounded-lg transition-colors">
+                                                <ShieldAlert className="w-4 h-4" />
+                                                <span>Suspender Acceso</span>
+                                            </DropdownMenuItem>
+                                          ) : (
+                                            <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-green-500/10 focus:bg-green-500/10 text-green-500 text-sm py-2 rounded-lg transition-colors">
+                                                <ShieldCheck className="w-4 h-4" />
+                                                <span>Activar Acceso</span>
+                                            </DropdownMenuItem>
+                                          )}
+                                          
+                                          <DropdownMenuItem className="flex items-center gap-2 cursor-pointer hover:bg-red-500/10 focus:bg-red-500/10 text-red-500 text-sm py-2 rounded-lg transition-colors">
+                                              <Trash2 className="w-4 h-4" />
+                                              <span>Eliminar Franquicia</span>
+                                          </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                  </DropdownMenu>
                               </td>
                           </tr>
                       ))}

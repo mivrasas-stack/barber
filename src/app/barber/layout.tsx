@@ -5,9 +5,10 @@ import {
   CalendarDays,
   Scissors,
   LogOut,
-  Briefcase,
-  Coffee,
-  Wallet,
+  Users,
+  DollarSign,
+  Activity,
+  UserCircle,
   ArrowLeft
 } from 'lucide-react';
 import {
@@ -26,10 +27,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { dummyBarbers } from '@/app/dashboard/data';
 
 const navItems = [
-  { href: '/barber', icon: CalendarDays, label: 'Mi Agenda' },
-  { href: '/barber/wallet', icon: Wallet, label: 'Mis Comisiones' },
-  { href: '/barber/wait-room', icon: Coffee, label: 'Lounge (Espera)' },
-  { href: '/barber/portfolio', icon: Briefcase, label: 'Mi Portafolio' },
+  { href: '/barber/appointments', icon: CalendarDays, label: 'Mi Agenda' },
+  { href: '/barber/customers', icon: Users, label: 'Mis Clientes' },
+  { href: '/barber/earnings', icon: DollarSign, label: 'Ganancias' },
+  { href: '/barber/services', icon: Scissors, label: 'Servicios' },
+  { href: '/barber/metrics', icon: Activity, label: 'Métricas' },
+  { href: '/barber/profile', icon: UserCircle, label: 'Mi Perfil' },
 ];
 
 export default function BarberLayout({
@@ -45,11 +48,11 @@ export default function BarberLayout({
   // When on root /barber, render full-screen like AdminPortal
   if (isRoot) {
     return (
-      <div className="dark bg-[#050505] min-h-screen text-foreground selection:bg-amber-500/30 overflow-hidden relative">
+      <div className="dark bg-[#050505] min-h-[100vh] h-[100vh] text-foreground selection:bg-amber-500/30 overflow-hidden relative flex flex-col">
         {/* Global Ambient Glow */}
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-amber-900/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-amber-900/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
-        <div className="relative z-10 w-full">
+        <div className="relative z-10 w-full flex-1 flex flex-col min-h-0 h-full">
           {children}
         </div>
       </div>
@@ -125,7 +128,7 @@ export default function BarberLayout({
                 </div>
                 
                 <div className="flex items-center gap-4">
-                    <Link href="/" className="flex items-center gap-2 group">
+                    <Link href="/barber" className="flex items-center gap-2 group">
                         <img src="/logo.png" alt="MIVRA BARBER Logo" className="h-8 w-8 rounded-md object-cover shadow-[0_0_10px_rgba(245,158,11,0.2)]" />
                         <span className="text-sm font-bold tracking-widest text-white font-headline uppercase leading-none hidden sm:block">MivraBarber</span>
                     </Link>
