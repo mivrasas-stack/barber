@@ -16,19 +16,19 @@
     --primary: 41 61% 51%; /* #C89B3C Gold */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96.1%;
+    --secondary: 0 0% 92%; /* Slightly darker to distinguish from background */
     --secondary-foreground: 0 0% 9%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 35%; /* Darker muted text for better readability */
 
-    --accent: 0 0% 96.1%;
+    --accent: 0 0% 92%;
     --accent-foreground: 41 61% 51%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 89.8%;
+    --border: 0 0% 82%; /* Stronger borders for visible separators */
     --input: 0 0% 89.8%;
     --ring: 41 61% 51%;
 
@@ -44,9 +44,9 @@
     --sidebar-foreground: 0 0% 3.9%;
     --sidebar-primary: 41 61% 51%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96.1%;
+    --sidebar-accent: 0 0% 92%;
     --sidebar-accent-foreground: 0 0% 9%;
-    --sidebar-border: 0 0% 89.8%;
+    --sidebar-border: 0 0% 82%;
     --sidebar-ring: 41 61% 51%;
   }
 

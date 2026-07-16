@@ -31,9 +31,9 @@ export default function Hero() {
         </motion.div>
       )}
 
-      {/* Dark Luxury Overlay */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-background/40 via-background/60 to-background" />
-      <div className="absolute inset-0 z-10 bg-foreground/10 mix-blend-multiply" />
+      {/* Dark Luxury Overlay - strong enough for both light and dark themes */}
+      <div className="absolute inset-0 z-10 bg-black/50" />
+      <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/20 via-black/40 to-black/80" />
 
       {/* Content */}
       <div className="relative z-20 flex h-full w-full flex-col items-center justify-center text-center px-4">
@@ -47,14 +47,14 @@ export default function Hero() {
             Estilo & Perfección
           </p>
           
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-headline font-bold text-foreground leading-[0.9] tracking-tight">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-headline font-bold text-white leading-[0.9] tracking-tight">
             NO HACEMOS CORTES <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground/80 to-foreground/40">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/40">
               CREAMOS IDENTIDAD
             </span>
           </h1>
 
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mt-8">
+          <p className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed mt-8">
             Experimenta el arte del grooming tradicional combinado con la sofisticación moderna en un ambiente de absoluta exclusividad.
           </p>
         </motion.div>
@@ -81,7 +81,7 @@ export default function Hero() {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
       >
-        <span className="text-muted-foreground text-xs tracking-widest uppercase">Descubrir</span>
+        <span className="text-white/60 text-xs tracking-widest uppercase">Descubrir</span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}

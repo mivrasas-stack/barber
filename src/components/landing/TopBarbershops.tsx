@@ -40,7 +40,7 @@ export default function TopBarbershops() {
   return (
     <section id="ranking" className="py-24 lg:py-32 bg-background relative overflow-hidden">
       {/* Background Map Placeholder Texture */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+      <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)', backgroundSize: '40px 40px' }} />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary/5 blur-[120px] rounded-[100%] pointer-events-none" />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -78,7 +78,7 @@ export default function TopBarbershops() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.15, duration: 0.6 }}
-              className="group relative bg-foreground/[0.02] border border-border hover:border-primary/40 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_rgba(200,155,60,0.15)] flex flex-col"
+              className="group relative bg-card border border-border hover:border-primary/40 rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_rgba(200,155,60,0.15)] flex flex-col shadow-sm"
             >
               <div className="relative w-full h-64 overflow-hidden">
                 <Image
@@ -90,16 +90,16 @@ export default function TopBarbershops() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                 
                 {/* Ranking Badge */}
-                <div className="absolute top-4 left-4 bg-background/60 backdrop-blur-md border border-border px-3 py-1 rounded-full flex items-center gap-1">
+                <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full flex items-center gap-1">
                    <span className="text-primary font-headline text-sm tracking-widest">#{index + 1}</span>
                 </div>
               </div>
               
               <div className="p-8 flex flex-col flex-grow relative z-10 -mt-16">
-                <div className="flex items-center gap-1 mb-2 bg-background/60 backdrop-blur-md border border-border w-max px-3 py-1 rounded-full">
+                <div className="flex items-center gap-1 mb-2 bg-black/70 backdrop-blur-md border border-white/20 w-max px-3 py-1 rounded-full">
                   <Star className="w-4 h-4 text-primary fill-primary" />
-                  <span className="text-foreground font-medium text-sm">{shop.rating}</span>
-                  <span className="text-muted-foreground text-xs ml-1">({shop.reviews})</span>
+                  <span className="text-white font-medium text-sm">{shop.rating}</span>
+                  <span className="text-white/60 text-xs ml-1">({shop.reviews})</span>
                 </div>
                 
                 <h3 className="text-2xl font-headline text-foreground mb-1 tracking-wide uppercase mt-4">{shop.name}</h3>

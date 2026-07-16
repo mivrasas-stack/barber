@@ -17,7 +17,7 @@ export default function RegisterPage() {
       <Card className="mx-auto max-w-sm">
         <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-                <Scissors className="h-10 w-10 text-primary" />
+                <img src="/logo.png" alt="MIVRA BARBER Logo" className="h-16 w-16 object-cover rounded-xl" />
             </div>
             <CardTitle className="text-2xl">Crear una Cuenta</CardTitle>
             <CardDescription>

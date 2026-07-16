@@ -21,7 +21,13 @@ export function CancelAppointmentDialog({ onConfirm }: CancelAppointmentDialogPr
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="sm">Cancelar</Button>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="bg-transparent border-white/20 text-muted-foreground hover:bg-white/10 hover:text-white transition-colors"
+        >
+          Cancelar
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

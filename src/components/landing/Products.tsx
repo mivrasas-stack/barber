@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function Products() {
   return (
-    <section id="products" className="py-24 lg:py-40 bg-secondary">
+    <section id="products" className="py-24 lg:py-40 bg-muted/50">
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-24">
           <p className="text-primary font-medium tracking-[0.2em] uppercase text-sm mb-4">
@@ -29,7 +29,7 @@ export default function Products() {
               transition={{ delay: index * 0.1, duration: 0.8 }}
               className="group flex flex-col items-center text-center"
             >
-              <div className="relative w-full aspect-square mb-10 bg-background/50 rounded-3xl overflow-hidden p-12 transition-colors duration-500 group-hover:bg-foreground/5">
+              <div className="relative w-full aspect-square mb-10 bg-card rounded-3xl overflow-hidden p-12 transition-colors duration-500 group-hover:bg-muted border border-border shadow-sm">
                 <div className="relative w-full h-full transform transition-transform duration-700 group-hover:scale-110 group-hover:-translate-y-4">
                   <Image
                     src={product.imageUrl}

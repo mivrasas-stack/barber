@@ -28,7 +28,7 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.15, duration: 0.8 }}
-              className="bg-card p-10 lg:p-14 relative flex flex-col h-full border border-border hover:border-primary/30 transition-colors duration-500"
+              className="bg-card p-10 lg:p-14 relative flex flex-col h-full border border-border hover:border-primary/30 transition-colors duration-500 shadow-sm"
             >
               {/* Rating */}
               <div className="flex gap-1 mb-8">

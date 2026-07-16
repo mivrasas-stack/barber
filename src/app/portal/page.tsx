@@ -106,60 +106,29 @@ export default function ClientPortalPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080808] flex flex-col relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#080808] flex flex-col relative overflow-x-hidden font-sans">
       {/* Background ambient glow */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[50vw] max-w-[900px] max-h-[600px] bg-amber-500/[0.04] rounded-full blur-[160px] pointer-events-none" />
 
-      {/* Top Navigation Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-8 z-20"
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-black border border-white/10 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.15)]">
-            <Scissors className="w-5 h-5 text-amber-500" />
-          </div>
-          <span className="font-bold tracking-widest text-lg uppercase text-white">
-            Cliente<span className="text-amber-500">Portal</span>
-          </span>
-        </div>
 
-        {/* Right side actions */}
-        <div className="flex items-center gap-4">
-          <UserWaitRoomCart />
-          <UserCart />
-          <div className="w-px h-6 bg-white/10 hidden sm:block" />
-          <Link
-            href="/"
-            className="flex items-center gap-2 px-5 h-10 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold tracking-widest uppercase hover:bg-red-500/20 hover:text-red-300 transition-all"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Cerrar Sesión</span>
-          </Link>
-        </div>
-      </motion.div>
 
       {/* Main Content - Launchpad */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-6 z-10 w-full max-w-7xl mx-auto -mt-10">
-
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-8 md:py-10 z-10 w-full max-w-7xl mx-auto">
         {/* Hero heading */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-16 relative"
+          className="text-center mb-8 relative"
         >
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-amber-500/20 blur-[100px] rounded-full pointer-events-none" />
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-widest uppercase relative z-10">
-            Bienvenido a{' '}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline text-white mb-4 tracking-widest uppercase relative z-10 leading-normal">
+            Bienvenido a <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">
               ClientePortal
             </span>
           </h1>
-          <p className="text-white/40 font-light text-sm tracking-wide max-w-xl mx-auto relative z-10">
+          <p className="text-white/40 font-light text-sm sm:text-base md:text-xl tracking-wide max-w-2xl mx-auto relative z-10">
             Gestiona tus citas, revisa tu turno en tiempo real, explora la boutique y consulta tus recompensas.
           </p>
         </motion.div>
@@ -178,7 +147,7 @@ export default function ClientPortalPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 + i * 0.1 }}
-                  className={`relative h-full bg-[#0A0A0A] border border-white/5 rounded-[24px] p-8 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:bg-white/[0.02] ${c.border} cursor-pointer`}
+                  className={`relative h-full bg-[#0A0A0A] border border-white/5 rounded-[24px] p-6 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:bg-white/[0.02] ${c.border} cursor-pointer`}
                 >
                   {/* Hover Glow */}
                   <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -189,16 +158,16 @@ export default function ClientPortalPage() {
 
                   {/* Icon */}
                   <div
-                    className={`w-16 h-16 rounded-2xl bg-black border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 ${c.bg} transition-all duration-500 z-10 relative`}
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-[24px] bg-black border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 ${c.bg} transition-all duration-500 z-10 relative`}
                   >
-                    <mod.icon className={`w-7 h-7 text-white/50 group-hover:${c.icon.replace('text-', '')} transition-colors duration-500 ${c.icon} opacity-50 group-hover:opacity-100`} />
+                    <mod.icon className={`w-10 h-10 md:w-12 md:h-12 text-white/50 group-hover:${c.icon.replace('text-', '')} transition-colors duration-500 ${c.icon} opacity-50 group-hover:opacity-100`} />
                   </div>
 
                   {/* Text */}
-                  <h3 className="text-lg font-bold tracking-widest uppercase text-white mb-2 z-10 group-hover:text-amber-100 transition-colors">
+                  <h3 className="text-xl md:text-2xl font-extrabold tracking-widest uppercase text-white mb-3 z-10 group-hover:text-amber-100 transition-colors">
                     {mod.name}
                   </h3>
-                  <p className="text-xs font-light tracking-wide text-white/40 z-10 group-hover:text-white/60 transition-colors">
+                  <p className="text-sm md:text-base font-medium tracking-wider text-white/60 z-10 group-hover:text-white/90 transition-colors">
                     {mod.desc}
                   </p>
 
@@ -212,7 +181,7 @@ export default function ClientPortalPage() {
       </div>
 
       {/* Footer */}
-      <div className="pb-8 w-full text-center text-white/30 text-[10px] font-bold tracking-widest uppercase z-10 opacity-60">
+      <div className="py-4 w-full text-center text-white/30 text-[10px] font-bold tracking-widest uppercase z-10 opacity-60">
         © 2026 Barber Paradise • Portal Exclusivo para Clientes
       </div>
     </div>
@@ -293,49 +262,93 @@ function ClientPortalDetail({
       {/* User Banner */}
       <div className="relative border-b border-white/5 overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/[0.02] to-transparent -z-10 pointer-events-none" />
-        <div className="container mx-auto px-6 md:px-12 py-12 lg:py-20 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-            {/* Profile */}
-            <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left w-full lg:w-auto">
+        
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-amber-500/5 to-transparent pointer-events-none" />
+        <div className="absolute -top-20 -right-20 w-96 h-96 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+        <div className="container mx-auto px-6 md:px-12 py-12 lg:py-16 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
+            
+            {/* Profile Info (Left) */}
+            <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
               <div className="relative group">
-                <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-2xl group-hover:bg-amber-500/30 transition-colors duration-700" />
-                <Avatar className="relative h-32 w-32 md:h-40 md:w-40 border border-amber-500/20 p-1 bg-[#0A0A0A] shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                <div className="absolute inset-0 bg-amber-500/30 rounded-full blur-2xl group-hover:bg-amber-500/50 transition-colors duration-700" />
+                <div className="absolute -inset-2 bg-gradient-to-br from-amber-500/20 to-transparent rounded-full animate-spin-slow opacity-50" style={{ animationDuration: '10s' }} />
+                <Avatar className="relative h-32 w-32 md:h-40 md:w-40 border-2 border-amber-500/40 p-1 bg-[#0A0A0A] shadow-[0_0_40px_rgba(245,158,11,0.15)] transition-transform duration-500 group-hover:scale-105">
                   <div className="w-full h-full rounded-full border border-white/10 overflow-hidden relative">
                     <AvatarImage src="https://picsum.photos/seed/user-profile/200/200" alt="John Doe" className="object-cover" />
                     <AvatarFallback className="bg-neutral-900 text-white font-bold text-4xl">JD</AvatarFallback>
                   </div>
                 </Avatar>
+                {/* Small level badge */}
+                <div className="absolute -bottom-2 md:-bottom-4 left-1/2 -translate-x-1/2 bg-[#0A0A0A] border border-amber-500/50 px-4 py-1 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)] z-20">
+                  <span className="text-amber-500 font-bold text-xs tracking-widest">LVL 12</span>
+                </div>
               </div>
-              <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/10 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+
+              <div className="space-y-4 mt-4 md:mt-0">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/10 rounded-full shadow-[0_0_15px_rgba(245,158,11,0.05)] backdrop-blur-sm">
                   <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.8)]" />
                   <span className="text-amber-500 font-medium tracking-[0.2em] uppercase text-[10px]">Miembro Black Tier</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-widest">JOHN DOE</h1>
-                <p className="text-slate-400 font-light tracking-wide flex flex-wrap items-center justify-center md:justify-start gap-3">
-                  <span>john.d@example.com</span>
-                  <span className="w-1 h-1 bg-white/20 rounded-full hidden sm:block" />
-                  <span className="text-amber-500/70">Cliente VIP desde Oct 2023</span>
-                </p>
+                <div>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-widest uppercase drop-shadow-md">
+                    JOHN DOE
+                  </h1>
+                  <p className="text-slate-400 font-light tracking-wide flex flex-wrap items-center justify-center md:justify-start gap-3 mt-2">
+                    <span>john.d@example.com</span>
+                    <span className="w-1 h-1 bg-white/20 rounded-full hidden sm:block" />
+                    <span className="text-amber-500/70">Cliente VIP desde 2023</span>
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="flex flex-col sm:flex-row items-center gap-8 w-full lg:w-auto lg:border-l border-white/5 pt-8 lg:pt-0 lg:pl-12">
-              <div className="flex gap-8 text-center sm:text-left bg-white/[0.02] p-6 rounded-3xl border border-white/5">
-                <div className="space-y-1">
-                  <p className="text-slate-400 text-[10px] tracking-[0.2em] uppercase">Puntos Totales</p>
-                  <p className="text-3xl font-bold text-white tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">12,450</p>
-                </div>
-                <div className="w-px h-12 bg-white/10 hidden sm:block my-auto" />
-                <div className="space-y-1">
-                  <p className="text-slate-400 text-[10px] tracking-[0.2em] uppercase">Visitas</p>
-                  <p className="text-3xl font-bold text-white tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]">14</p>
+            {/* Showcase & Stats (Right) */}
+            <div className="flex flex-col sm:flex-row items-center gap-8 w-full lg:w-auto">
+              
+              {/* Badges Showcase (Game Profile Style) */}
+              <div className="flex flex-col items-center sm:items-start space-y-3 p-6 bg-white/[0.02] border border-white/5 rounded-3xl backdrop-blur-sm w-full sm:w-auto relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none group-hover:bg-amber-500/10 transition-colors" />
+                <span className="text-[10px] tracking-[0.2em] uppercase text-slate-400 font-bold">Vitrina de Logros</span>
+                <div className="flex gap-3">
+                  {/* Badge 1 */}
+                  <div className="group/badge relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer">
+                    <div className="absolute inset-0 bg-amber-500/20 rounded-xl rotate-45 group-hover/badge:rotate-90 transition-transform duration-500 border border-amber-500/30" />
+                    <Star className="w-5 h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
+                  </div>
+                  {/* Badge 2 */}
+                  <div className="group/badge relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer">
+                    <div className="absolute inset-0 bg-amber-500/20 rounded-xl rotate-45 group-hover/badge:rotate-90 transition-transform duration-500 border border-amber-500/30" />
+                    <Scissors className="w-5 h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
+                  </div>
+                  {/* Badge 3 */}
+                  <div className="group/badge relative w-12 h-12 md:w-14 md:h-14 flex items-center justify-center cursor-pointer">
+                    <div className="absolute inset-0 bg-amber-500/20 rounded-xl rotate-45 group-hover/badge:rotate-90 transition-transform duration-500 border border-amber-500/30" />
+                    <Award className="w-5 h-5 md:w-6 md:h-6 text-amber-400 drop-shadow-[0_0_8px_rgba(245,158,11,0.6)] relative z-10 group-hover/badge:scale-110 transition-transform" />
+                  </div>
                 </div>
               </div>
-              <PremiumButton variant="outline" size="sm" className="w-full sm:w-auto px-8 rounded-full border-white/10 hover:border-amber-500/50 hover:bg-amber-500/5 text-sm tracking-widest h-12">
-                Editar Perfil
-              </PremiumButton>
+
+              {/* Stats & Actions */}
+              <div className="flex flex-col gap-4 w-full sm:w-auto">
+                <div className="flex gap-6 text-center sm:text-left bg-[#0A0A0A] p-5 rounded-3xl border border-white/5 shadow-inner">
+                  <div className="space-y-1">
+                    <p className="text-slate-500 text-[9px] tracking-[0.2em] uppercase font-bold">Pts Totales</p>
+                    <p className="text-2xl font-black text-white tracking-widest">12<span className="text-amber-500">K</span></p>
+                  </div>
+                  <div className="w-px h-10 bg-white/10 hidden sm:block my-auto" />
+                  <div className="space-y-1">
+                    <p className="text-slate-500 text-[9px] tracking-[0.2em] uppercase font-bold">Visitas</p>
+                    <p className="text-2xl font-black text-white tracking-widest">14</p>
+                  </div>
+                </div>
+                <PremiumButton variant="outline" size="sm" className="w-full px-6 rounded-2xl border-white/10 hover:border-amber-500/50 hover:bg-amber-500/5 text-xs tracking-widest h-10 font-bold uppercase">
+                  Editar Perfil
+                </PremiumButton>
+              </div>
+
             </div>
           </div>
         </div>
@@ -351,8 +364,8 @@ function ClientPortalDetail({
                   <CalendarDays className="w-7 h-7 sm:w-8 sm:h-8 text-amber-400" />
                 </div>
                 <div className="relative z-10 text-center space-y-1 sm:space-y-2">
-                  <h3 className="text-sm sm:text-lg font-bold text-white tracking-widest uppercase transition-colors">Citas</h3>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-light tracking-wide uppercase">Tus reservas</p>
+                  <h3 className="text-base sm:text-lg font-extrabold text-white tracking-widest uppercase transition-colors">Citas</h3>
+                  <p className="text-xs sm:text-sm text-slate-300 font-medium tracking-wider uppercase">Tus reservas</p>
                 </div>
               </TabsTrigger>
 
@@ -361,8 +374,8 @@ function ClientPortalDetail({
                   <Clock className="w-7 h-7 sm:w-8 sm:h-8 text-blue-400" />
                 </div>
                 <div className="relative z-10 text-center space-y-1 sm:space-y-2">
-                  <h3 className="text-sm sm:text-lg font-bold text-white tracking-widest uppercase transition-colors">Espera</h3>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-light tracking-wide uppercase">Turno Actual</p>
+                  <h3 className="text-base sm:text-lg font-extrabold text-white tracking-widest uppercase transition-colors">Espera</h3>
+                  <p className="text-xs sm:text-sm text-slate-300 font-medium tracking-wider uppercase">Turno Actual</p>
                 </div>
               </TabsTrigger>
 
@@ -371,8 +384,8 @@ function ClientPortalDetail({
                   <ShoppingBag className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-400" />
                 </div>
                 <div className="relative z-10 text-center space-y-1 sm:space-y-2">
-                  <h3 className="text-sm sm:text-lg font-bold text-white tracking-widest uppercase transition-colors">Compras</h3>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-light tracking-wide uppercase">Boutique</p>
+                  <h3 className="text-base sm:text-lg font-extrabold text-white tracking-widest uppercase transition-colors">Compras</h3>
+                  <p className="text-xs sm:text-sm text-slate-300 font-medium tracking-wider uppercase">Boutique</p>
                 </div>
               </TabsTrigger>
 
@@ -381,8 +394,8 @@ function ClientPortalDetail({
                   <Star className="w-7 h-7 sm:w-8 sm:h-8 text-amber-400" />
                 </div>
                 <div className="relative z-10 text-center space-y-1 sm:space-y-2">
-                  <h3 className="text-sm sm:text-lg font-bold text-white tracking-widest uppercase transition-colors">Puntos</h3>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-light tracking-wide uppercase">Recompensas</p>
+                  <h3 className="text-base sm:text-lg font-extrabold text-white tracking-widest uppercase transition-colors">Puntos</h3>
+                  <p className="text-xs sm:text-sm text-slate-300 font-medium tracking-wider uppercase">Recompensas</p>
                 </div>
               </TabsTrigger>
 
@@ -391,8 +404,8 @@ function ClientPortalDetail({
                   <Award className="w-7 h-7 sm:w-8 sm:h-8 text-purple-400" />
                 </div>
                 <div className="relative z-10 text-center space-y-1 sm:space-y-2">
-                  <h3 className="text-sm sm:text-lg font-bold text-white tracking-widest uppercase transition-colors">Logros</h3>
-                  <p className="text-[10px] sm:text-xs text-slate-400 font-light tracking-wide uppercase">Insignias</p>
+                  <h3 className="text-base sm:text-lg font-extrabold text-white tracking-widest uppercase transition-colors">Logros</h3>
+                  <p className="text-xs sm:text-sm text-slate-300 font-medium tracking-wider uppercase">Insignias</p>
                 </div>
               </TabsTrigger>
             </TabsList>

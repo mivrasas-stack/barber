@@ -117,7 +117,7 @@ export default function Pricing() {
 
         {/* Billing Toggle */}
         <div className="flex justify-center mb-16">
-          <div className="bg-foreground/5 border border-border rounded-full p-1.5 flex items-center gap-1">
+          <div className="bg-muted border border-border rounded-full p-1.5 flex items-center gap-1">
             <button 
               onClick={() => setBillingCycle("mensual")}
               className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${billingCycle === "mensual" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
@@ -128,13 +128,13 @@ export default function Pricing() {
               onClick={() => setBillingCycle("semestral")}
               className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${billingCycle === "semestral" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
             >
-              Semestral <span className="hidden sm:inline-block ml-1 text-[10px] bg-background/20 px-2 py-0.5 rounded-full">-10%</span>
+              Semestral <span className="hidden sm:inline-block ml-1 text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full">-10%</span>
             </button>
             <button 
               onClick={() => setBillingCycle("anual")}
               className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${billingCycle === "anual" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
             >
-              Anual <span className="hidden sm:inline-block ml-1 text-[10px] bg-background/20 px-2 py-0.5 rounded-full text-foreground">-16%</span>
+              Anual <span className="hidden sm:inline-block ml-1 text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full">-16%</span>
             </button>
           </div>
         </div>
@@ -148,7 +148,7 @@ export default function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              className={`relative rounded-3xl p-8 flex flex-col ${plan.highlight ? 'bg-gradient-to-b from-primary/10 to-foreground/5 border-primary border-2 shadow-[0_0_30px_rgba(200,155,60,0.15)] transform lg:-translate-y-4' : 'bg-foreground/[0.02] border border-border hover:border-foreground/20'}`}
+              className={`relative rounded-3xl p-8 flex flex-col ${plan.highlight ? 'bg-gradient-to-b from-primary/15 to-primary/5 border-primary border-2 shadow-[0_0_30px_rgba(200,155,60,0.2)] transform lg:-translate-y-4' : 'bg-card border border-border hover:border-foreground/20 shadow-sm'}`}
             >
               {plan.badge && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-primary-foreground text-xs font-bold tracking-widest uppercase rounded-full">
@@ -213,7 +213,7 @@ export default function Pricing() {
               </thead>
               <tbody className="divide-y divide-border">
                 {compareFeatures.map((row, i) => (
-                  <tr key={i} className="hover:bg-foreground/[0.02] transition-colors">
+                  <tr key={i} className="hover:bg-muted/50 transition-colors">
                     <td className="py-5 px-4 text-sm text-foreground/80 font-light">{row.name}</td>
                     {row.plans.map((val, idx) => (
                       <td key={idx} className="py-5 px-4 text-center">

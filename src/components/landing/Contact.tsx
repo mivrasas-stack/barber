@@ -9,7 +9,7 @@ export default function Contact() {
     <section className="relative py-32 lg:py-48 bg-background overflow-hidden flex items-center justify-center min-h-[80vh]">
       {/* Cinematic Lighting Effect */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full max-h-[400px] bg-primary/20 blur-[120px] rounded-full pointer-events-none mix-blend-screen" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full max-h-[400px] bg-primary/15 blur-[120px] rounded-full pointer-events-none" />
       </div>
 
       <div className="container relative z-10 mx-auto px-6 md:px-12 text-center">

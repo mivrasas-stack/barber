@@ -26,7 +26,7 @@ export default function Portfolio() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: (index % 3) * 0.1, duration: 0.8 }}
-              className="relative group overflow-hidden break-inside-avoid bg-foreground/5"
+              className="relative group overflow-hidden break-inside-avoid bg-muted"
             >
               <Image
                 src={item.imageUrl}

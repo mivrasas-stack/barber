@@ -126,8 +126,8 @@ export default function BarberLayout({
                 
                 <div className="flex items-center gap-4">
                     <Link href="/" className="flex items-center gap-2 group">
-                        <Scissors className="h-4 w-4 text-primary group-hover:rotate-180 transition-transform duration-700" />
-                        <span className="text-sm font-bold tracking-widest text-white font-headline uppercase leading-none hidden sm:block">BarberParadise</span>
+                        <img src="/logo.png" alt="MIVRA BARBER Logo" className="h-8 w-8 rounded-md object-cover shadow-[0_0_10px_rgba(245,158,11,0.2)]" />
+                        <span className="text-sm font-bold tracking-widest text-white font-headline uppercase leading-none hidden sm:block">MivraBarber</span>
                     </Link>
                 </div>
             </header>
