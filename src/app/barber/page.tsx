@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { CalendarDays, Users, DollarSign, UserCircle, LogOut, Moon, Scissors, Activity, ChevronDown, Info } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { CalendarDays, Users, DollarSign, UserCircle, LogOut, Moon, Scissors, Activity } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function BarberDashboard() {
   const [shopName, setShopName] = useState("The Royal Barber"); 
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   
   const modules = [
     { 
@@ -97,8 +96,6 @@ export default function BarberDashboard() {
         {/* Modules Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full items-start content-start py-2">
           {modules.map((mod, i) => {
-            const isExpanded = expandedIndex === i;
-            
             return (
               <motion.div
                 key={mod.name}
@@ -125,37 +122,6 @@ export default function BarberDashboard() {
                     {mod.desc}
                   </p>
                 </Link>
-
-                {/* Dropdown Toggle Button */}
-                <div className="px-5 pb-5 relative z-10 flex flex-col items-center">
-                  <button 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setExpandedIndex(isExpanded ? null : i);
-                    }}
-                    className="flex items-center gap-2 text-xs font-headline tracking-widest uppercase text-amber-500/70 hover:text-amber-400 py-2 px-4 rounded-full bg-amber-500/5 hover:bg-amber-500/10 transition-all border border-amber-500/10 hover:border-amber-500/30"
-                  >
-                    <Info className="w-3 h-3" />
-                    <span>{isExpanded ? 'Ocultar' : 'Más Info'}</span>
-                    <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                        animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden w-full"
-                      >
-                        <div className="p-4 bg-black/40 rounded-xl border border-white/5 text-sm font-light text-white/60 text-center leading-relaxed backdrop-blur-sm shadow-inner">
-                          {mod.details}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
 
                 {/* Bottom Highlight Line */}
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent group-hover:w-1/2 transition-all duration-500" />

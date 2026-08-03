@@ -6,7 +6,7 @@ import { useState } from "react"
 import type { Appointment } from "@/lib/types"
 import { BookAppointmentForm } from "./BookAppointmentForm"
 import { PremiumButton } from "@/components/ui/premium-button"
-import { Calendar, Clock, User, ArrowRight } from "lucide-react"
+import { Calendar, Clock, User, ArrowRight, MapPin } from "lucide-react"
 
 export function UserAppointments() {
   const [appointments, setAppointments] = useState<Appointment[]>(
@@ -99,6 +99,10 @@ export function UserAppointments() {
                     <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
                         <User className="w-4 h-4 text-primary" />
                         <span>{getBarberById(upcomingAppointment.barberId)?.name || 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+                        <MapPin className="w-4 h-4 text-primary" />
+                        <span>Cra 15 # 85-20, Zona T</span>
                     </div>
                 </div>
               </div>

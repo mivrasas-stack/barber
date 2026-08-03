@@ -84,16 +84,16 @@ export default function PaymentsPage() {
                     <SelectValue placeholder="Seleccionar servicio..." />
                   </SelectTrigger>
                   <SelectContent className="bg-background border-white/10 text-white">
-                    <SelectItem value="corte">Corte Clásico ($150)</SelectItem>
-                    <SelectItem value="corte_barba">Corte y Barba ($250)</SelectItem>
-                    <SelectItem value="tinte">Tinte ($400)</SelectItem>
+                    <SelectItem value="corte">Corte Clásico ($ 150.000 COP)</SelectItem>
+                    <SelectItem value="corte_barba">Corte y Barba ($ 250.000 COP)</SelectItem>
+                    <SelectItem value="tinte">Tinte ($ 400.000 COP)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="pt-6 border-t border-white/10 mt-6 flex justify-between items-center">
                 <span className="text-white/60 text-sm uppercase tracking-widest">Total a Pagar</span>
-                <span className="text-3xl font-headline text-white">$250.00</span>
+                <span className="text-3xl font-headline text-white">$ 250.000 COP</span>
               </div>
             </div>
           </div>

@@ -6,15 +6,15 @@ import { motion } from 'framer-motion';
 
 export default function EarningsPage() {
   const stats = [
-    { label: "Ganancias de Hoy", value: "$1,250", icon: DollarSign, trend: "+15%", positive: true },
+    { label: "Ganancias de Hoy", value: "$ 1.250.000 COP", icon: DollarSign, trend: "+15%", positive: true },
     { label: "Cortes Realizados", value: "8", icon: Scissors, trend: "+2", positive: true },
-    { label: "Propinas", value: "$200", icon: Wallet, trend: "-5%", positive: false },
+    { label: "Propinas", value: "$ 200.000 COP", icon: Wallet, trend: "-5%", positive: false },
   ];
 
   const recentTransactions = [
-    { id: 1, type: "Corte Clásico", amount: "$150", tip: "$20", time: "11:30 AM", client: "David Torres" },
-    { id: 2, type: "Corte y Barba", amount: "$250", tip: "$50", time: "10:00 AM", client: "Carlos Mendoza" },
-    { id: 3, type: "Fade + Cejas", amount: "$180", tip: "$30", time: "01:00 PM", client: "Miguel Ángel" },
+    { id: 1, type: "Corte Clásico", amount: "$ 150.000 COP", tip: "$ 20.000 COP", time: "11:30 AM", client: "David Torres" },
+    { id: 2, type: "Corte y Barba", amount: "$ 250.000 COP", tip: "$ 50.000 COP", time: "10:00 AM", client: "Carlos Mendoza" },
+    { id: 3, type: "Fade + Cejas", amount: "$ 180.000 COP", tip: "$ 30.000 COP", time: "01:00 PM", client: "Miguel Ángel" },
   ];
 
   return (
@@ -34,10 +34,6 @@ export default function EarningsPage() {
           </div>
         </div>
         
-        <PremiumButton variant="outline" className="relative z-10 w-full sm:w-auto flex items-center justify-center gap-2">
-          <ArrowUpRight className="w-4 h-4" />
-          <span>Retirar Fondos</span>
-        </PremiumButton>
       </div>
 
       {/* Stats Grid */}

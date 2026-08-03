@@ -105,3 +105,71 @@ export function UserReviewForm() {
     </div>
   )
 }
+
+export function UserReviewInlineForm() {
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [review, setReview] = useState("");
+  const { toast } = useToast();
+
+  const handleSubmit = () => {
+    if (rating === 0) {
+        toast({
+            title: "Requerido",
+            description: "Por favor, selecciona una calificación de estrellas.",
+            variant: "destructive",
+        });
+        return;
+    }
+    toast({
+        title: "Testimonio Recibido",
+        description: "Agradecemos tu tiempo y confianza en BarberParadise.",
+    });
+    setRating(0);
+    setReview("");
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto rounded-[24px] bg-black/40 backdrop-blur-xl border border-white/5 p-8 shadow-[0_0_40px_rgba(0,0,0,0.2)]">
+      <div className="text-center mb-8">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/5 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
+          <MessageSquarePlus className="w-8 h-8 text-amber-500" />
+        </div>
+        <h3 className="text-2xl font-headline text-white tracking-widest uppercase mb-2">Evalúa tu Experiencia</h3>
+        <p className="text-white/50 font-light text-sm tracking-wide">Ayúdanos a alcanzar la perfección.</p>
+      </div>
+
+      <div className="space-y-8">
+        <div className="flex justify-center space-x-4">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star
+              key={star}
+              className={cn(
+                "h-10 w-10 sm:h-12 sm:w-12 cursor-pointer transition-all duration-300 hover:scale-110",
+                (hoverRating >= star || rating >= star)
+                  ? "text-primary fill-primary drop-shadow-[0_0_15px_rgba(200,155,60,0.5)]"
+                  : "text-white/10 hover:text-white/30"
+              )}
+              onClick={() => setRating(star)}
+              onMouseEnter={() => setHoverRating(star)}
+              onMouseLeave={() => setHoverRating(0)}
+            />
+          ))}
+        </div>
+        
+        <Textarea
+          placeholder="Comparte los detalles de tu experiencia..."
+          value={review}
+          onChange={(e) => setReview(e.target.value)}
+          className="min-h-[150px] bg-white/5 border-white/10 rounded-xl focus-visible:ring-1 focus-visible:ring-primary text-white resize-none font-light placeholder:text-white/30 text-base p-4"
+        />
+        
+        <div className="pt-2 flex justify-center">
+            <PremiumButton onClick={handleSubmit} className="px-10 py-3 text-sm">
+                Enviar Testimonio
+            </PremiumButton>
+        </div>
+      </div>
+    </div>
+  )
+}

@@ -5,10 +5,10 @@ import { CreditCard, DollarSign, DownloadCloud, ArrowUpRight, CheckCircle2 } fro
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const billingHistory = [
-  { id: 'INV-2026-081', tenant: 'The Royal Barber', plan: 'Black Label', amount: '$150.00', date: '14/07/2026', status: 'Paid' },
-  { id: 'INV-2026-080', tenant: 'Urban Style Barbería', plan: 'Black Label', amount: '$150.00', date: '12/07/2026', status: 'Paid' },
-  { id: 'INV-2026-079', tenant: 'Gentleman\'s Lounge', plan: 'Barber Club', amount: '$80.00', date: '05/07/2026', status: 'Paid' },
-  { id: 'INV-2026-078', tenant: 'Classic Cuts Club', plan: 'Corte Clásico', amount: '$40.00', date: '28/06/2026', status: 'Pending' },
+  { id: 'INV-2026-081', tenant: 'The Royal Barber', plan: 'Black Label', amount: '$150.000 COP', date: '14/07/2026', status: 'Paid' },
+  { id: 'INV-2026-080', tenant: 'Urban Style Barbería', plan: 'Black Label', amount: '$150.000 COP', date: '12/07/2026', status: 'Paid' },
+  { id: 'INV-2026-079', tenant: 'Gentleman\'s Lounge', plan: 'Barber Club', amount: '$80.000 COP', date: '05/07/2026', status: 'Paid' },
+  { id: 'INV-2026-078', tenant: 'Classic Cuts Club', plan: 'Corte Clásico', amount: '$40.000 COP', date: '28/06/2026', status: 'Pending' },
 ];
 
 export default function SubscriptionsPage() {
@@ -38,9 +38,9 @@ export default function SubscriptionsPage() {
       {/* Plans Distribution */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-              { name: 'Corte Clásico', price: '$40/mo', users: 45, color: 'from-white/10 to-transparent', border: 'border-white/10' },
-              { name: 'Barber Club', price: '$80/mo', users: 62, color: 'from-amber-500/10 to-transparent', border: 'border-amber-500/20' },
-              { name: 'Black Label', price: '$150/mo', users: 17, color: 'from-amber-900/40 to-transparent', border: 'border-amber-500/50' }
+              { name: 'Corte Clásico', price: '$40.000/mes', users: 45, color: 'from-white/10 to-transparent', border: 'border-white/10' },
+              { name: 'Barber Club', price: '$80.000/mes', users: 62, color: 'from-amber-500/10 to-transparent', border: 'border-amber-500/20' },
+              { name: 'Black Label', price: '$150.000/mes', users: 17, color: 'from-amber-900/40 to-transparent', border: 'border-amber-500/50' }
           ].map((plan, i) => (
               <motion.div
                   key={i}

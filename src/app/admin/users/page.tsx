@@ -1,9 +1,18 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Search, Filter, MoreHorizontal, UserPlus, ShieldAlert, CheckCircle2, Clock, Copy } from 'lucide-react';
+import { Users, Search, Filter, MoreHorizontal, UserPlus, ShieldAlert, CheckCircle2, Clock, Copy, Edit, Trash2, Key, ShieldCheck } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -13,8 +22,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
 
-const usersData = [
+const initialUsersData = [
   { id: 1, name: 'Administrador Principal', email: 'admin@mivra.com', role: 'SuperAdmin', status: 'Active', lastLogin: 'Hace 2 horas' },
   { id: 2, name: 'Soporte Técnico', email: 'support@mivra.com', role: 'Support', status: 'Active', lastLogin: 'Hace 5 horas' },
   { id: 3, name: 'Auditor Financiero', email: 'audit@mivra.com', role: 'Admin', status: 'Inactive', lastLogin: 'Hace 3 días' },
@@ -206,6 +216,57 @@ function InviteUserModal() {
 }
 
 export default function UsersPage() {
+  const [usersData, setUsersData] = useState(initialUsersData);
+  const [editingUser, setEditingUser] = useState<typeof initialUsersData[0] | null>(null);
+  const { toast } = useToast();
+
+  const handleStatusToggle = (userId: number) => {
+    const user = usersData.find(u => u.id === userId);
+    if (!user) return;
+    const newStatus = user.status === 'Active' ? 'Inactive' : 'Active';
+    
+    setUsersData(prev => prev.map(u => 
+      u.id === userId ? { ...u, status: newStatus } : u
+    ));
+    
+    toast({
+      title: newStatus === 'Active' ? 'Usuario Activado' : 'Usuario Desactivado',
+      description: `El estado de ${user.name} ha cambiado.`,
+    });
+  };
+
+  const handleDelete = (userId: number) => {
+    const user = usersData.find(u => u.id === userId);
+    if (user) {
+      setUsersData(prev => prev.filter(u => u.id !== userId));
+      toast({
+        title: 'Usuario Eliminado',
+        description: `${user.name} ha sido eliminado.`,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleResetLink = (userName: string) => {
+    toast({
+      title: 'Enlace Enviado',
+      description: `Se ha enviado un enlace de recuperación a ${userName}.`,
+    });
+  };
+
+  const handleRoleChange = (newRole: string) => {
+    if (editingUser) {
+      setUsersData(prev => prev.map(u => 
+        u.id === editingUser.id ? { ...u, role: newRole } : u
+      ));
+      toast({
+        title: 'Rol Actualizado',
+        description: `El rol de ${editingUser.name} ahora es ${newRole}.`,
+      });
+      setEditingUser(null);
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto space-y-12 px-4 sm:px-6 lg:px-8 py-8 pb-20">
       
@@ -308,9 +369,61 @@ export default function UsersPage() {
                                   </div>
                               </td>
                               <td className="px-8 py-6 text-right">
-                                  <button className="text-white/40 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5">
-                                      <MoreHorizontal className="w-5 h-5" />
-                                  </button>
+                                  <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                          <button className="text-white/40 hover:text-white transition-colors p-2 rounded-full hover:bg-white/5">
+                                              <MoreHorizontal className="w-5 h-5" />
+                                          </button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end" className="w-48 bg-[#0a0a0a] border-white/10 text-white shadow-xl shadow-black/50 rounded-xl p-1">
+                                          <DropdownMenuLabel className="text-xs uppercase tracking-widest text-white/40 font-headline">Acciones</DropdownMenuLabel>
+                                          <DropdownMenuSeparator className="bg-white/10" />
+                                          
+                                          <DropdownMenuItem 
+                                            onClick={() => setEditingUser(user)}
+                                            className="flex items-center gap-2 cursor-pointer hover:bg-white/5 focus:bg-white/5 text-sm py-2 rounded-lg transition-colors"
+                                          >
+                                              <Edit className="w-4 h-4 text-blue-500" />
+                                              <span>Editar Rol</span>
+                                          </DropdownMenuItem>
+                                          
+                                          <DropdownMenuItem 
+                                            onClick={() => handleResetLink(user.name)}
+                                            className="flex items-center gap-2 cursor-pointer hover:bg-white/5 focus:bg-white/5 text-sm py-2 rounded-lg transition-colors"
+                                          >
+                                              <Key className="w-4 h-4 text-purple-500" />
+                                              <span>Reseteo de Clave</span>
+                                          </DropdownMenuItem>
+                                          
+                                          <DropdownMenuSeparator className="bg-white/10" />
+                                          
+                                          {user.status === 'Active' ? (
+                                            <DropdownMenuItem 
+                                              onClick={() => handleStatusToggle(user.id)}
+                                              className="flex items-center gap-2 cursor-pointer hover:bg-amber-500/10 focus:bg-amber-500/10 text-amber-500 text-sm py-2 rounded-lg transition-colors"
+                                            >
+                                                <ShieldAlert className="w-4 h-4" />
+                                                <span>Desactivar Acceso</span>
+                                            </DropdownMenuItem>
+                                          ) : (
+                                            <DropdownMenuItem 
+                                              onClick={() => handleStatusToggle(user.id)}
+                                              className="flex items-center gap-2 cursor-pointer hover:bg-green-500/10 focus:bg-green-500/10 text-green-500 text-sm py-2 rounded-lg transition-colors"
+                                            >
+                                                <ShieldCheck className="w-4 h-4" />
+                                                <span>Activar Acceso</span>
+                                            </DropdownMenuItem>
+                                          )}
+                                          
+                                          <DropdownMenuItem 
+                                            onClick={() => handleDelete(user.id)}
+                                            className="flex items-center gap-2 cursor-pointer hover:bg-red-500/10 focus:bg-red-500/10 text-red-500 text-sm py-2 rounded-lg transition-colors"
+                                          >
+                                              <Trash2 className="w-4 h-4" />
+                                              <span>Eliminar Usuario</span>
+                                          </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                  </DropdownMenu>
                               </td>
                           </tr>
                       ))}
@@ -319,6 +432,28 @@ export default function UsersPage() {
           </div>
       </motion.div>
 
+      <Dialog open={!!editingUser} onOpenChange={(open) => !open && setEditingUser(null)}>
+        <DialogContent className="sm:max-w-md bg-[#0a0a0a] border border-white/10 text-white shadow-2xl shadow-amber-500/10 rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-headline tracking-widest uppercase text-white">Editar Rol de Usuario</DialogTitle>
+            <DialogDescription className="text-white/40 font-light text-sm">
+              Selecciona el nuevo rol para {editingUser?.name}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 gap-3 py-4">
+            {['SuperAdmin', 'Admin', 'Support'].map(role => (
+              <button 
+                key={role}
+                onClick={() => handleRoleChange(role)}
+                className={`p-4 rounded-xl border text-left flex items-center justify-between transition-colors ${editingUser?.role === role ? 'border-amber-500 bg-amber-500/10' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}
+              >
+                <span className="font-headline tracking-widest uppercase text-sm">{role}</span>
+                {editingUser?.role === role && <CheckCircle2 className="w-4 h-4 text-amber-500" />}
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

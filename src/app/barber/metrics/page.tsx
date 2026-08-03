@@ -1,8 +1,9 @@
 "use client";
 import React from 'react';
-import { Activity, TrendingUp, Users, Scissors, Star, Calendar } from 'lucide-react';
+import { Activity, TrendingUp, Users, Scissors, Star, Calendar, CalendarDays } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { PremiumButton } from '@/components/ui/premium-button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export default function MetricsPage() {
   const metrics = [
@@ -30,12 +31,20 @@ export default function MetricsPage() {
         </div>
 
         <div className="relative z-10 flex gap-2 w-full md:w-auto">
-            <select className="bg-black/40 border border-white/10 text-white rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-amber-500/50 backdrop-blur-md w-full md:w-auto">
-                <option>Este mes</option>
-                <option>Mes pasado</option>
-                <option>Últimos 3 meses</option>
-                <option>Este año</option>
-            </select>
+            <Select defaultValue="este_año">
+                <SelectTrigger className="bg-black/40 border-amber-500/20 text-white rounded-lg px-4 h-11 text-sm focus:ring-0 focus:outline-none focus:border-amber-500/50 backdrop-blur-md w-[160px] md:w-[180px] hover:bg-white/[0.02] transition-colors">
+                    <div className="flex items-center gap-2">
+                        <CalendarDays className="w-4 h-4 text-amber-500" />
+                        <SelectValue placeholder="Periodo" />
+                    </div>
+                </SelectTrigger>
+                <SelectContent className="bg-[#0A0A0A] border-amber-500/20 text-white">
+                    <SelectItem value="este_mes" className="focus:bg-amber-500/10 focus:text-amber-500 cursor-pointer">Este mes</SelectItem>
+                    <SelectItem value="mes_pasado" className="focus:bg-amber-500/10 focus:text-amber-500 cursor-pointer">Mes pasado</SelectItem>
+                    <SelectItem value="ultimos_3_meses" className="focus:bg-amber-500/10 focus:text-amber-500 cursor-pointer">Últimos 3 meses</SelectItem>
+                    <SelectItem value="este_año" className="focus:bg-amber-500/10 focus:text-amber-500 cursor-pointer">Este año</SelectItem>
+                </SelectContent>
+            </Select>
             <PremiumButton variant="outline" className="hidden md:flex whitespace-nowrap">
                 Descargar Reporte
             </PremiumButton>

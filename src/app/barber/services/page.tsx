@@ -1,17 +1,29 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { Scissors, Clock, DollarSign, Plus } from 'lucide-react';
 import { PremiumButton } from '@/components/ui/premium-button';
 import { motion } from 'framer-motion';
+import { AddServiceForm } from '@/components/dashboard/AddServiceForm';
+import type { Service } from '@/lib/types';
 
 export default function ServicesPage() {
-  const services = [
-    { id: 1, name: "Corte Clásico", duration: "45 min", price: "$150", category: "Cortes" },
-    { id: 2, name: "Corte y Barba", duration: "60 min", price: "$250", category: "Paquetes" },
-    { id: 3, name: "Fade / Degradado", duration: "45 min", price: "$180", category: "Cortes" },
-    { id: 4, name: "Alineación de Barba", duration: "20 min", price: "$100", category: "Barba" },
-    { id: 5, name: "Tinte y Corte", duration: "90 min", price: "$400", category: "Color" },
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [services, setServices] = useState<Service[]>([
+    { id: '1', name: "Corte Clásico", description: "Corte tradicional de caballero", duration: 45, price: 20000, imageUrl: "" },
+    { id: '2', name: "Corte y Barba", description: "Corte y arreglo de barba completo", duration: 60, price: 35000, imageUrl: "" },
+    { id: '3', name: "Fade / Degradado", description: "Degradado moderno a los lados", duration: 45, price: 25000, imageUrl: "" },
+    { id: '4', name: "Alineación de Barba", description: "Perfilado y cuidado de barba", duration: 20, price: 15000, imageUrl: "" },
+    { id: '5', name: "Tinte y Corte", description: "Corte y aplicación de tinte", duration: 90, price: 60000, imageUrl: "" },
+  ]);
+
+  const handleSaveService = (service: Service | Omit<Service, 'id'>) => {
+    if ('id' in service && service.id) {
+      setServices(services.map(s => s.id === service.id ? service as Service : s));
+    } else {
+      setServices([...services, { ...service, id: Date.now().toString() }]);
+    }
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="flex flex-col w-full animate-in fade-in duration-700">
@@ -30,7 +42,11 @@ export default function ServicesPage() {
           </div>
         </div>
         
-        <PremiumButton variant="outline" className="relative z-10 w-full sm:w-auto flex items-center justify-center gap-2">
+        <PremiumButton 
+          variant="outline" 
+          className="relative z-10 w-full sm:w-auto flex items-center justify-center gap-2"
+          onClick={() => setIsModalOpen(true)}
+        >
           <Plus className="w-4 h-4" />
           <span>Nuevo Servicio</span>
         </PremiumButton>
@@ -50,7 +66,7 @@ export default function ServicesPage() {
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[10px] font-headline tracking-widest uppercase px-3 py-1 bg-white/5 border border-white/10 rounded-full text-white/60 group-hover:bg-amber-500/10 group-hover:border-amber-500/20 group-hover:text-amber-500 transition-colors">
-                  {service.category}
+                  Servicio
                 </span>
                 <button className="text-white/20 hover:text-white transition-colors">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
@@ -58,22 +74,32 @@ export default function ServicesPage() {
               </div>
               
               <h3 className="text-xl font-headline text-white tracking-widest group-hover:text-amber-100 transition-colors">{service.name}</h3>
+              {service.description && (
+                <p className="text-sm font-light text-white/40 mt-1 line-clamp-1">{service.description}</p>
+              )}
             </div>
             
             <div className="relative z-10 flex items-center justify-between mt-6 pt-4 border-t border-white/5 group-hover:border-white/10 transition-colors">
               <div className="flex items-center gap-2 text-white/40 group-hover:text-white/60">
                 <Clock className="w-4 h-4" />
-                <span className="text-sm font-light">{service.duration}</span>
+                <span className="text-sm font-light">{service.duration} min</span>
               </div>
               
               <div className="flex items-center gap-1 text-white font-headline tracking-wider text-lg">
                 <DollarSign className="w-4 h-4 text-amber-500" />
-                {service.price.replace('$', '')}
+                {service.price.toLocaleString()} COP
               </div>
             </div>
           </motion.div>
         ))}
       </div>
+
+      <AddServiceForm
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        onSaveService={handleSaveService}
+        existingService={null}
+      />
     </div>
   );
 }

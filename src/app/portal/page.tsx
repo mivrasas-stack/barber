@@ -187,7 +187,7 @@ import { UserPoints } from '@/components/profile/UserPoints';
 import { UserBadges } from '@/components/profile/UserBadges';
 import { ArrowLeft } from 'lucide-react';
 import { UserAppointments } from '@/components/profile/UserAppointments';
-import { UserReviewForm } from '@/components/profile/UserReviewForm';
+import { UserReviewForm, UserReviewInlineForm } from '@/components/profile/UserReviewForm';
 import { UserProducts } from '@/components/profile/UserProducts';
 import { PremiumButton } from '@/components/ui/premium-button';
 
@@ -379,7 +379,7 @@ function ClientPortalDetail({
             <TabsContent value="points" className="mt-0 outline-none"><UserPoints /></TabsContent>
             <TabsContent value="badges" className="mt-0 outline-none"><UserBadges /></TabsContent>
             <TabsContent value="review" className="mt-0 outline-none">
-              <div className="text-center py-20 text-white/40">Abre el formulario de reseña desde el botón flotante ↗</div>
+              <UserReviewInlineForm />
             </TabsContent>
           </div>
         </Tabs>
