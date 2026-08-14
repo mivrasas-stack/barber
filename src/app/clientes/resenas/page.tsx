@@ -16,11 +16,31 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
+const barberias = [
+  {
+    id: "barberia_1",
+    name: "The Gentleman's Lounge",
+    barbers: [
+      { id: "carlos", name: "Carlos (Maestro Barbero)", avatarUrl: "https://picsum.photos/seed/carlos/100/100" },
+      { id: "miguel", name: "Miguel (Especialista en Barbas)", avatarUrl: "https://picsum.photos/seed/miguel/100/100" }
+    ]
+  },
+  {
+    id: "barberia_2",
+    name: "Classic Cuts Barber",
+    barbers: [
+      { id: "andres", name: "Andrés (Cortes Clásicos)", avatarUrl: "https://picsum.photos/seed/andres/100/100" },
+      { id: "luis", name: "Luis (Fade y Diseños)", avatarUrl: "https://picsum.photos/seed/luis/100/100" }
+    ]
+  }
+];
+
 export default function ResenasPage() {
   const { toast } = useToast();
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
+  const [selectedBarberia, setSelectedBarberia] = useState("");
   const [selectedBarber, setSelectedBarber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -141,15 +161,38 @@ export default function ResenasPage() {
                     </div>
                   </div>
 
+                  {/* Barberia Selector */}
+                  <div className="space-y-3">
+                    <label className="text-xs uppercase tracking-widest text-white/60">¿En cuál sede te atendieron?</label>
+                    <Select 
+                      value={selectedBarberia} 
+                      onValueChange={(val) => {
+                        setSelectedBarberia(val);
+                        setSelectedBarber(""); // Reset barber when location changes
+                      }}
+                    >
+                      <SelectTrigger className="w-full h-14 bg-white/5 border-white/10 text-white rounded-xl focus:ring-pink-500/50">
+                        <SelectValue placeholder="Selecciona la barbería..." />
+                      </SelectTrigger>
+                      <SelectContent className="bg-zinc-900 border-zinc-800 text-white rounded-xl">
+                        {barberias.map(b => (
+                          <SelectItem key={b.id} value={b.id} className="focus:bg-zinc-800 rounded-lg cursor-pointer">
+                            {b.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   {/* Barber Selector */}
                   <div className="space-y-3">
                     <label className="text-xs uppercase tracking-widest text-white/60">¿Quién te atendió?</label>
-                    <Select value={selectedBarber} onValueChange={setSelectedBarber}>
-                      <SelectTrigger className="w-full h-14 bg-white/5 border-white/10 text-white rounded-xl focus:ring-pink-500/50">
+                    <Select value={selectedBarber} onValueChange={setSelectedBarber} disabled={!selectedBarberia}>
+                      <SelectTrigger className="w-full h-14 bg-white/5 border-white/10 text-white rounded-xl focus:ring-pink-500/50 disabled:opacity-50">
                         <SelectValue placeholder="Selecciona tu barbero..." />
                       </SelectTrigger>
                       <SelectContent className="bg-zinc-900 border-zinc-800 text-white rounded-xl">
-                        {dummyBarbers.map(b => (
+                        {barberias.find(b => b.id === selectedBarberia)?.barbers.map(b => (
                           <SelectItem key={b.id} value={b.id} className="focus:bg-zinc-800 rounded-lg cursor-pointer">
                             <div className="flex items-center gap-3">
                               <Avatar className="w-6 h-6 border border-white/10">
