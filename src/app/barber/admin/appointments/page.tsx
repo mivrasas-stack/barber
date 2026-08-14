@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { dummyAppointments } from "@/app/dashboard/data";
+import { dummyAppointments } from "@/app/clientes/data";
 import { Calendar, Search, Filter, Clock, MapPin, User, CheckCircle2, XCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PremiumButton } from "@/components/ui/premium-button";

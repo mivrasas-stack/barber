@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { dummyProducts } from "@/app/dashboard/data";
+import { dummyProducts } from "@/app/clientes/data";
 import { ShoppingBag, Search, Plus, AlertTriangle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PremiumButton } from "@/components/ui/premium-button";

@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { dummyTransactions, serviceTransactions, productTransactions, waitingRoomTransactions } from "@/app/dashboard/data";
+import { dummyTransactions, serviceTransactions, productTransactions, waitingRoomTransactions } from "@/app/clientes/data";
 import { CreditCard, TrendingUp, TrendingDown, Download, FileText, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 

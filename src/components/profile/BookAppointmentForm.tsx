@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input';
 import { PremiumButton } from '@/components/ui/premium-button';
 import { Button } from '@/components/ui/button';
 import type { Appointment } from '@/lib/types';
-import { dummyServices, dummyBarbers } from '@/app/dashboard/data';
+import { dummyServices, dummyBarbers } from '@/app/clientes/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';

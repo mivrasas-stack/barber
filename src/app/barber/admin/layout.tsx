@@ -40,7 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { dummyLocations } from '@/app/dashboard/data';
+import { dummyLocations } from '@/app/clientes/data';
 
 const navItems = [
   { href: '/barber/admin', icon: LayoutDashboard, label: 'Panel' },

@@ -38,13 +38,16 @@ export default function PortalLayout({
           <UserWaitRoomCart />
           <UserCart />
           <div className="w-px h-6 bg-white/10 hidden sm:block" />
-          <Link
-            href="/"
+          <button
+            onClick={() => {
+              document.cookie = 'barberia_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+              window.location.href = '/login';
+            }}
             className="flex items-center gap-2 px-5 h-10 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold tracking-widest uppercase hover:bg-red-500/20 hover:text-red-300 transition-all"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Cerrar Sesión</span>
-          </Link>
+          </button>
         </div>
       </motion.div>
 

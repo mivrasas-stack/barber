@@ -1,6 +1,6 @@
 "use client"
 import { Badge } from "@/components/ui/badge"
-import { dummyAppointments, dummyBarbers } from "@/app/dashboard/data"
+import { dummyAppointments, dummyBarbers } from "@/app/clientes/data"
 import { CancelAppointmentDialog } from "./CancelAppointmentDialog"
 import { useState } from "react"
 import type { Appointment } from "@/lib/types"

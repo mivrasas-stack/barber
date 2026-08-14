@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image"
-import { dummyProducts } from "@/app/dashboard/data"
+import { dummyProducts } from "@/app/clientes/data"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "@/hooks/use-cart"
 import type { Product } from "@/lib/types"

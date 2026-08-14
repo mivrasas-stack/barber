@@ -7,7 +7,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { PremiumButton } from '@/components/ui/premium-button';
-import { dummyBarbers } from '@/app/dashboard/data';
+import { dummyBarbers } from '@/app/clientes/data';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const MAX_PHOTOS = 10;
@@ -157,6 +157,7 @@ export default function ProfilePage() {
   const [photos, setPhotos] = useState<{ id: string; url: string; name: string }[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* Try to open file picker — if full, show upgrade modal */
@@ -206,6 +207,29 @@ export default function ProfilePage() {
     });
   };
 
+  const handleImageDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIdx(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleImageDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIdx === null || draggedIdx === index) return;
+    
+    setPhotos(prev => {
+      const newPhotos = [...prev];
+      const draggedItem = newPhotos[draggedIdx];
+      newPhotos.splice(draggedIdx, 1);
+      newPhotos.splice(index, 0, draggedItem);
+      return newPhotos;
+    });
+    setDraggedIdx(index);
+  };
+
+  const handleImageDragEnd = () => {
+    setDraggedIdx(null);
+  };
+
   const isFull = photos.length >= MAX_PHOTOS;
 
   return (
@@ -215,39 +239,40 @@ export default function ProfilePage() {
         {showUpgrade && <UpgradeModal onClose={() => setShowUpgrade(false)} />}
       </AnimatePresence>
 
-      <div className="flex flex-col w-full animate-in fade-in duration-700 gap-8">
+      <div className="flex flex-col w-full min-h-screen animate-in fade-in duration-700 gap-10 relative pb-20">
+        <div className="fixed top-0 right-1/4 w-[50vw] h-[50vw] bg-amber-500/5 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
+        
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 relative">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 blur-[70px] rounded-full pointer-events-none" />
-          <div className="relative z-10 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center hidden sm:flex">
-              <UserCircle className="w-6 h-6 text-amber-500" />
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
+          <div className="relative z-10 flex items-center gap-6">
+            <div className="w-16 h-16 rounded-3xl bg-[#0F0F0F] border border-white/5 flex items-center justify-center hidden sm:flex shadow-2xl">
+              <UserCircle className="w-8 h-8 text-white/80" />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-headline text-white tracking-widest uppercase">Mi Perfil</h2>
-              <p className="text-white/40 font-light tracking-wide mt-2 text-sm">
-                Gestiona tu información personal y configuración.
-              </p>
+              <p className="text-amber-500 font-headline tracking-[0.2em] uppercase text-xs sm:text-sm mb-2">Configuración</p>
+              <h2 className="text-4xl md:text-5xl font-headline text-white tracking-widest uppercase">
+                Mi <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">Perfil</span>
+              </h2>
             </div>
           </div>
-          <PremiumButton variant="outline" className="relative z-10 w-full sm:w-auto flex items-center justify-center gap-2">
+          <PremiumButton className="relative z-10 w-full sm:w-auto flex items-center justify-center gap-2 h-14 px-8">
             <Save className="w-4 h-4" />
-            <span>Guardar Cambios</span>
+            <span className="tracking-widest text-[10px] sm:text-xs uppercase">Guardar Cambios</span>
           </PremiumButton>
         </div>
 
         {/* Profile + Form grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 relative z-10">
           {/* Profile Card */}
-          <div className="lg:col-span-1 rounded-[24px] bg-black/40 border border-white/5 p-6 md:p-8 flex flex-col items-center text-center gap-4 backdrop-blur-xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none" />
+          <div className="lg:col-span-1 rounded-[32px] bg-[#0F0F0F] border border-white/5 p-8 flex flex-col items-center text-center gap-6 shadow-2xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             <div className="relative group mt-4">
-              <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-md group-hover:bg-amber-500/40 transition-colors duration-500" />
-              <Avatar className="relative h-32 w-32 border-2 border-amber-500/20 p-1 bg-black/50 ring-4 ring-black shadow-2xl transition-all duration-500">
+              <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-[40px] group-hover:bg-amber-500/40 transition-colors duration-700" />
+              <Avatar className="relative h-40 w-40 border-2 border-amber-500/20 p-2 bg-black/80 shadow-2xl transition-all duration-700 group-hover:scale-105">
                 <AvatarImage src={me.avatarUrl} alt={me.name} className="rounded-full object-cover" />
-                <AvatarFallback className="bg-transparent text-white font-headline text-4xl">{me.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="bg-transparent text-white font-headline text-5xl">{me.name.charAt(0)}</AvatarFallback>
               </Avatar>
-              <button className="absolute bottom-0 right-0 w-10 h-10 bg-amber-500 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg border-2 border-black">
+              <button className="absolute bottom-2 right-2 w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg border-2 border-black z-10">
                 <Camera className="w-4 h-4" />
               </button>
             </div>
@@ -256,49 +281,55 @@ export default function ProfilePage() {
               <p className="text-sm font-light tracking-[0.2em] text-amber-500 uppercase mt-1">Master Barber</p>
             </div>
             <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-4" />
-            <div className="w-full space-y-4 text-left relative z-10">
-              <div className="flex items-center gap-3 text-white/60">
-                <Mail className="w-4 h-4 text-amber-500/70" />
-                <span className="text-sm font-light">carlos.m@mivraba.com</span>
+            <div className="w-full space-y-4 text-left relative z-10 mt-4 bg-black/60 p-6 rounded-2xl border border-white/5 shadow-inner">
+              <div className="flex items-center gap-4 text-white/60 hover:text-white transition-colors group/item">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-amber-500/20 group-hover/item:text-amber-500 transition-colors">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <span className="text-sm font-light tracking-wide">carlos.m@mivraba.com</span>
               </div>
-              <div className="flex items-center gap-3 text-white/60">
-                <Phone className="w-4 h-4 text-amber-500/70" />
-                <span className="text-sm font-light">+1 234 567 8900</span>
+              <div className="flex items-center gap-4 text-white/60 hover:text-white transition-colors group/item">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-amber-500/20 group-hover/item:text-amber-500 transition-colors">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <span className="text-sm font-light tracking-wide">+1 234 567 8900</span>
               </div>
-              <div className="flex items-center gap-3 text-white/60">
-                <MapPin className="w-4 h-4 text-amber-500/70" />
-                <span className="text-sm font-light">Sucursal Centro</span>
+              <div className="flex items-center gap-4 text-white/60 hover:text-white transition-colors group/item">
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover/item:bg-amber-500/20 group-hover/item:text-amber-500 transition-colors">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <span className="text-sm font-light tracking-wide">Sucursal Centro</span>
               </div>
             </div>
           </div>
 
           {/* Edit Form */}
-          <div className="lg:col-span-2 rounded-[24px] bg-black/40 border border-white/5 p-6 md:p-8 flex flex-col gap-6 backdrop-blur-xl relative">
-            <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
-              <Settings className="w-32 h-32 text-amber-500" />
+          <div className="lg:col-span-2 rounded-[32px] bg-[#0F0F0F] border border-white/5 p-8 flex flex-col gap-8 shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none group-hover:scale-110 transition-transform duration-700 group-hover:opacity-10">
+              <Settings className="w-40 h-40 text-amber-500" />
             </div>
-            <h3 className="text-xl font-headline tracking-widest text-white uppercase border-b border-white/10 pb-4 relative z-10">Información Personal</h3>
+            <h3 className="text-xl font-headline tracking-widest text-white uppercase border-b border-white/5 pb-4 relative z-10">Información Personal</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
               <div className="space-y-2">
                 <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-2">Nombre Completo</label>
-                <Input defaultValue={me.name} className="bg-white/5 border-white/10 text-white rounded-xl h-12 focus-visible:ring-amber-500/50" />
+                <Input defaultValue={me.name} className="bg-black border-white/5 text-white rounded-2xl h-14 px-4 focus-visible:ring-amber-500/50 shadow-inner" />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-2">Especialidad</label>
-                <Input defaultValue="Master Barber" className="bg-white/5 border-white/10 text-white rounded-xl h-12 focus-visible:ring-amber-500/50" />
+                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-4">Especialidad</label>
+                <Input defaultValue="Master Barber" className="bg-black border-white/5 text-white rounded-2xl h-14 px-4 focus-visible:ring-amber-500/50 shadow-inner" />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-2">Correo Electrónico</label>
-                <Input defaultValue="carlos.m@mivraba.com" type="email" className="bg-white/5 border-white/10 text-white rounded-xl h-12 focus-visible:ring-amber-500/50" />
+                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-4">Correo Electrónico</label>
+                <Input defaultValue="carlos.m@mivraba.com" type="email" className="bg-black border-white/5 text-white rounded-2xl h-14 px-4 focus-visible:ring-amber-500/50 shadow-inner" />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-2">Teléfono</label>
-                <Input defaultValue="+1 234 567 8900" type="tel" className="bg-white/5 border-white/10 text-white rounded-xl h-12 focus-visible:ring-amber-500/50" />
+                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-4">Teléfono</label>
+                <Input defaultValue="+1 234 567 8900" type="tel" className="bg-black border-white/5 text-white rounded-2xl h-14 px-4 focus-visible:ring-amber-500/50 shadow-inner" />
               </div>
-              <div className="md:col-span-2 space-y-2">
-                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-2">Biografía</label>
+              <div className="md:col-span-2 space-y-2 mt-4">
+                <label className="text-[10px] font-headline tracking-widest uppercase text-white/40 ml-4">Biografía</label>
                 <textarea
-                  className="w-full bg-white/5 border border-white/10 text-white rounded-xl p-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-500/50 min-h-[120px] font-light text-sm"
+                  className="w-full bg-black border border-white/5 text-white rounded-2xl p-6 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-500/50 min-h-[160px] font-light text-sm shadow-inner resize-none"
                   defaultValue="Especialista en cortes clásicos y arreglos de barba con más de 5 años de experiencia. Apasionado por el detalle y la atención al cliente."
                 />
               </div>
@@ -307,9 +338,9 @@ export default function ProfilePage() {
         </div>
 
         {/* ── Mi Plan Actual ── */}
-        <div className="relative z-10 rounded-[24px] bg-black/40 border border-white/5 p-6 md:p-8 backdrop-blur-xl overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
-            <Crown className="w-32 h-32 text-amber-500" />
+        <div className="relative z-10 rounded-[32px] bg-[#0F0F0F] border border-white/5 p-8 shadow-2xl overflow-hidden group">
+          <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none group-hover:scale-110 transition-transform duration-700 group-hover:opacity-10">
+            <Crown className="w-48 h-48 text-amber-500" />
           </div>
           
           <div className="flex items-center gap-4 mb-6 relative z-10">
@@ -322,11 +353,11 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="relative z-10 p-6 md:p-8 rounded-2xl bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.05)]">
+          <div className="relative z-10 p-8 md:p-10 rounded-[24px] bg-gradient-to-r from-amber-500/5 to-orange-500/10 border border-amber-500/20 flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden shadow-[0_0_40px_rgba(245,158,11,0.05)] mt-4">
             <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-amber-500/15 blur-[60px] rounded-full pointer-events-none" />
             
             <div className="relative z-10 w-full md:w-auto">
-              <div className="text-[10px] font-headline tracking-[0.25em] uppercase bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent mb-1">
+              <div className="text-[10px] font-headline tracking-[0.25em] uppercase bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent mb-2">
                 Plan Contratado
               </div>
               <div className="flex items-center gap-3">
@@ -358,16 +389,16 @@ export default function ProfilePage() {
               </ul>
             </div>
 
-            <div className="relative z-10 w-full md:w-auto flex flex-col items-start md:items-end gap-3 pt-6 md:pt-0 border-t md:border-t-0 md:border-l border-white/10 md:pl-8">
+            <div className="relative z-10 w-full md:w-auto flex flex-col items-start md:items-end gap-3 pt-8 md:pt-0 border-t md:border-t-0 md:border-l border-white/5 md:pl-10">
               <div className="text-left md:text-right w-full">
                 <div className="flex items-baseline md:justify-end gap-1">
                   <span className="text-4xl md:text-5xl font-headline text-white">$4.99</span>
                   <span className="text-white/40 text-sm font-light">/mes</span>
                 </div>
-                <div className="text-xs text-white/40 font-light mt-1">Próxima renovación: 15 Ago 2026</div>
+                <div className="text-[10px] text-white/40 font-headline tracking-widest uppercase mt-2">Próxima renovación: 15 Ago 2026</div>
               </div>
-              <button onClick={() => setShowUpgrade(true)} className="w-full md:w-auto mt-2 py-2.5 px-6 rounded-xl bg-white/5 border border-white/10 text-white text-[11px] font-headline tracking-widest uppercase hover:bg-white/10 hover:border-white/20 transition-all flex items-center justify-center gap-2">
-                <Crown className="w-3.5 h-3.5" />
+              <button onClick={() => setShowUpgrade(true)} className="w-full md:w-auto mt-4 py-3 px-8 rounded-2xl bg-black border border-amber-500/30 text-amber-500 text-[11px] font-headline tracking-widest uppercase hover:bg-amber-500/10 hover:border-amber-500/50 transition-all flex items-center justify-center gap-2 shadow-inner">
+                <Crown className="w-4 h-4" />
                 Mejorar Plan
               </button>
             </div>
@@ -375,7 +406,7 @@ export default function ProfilePage() {
         </div>
 
         {/* ── Galería de Cortes ── */}
-        <div className="relative z-10 rounded-[24px] bg-black/40 border border-white/5 p-6 md:p-8 backdrop-blur-xl overflow-hidden">
+        <div className="relative z-10 rounded-[32px] bg-[#0F0F0F] border border-white/5 p-8 shadow-2xl overflow-hidden group">
           <div className="absolute -top-10 -left-10 w-48 h-48 bg-amber-500/8 blur-[80px] rounded-full pointer-events-none" />
 
           {/* Section header */}
@@ -500,17 +531,22 @@ export default function ProfilePage() {
               <AnimatePresence>
                 {photos.map((photo, index) => (
                   <motion.div
+                    layout
                     key={photo.id}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.7 }}
-                    transition={{ duration: 0.25, delay: index * 0.03 }}
-                    className="group relative aspect-square rounded-[16px] overflow-hidden border border-white/5 hover:border-amber-500/30 transition-all duration-300 shadow-lg"
+                    transition={{ duration: 0.25, delay: index * 0.03, layout: { type: "spring", stiffness: 300, damping: 30 } }}
+                    draggable
+                    onDragStart={(e) => handleImageDragStart(e, index)}
+                    onDragOver={(e) => handleImageDragOver(e, index)}
+                    onDragEnd={handleImageDragEnd}
+                    className={`group relative aspect-square rounded-[16px] overflow-hidden border border-white/5 hover:border-amber-500/30 transition-all duration-300 shadow-lg cursor-grab active:cursor-grabbing ${draggedIdx === index ? 'opacity-50 scale-95 z-50' : 'opacity-100 z-10'}`}
                   >
                     <img
                       src={photo.url}
                       alt={photo.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-cover pointer-events-none transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <button

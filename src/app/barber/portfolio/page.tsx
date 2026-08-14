@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { dummyPortfolioItems } from "@/app/dashboard/data";
+import { dummyPortfolioItems } from "@/app/clientes/data";
 import { Play, Image as ImageIcon, Trash2, UploadCloud, Edit3 } from "lucide-react";
 import Image from "next/image";
 import { UploadWorkDialog } from "@/components/profile/UploadWorkDialog";

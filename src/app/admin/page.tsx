@@ -1,81 +1,174 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Building2, CreditCard, Users, Settings, Activity, ShieldCheck, LogOut, Moon, Scissors } from "lucide-react";
+import { Building2, CreditCard, Users, Settings, Activity, ShieldCheck, LogOut, Moon, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
-  const modules = [
-    { name: "Franquicias", icon: Building2, desc: "Gestiona las sucursales", href: "/admin/tenants" },
-    { name: "Suscripciones", icon: CreditCard, desc: "Planes y facturación", href: "/admin/subscriptions" },
-    { name: "Usuarios", icon: Users, desc: "Administra accesos globales", href: "/admin/users" },
-    { name: "Métricas", icon: Activity, desc: "Rendimiento del sistema", href: "/admin/metrics" },
-    { name: "Auditoría", icon: ShieldCheck, desc: "Registros de seguridad", href: "/admin/audit" },
-    { name: "Configuración", icon: Settings, desc: "Ajustes globales", href: "/admin/settings" },
-  ];
+  const [greeting, setGreeting] = useState("Bienvenido");
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Buen día, Admin");
+    else if (hour < 18) setGreeting("Buenas tardes, Admin");
+    else setGreeting("Buenas noches, Admin");
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  };
 
   return (
-    <div className="flex-1 bg-transparent flex flex-col relative w-full h-[calc(100vh-72px)] overflow-hidden">
-      {/* Main Content - Launchpad */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-2 md:py-4 z-10 w-full max-w-7xl mx-auto h-full min-h-0">
+    <div className="min-h-screen bg-[#0A0A0A] flex flex-col relative overflow-x-hidden justify-center">
+      
+      {/* Elementos Ambientales (Glows) */}
+      <div className="fixed top-0 left-1/4 w-[50vw] h-[50vw] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 mix-blend-screen" />
+      <div className="fixed bottom-0 right-0 w-[40vw] h-[40vw] bg-amber-700/10 rounded-full blur-[100px] pointer-events-none translate-x-1/4 translate-y-1/4 mix-blend-screen" />
+
+      {/* Botón Flotante Cerrar Sesión */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="fixed top-6 right-6 lg:top-8 lg:right-10 z-50"
+      >
+        <Link href="/" className="group flex items-center justify-center w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/10 hover:border-red-500/30 hover:bg-red-500/10 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]" title="Cerrar Sesión">
+          <LogOut className="w-5 h-5 text-white/50 group-hover:text-red-400 transition-colors translate-x-[1px]" />
+        </Link>
+      </motion.div>
+
+      {/* Contenido Principal */}
+      <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 py-8 md:py-12 z-10 w-full max-w-7xl mx-auto">
         
-        <motion.div 
+        {/* Cabecera Personalizada */}
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-2 md:mb-4 relative shrink-0"
+          className="mb-8 md:mb-12 relative w-full"
         >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-32 bg-amber-500/20 blur-[100px] rounded-full pointer-events-none" />
-          
-          <h1 className="text-[clamp(1.5rem,3.5vw,3.5rem)] font-headline text-white mb-2 tracking-widest uppercase relative z-10 leading-tight">
-            Bienvenido a <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">AdminPortal</span>
+          <p className="text-amber-500 font-headline tracking-[0.2em] uppercase text-xs sm:text-sm mb-2">{greeting}</p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline text-white tracking-widest uppercase relative z-10 leading-tight">
+            Control <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">Central</span>
           </h1>
-          <p className="text-white/40 font-light text-[clamp(0.75rem,1.2vw,1rem)] tracking-wide max-w-2xl mx-auto relative z-10 px-4">
-            Selecciona un módulo operativo para comenzar la gestión de la plataforma SaaS, monitorear la salud del sistema o administrar franquicias.
-          </p>
         </motion.div>
 
-        {/* Modules Grid */}
-        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6 w-full items-stretch content-center min-h-0 py-2">
-          {modules.map((mod, i) => (
-            <Link href={mod.href} key={mod.name} className="block group outline-none h-full min-h-0">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 + (i * 0.1) }}
-                className="relative h-full bg-[#0A0A0A] border border-white/5 rounded-[16px] md:rounded-[24px] p-4 md:p-5 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-500 group-hover:bg-white/[0.02] group-hover:border-amber-500/30 group-focus:border-amber-500/50"
-              >
-                {/* Hover Glow Effects */}
-                <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                
-                {/* Icon Wrapper */}
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-[16px] md:rounded-[24px] bg-black border border-white/10 flex items-center justify-center mb-3 md:mb-5 group-hover:scale-110 group-hover:bg-amber-950/30 group-hover:border-amber-500/30 group-hover:shadow-[0_0_40px_rgba(245,158,11,0.25)] transition-all duration-500 z-10 relative">
-                  <mod.icon className="w-6 h-6 md:w-8 md:h-8 text-white/50 group-hover:text-amber-400 transition-colors duration-500" />
+        {/* Bento Grid */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 auto-rows-[160px] md:auto-rows-[180px]"
+        >
+          
+          {/* Card Destacada: Franquicias */}
+          <motion.div variants={itemVariants} className="md:col-span-2 md:row-span-2 lg:col-span-3 lg:row-span-2 relative group rounded-[32px] overflow-hidden cursor-pointer shadow-2xl">
+            <Link href="/admin/tenants" className="block w-full h-full relative z-10">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-black/50 to-amber-900/10 border border-white/5 group-hover:border-amber-500/40 transition-all duration-700 rounded-[32px]" />
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl -z-10" />
+              
+              {/* Dynamic Glow */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-amber-500/20 blur-[60px] group-hover:scale-150 transition-transform duration-700" />
+              
+              <div 
+                className="absolute top-0 right-0 w-full h-full bg-cover bg-center opacity-10 group-hover:opacity-30 transition-opacity duration-700 mix-blend-overlay" 
+                style={{ 
+                  backgroundImage: "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop')",
+                  maskImage: 'linear-gradient(to left, black, transparent)' 
+                }} 
+              />
+
+              <div className="p-8 md:p-10 flex flex-col justify-between h-full relative z-10">
+                <div className="w-16 h-16 bg-white/5 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/10 group-hover:scale-110 group-hover:bg-amber-500/20 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                  <Building2 className="w-8 h-8 text-amber-400 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
                 </div>
-                
-                {/* Typography */}
-                <h3 className="text-[clamp(0.875rem,1.5vw,1.25rem)] font-headline tracking-widest uppercase text-white mb-1 md:mb-2 z-10 group-hover:text-amber-100 transition-colors">
-                  {mod.name}
-                </h3>
-                <p className="text-[clamp(0.65rem,1vw,0.875rem)] font-light tracking-wide text-white/40 z-10 group-hover:text-white/60 transition-colors px-2">
-                  {mod.desc}
-                </p>
-
-                {/* Bottom Highlight Line */}
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent group-hover:w-1/2 transition-all duration-500" />
-              </motion.div>
+                <div>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-headline tracking-widest uppercase text-white mb-3 group-hover:text-amber-300 transition-colors">Franquicias</h2>
+                  <p className="text-white/40 font-light text-sm md:text-base tracking-[0.2em] flex items-center gap-3 group-hover:text-white/80 transition-colors uppercase">
+                    Control de red global <ArrowRight className="w-5 h-5 text-amber-500 group-hover:translate-x-3 transition-transform duration-500" />
+                  </p>
+                </div>
+              </div>
             </Link>
-          ))}
-        </div>
-      </div>
+          </motion.div>
 
-      {/* Footer */}
-      <div className="py-2 w-full text-center text-white/30 text-[10px] font-headline tracking-widest uppercase z-10 opacity-60 shrink-0">
-        © 2026 Barber Paradise • Centro de Comando Global • Root Access
-      </div>
+          {/* Card: Suscripciones */}
+          <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-3 lg:row-span-1 relative group rounded-[32px] overflow-hidden cursor-pointer shadow-xl">
+            <Link href="/admin/subscriptions" className="block w-full h-full p-8 bg-black/40 backdrop-blur-xl border border-white/5 hover:border-emerald-500/30 transition-all duration-700 rounded-[32px] flex items-center justify-between relative">
+              <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-emerald-500/10 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="flex items-center gap-6 relative z-10">
+                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/40 transition-all duration-500 group-hover:scale-110">
+                  <CreditCard className="w-6 h-6 text-white/50 group-hover:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] transition-colors" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-headline tracking-[0.2em] uppercase text-white mb-2 group-hover:text-emerald-100 transition-colors">Suscripciones</h3>
+                  <p className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Membresías & Facturación</p>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
 
+          {/* Card: Usuarios */}
+          <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-3 lg:row-span-1 relative group rounded-[32px] overflow-hidden cursor-pointer shadow-xl">
+             <Link href="/admin/users" className="block w-full h-full p-8 bg-black/40 backdrop-blur-xl border border-white/5 hover:border-blue-500/30 transition-all duration-700 rounded-[32px] flex items-center justify-between relative">
+                <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-blue-500/10 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="flex items-center gap-6 relative z-10">
+                  <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-blue-500/20 group-hover:border-blue-500/40 transition-all duration-500 group-hover:scale-110">
+                    <Users className="w-6 h-6 text-white/50 group-hover:text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] transition-colors" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-headline tracking-[0.2em] uppercase text-white mb-2 group-hover:text-blue-100 transition-colors">Usuarios</h3>
+                    <p className="text-white/30 text-[10px] tracking-[0.3em] uppercase">Control de Accesos</p>
+                  </div>
+                </div>
+             </Link>
+          </motion.div>
+
+          {/* Card: Métricas */}
+          <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-2 lg:row-span-1 relative group rounded-[32px] overflow-hidden cursor-pointer shadow-xl">
+            <Link href="/admin/metrics" className="flex flex-col items-center justify-center h-full p-6 bg-black/40 backdrop-blur-xl border border-white/5 hover:border-fuchsia-500/30 transition-all duration-700 rounded-[32px] text-center relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-fuchsia-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-fuchsia-500/20 group-hover:scale-110 transition-all duration-500 border border-white/10 group-hover:border-fuchsia-500/30">
+                  <Activity className="w-5 h-5 text-white/50 group-hover:text-fuchsia-400 drop-shadow-[0_0_8px_rgba(217,70,239,0.5)]" />
+                </div>
+                <h3 className="text-xs font-headline tracking-[0.25em] uppercase text-white mb-2 group-hover:text-fuchsia-100 transition-colors">Rendimiento</h3>
+            </Link>
+          </motion.div>
+
+          {/* Card: Auditoría */}
+          <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-2 lg:row-span-1 relative group rounded-[32px] overflow-hidden cursor-pointer shadow-xl">
+            <Link href="/admin/audit" className="flex flex-col items-center justify-center h-full p-6 bg-black/40 backdrop-blur-xl border border-white/5 hover:border-red-500/30 transition-all duration-700 rounded-[32px] text-center relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-red-500/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-red-500/20 group-hover:scale-110 transition-all duration-500 border border-white/10 group-hover:border-red-500/30">
+                  <ShieldCheck className="w-5 h-5 text-white/50 group-hover:text-red-400 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
+                </div>
+                <h3 className="text-xs font-headline tracking-[0.25em] uppercase text-white mb-2 group-hover:text-red-100 transition-colors">Seguridad</h3>
+            </Link>
+          </motion.div>
+
+          {/* Card: Configuración */}
+          <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-2 lg:row-span-1 relative group rounded-[32px] overflow-hidden cursor-pointer shadow-xl">
+            <Link href="/admin/settings" className="flex flex-col items-center justify-center h-full p-6 bg-black/40 backdrop-blur-xl border border-white/5 hover:border-gray-300/30 transition-all duration-700 rounded-[32px] text-center relative">
+                <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/10 group-hover:scale-110 transition-all duration-500 border border-white/10 group-hover:border-white/30">
+                  <Settings className="w-5 h-5 text-white/50 group-hover:text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                </div>
+                <h3 className="text-xs font-headline tracking-[0.25em] uppercase text-white mb-2 group-hover:text-white transition-colors">Ajustes</h3>
+            </Link>
+          </motion.div>
+
+        </motion.div>
+      </div>
     </div>
   );
 }

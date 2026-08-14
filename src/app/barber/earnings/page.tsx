@@ -18,58 +18,60 @@ export default function EarningsPage() {
   ];
 
   return (
-    <div className="flex flex-col w-full animate-in fade-in duration-700">
-      <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 relative">
-        <div className="absolute top-0 right-1/4 w-40 h-40 bg-amber-500/10 blur-[70px] rounded-full pointer-events-none" />
-        
-        <div className="relative z-10 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center hidden sm:flex">
-            <DollarSign className="w-6 h-6 text-amber-500" />
-          </div>
-          <div>
-            <h2 className="text-3xl md:text-4xl font-headline text-white tracking-widest uppercase">Mis Ganancias</h2>
-            <p className="text-white/40 font-light tracking-wide mt-2 text-sm">
-              Monitorea tus ingresos y rendimiento diario.
-            </p>
-          </div>
+    <div className="flex flex-col w-full min-h-screen animate-in fade-in duration-700 relative pb-20">
+      
+      {/* Elementos Ambientales (Glows) */}
+      <div className="fixed top-0 right-0 w-[50vw] h-[50vw] bg-emerald-500/5 rounded-full blur-[150px] pointer-events-none -translate-y-1/2 mix-blend-screen" />
+
+      {/* Header */}
+      <div className="mb-10 md:mb-16 flex flex-col relative z-10 text-center">
+        <p className="text-emerald-500 font-headline tracking-[0.2em] uppercase text-xs sm:text-sm mb-4">Balance Diario</p>
+        <div className="relative inline-block mx-auto">
+          <div className="absolute -inset-4 bg-emerald-500/20 blur-[50px] rounded-full" />
+          <h2 className="text-6xl md:text-8xl font-headline text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/50 tracking-tight relative z-10 drop-shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+            $1.250k
+          </h2>
         </div>
-        
+        <p className="text-white/40 font-light tracking-wide mt-6 text-sm md:text-base flex items-center justify-center gap-2">
+          <TrendingUp className="w-4 h-4 text-emerald-400" />
+          <span className="text-emerald-400 font-medium">+15%</span> vs. ayer
+        </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-10 relative z-10">
-        {stats.map((stat, i) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-16 relative z-10 max-w-4xl mx-auto w-full">
+        {stats.slice(1).map((stat, i) => (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
+            transition={{ delay: i * 0.15 }}
             key={i} 
-            className="group relative overflow-hidden rounded-[24px] bg-black/40 border border-white/5 hover:border-amber-500/30 transition-all duration-500 p-6 md:p-8 flex flex-col gap-4 backdrop-blur-xl hover:bg-black/60"
+            className="group relative overflow-hidden rounded-[32px] bg-[#0F0F0F] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 p-8 flex flex-col items-center text-center backdrop-blur-xl hover:bg-[#151515] shadow-2xl"
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-amber-500/0 to-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/0 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
-            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity duration-500 group-hover:scale-110 transform">
-              <stat.icon className="w-16 h-16 text-amber-500" />
+            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+              <stat.icon className="w-8 h-8 text-emerald-400" />
             </div>
             
             <div className="relative z-10 space-y-2">
-              <p className="text-[10px] md:text-xs text-white/50 tracking-[0.2em] uppercase font-medium">{stat.label}</p>
-              <h3 className="text-3xl md:text-4xl font-headline text-white group-hover:text-amber-100 transition-colors">{stat.value}</h3>
-            </div>
-            
-            <div className="relative z-10 flex items-center mt-2">
-              <div className={`flex items-center gap-1.5 text-[10px] md:text-xs font-headline tracking-widest uppercase px-3 py-1.5 rounded-full border ${stat.positive ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
-                <TrendingUp className={`w-3.5 h-3.5 ${stat.positive ? '' : 'rotate-180'}`} />
-                {stat.trend} <span className="hidden sm:inline opacity-70">respecto a ayer</span>
-              </div>
+              <p className="text-xs text-white/40 tracking-[0.2em] uppercase font-light">{stat.label}</p>
+              <h3 className="text-3xl font-headline text-white group-hover:text-emerald-100 transition-colors">{stat.value}</h3>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Recent Activity */}
-      <div className="space-y-6 relative z-10">
-        <h3 className="text-lg md:text-xl font-headline tracking-widest text-white uppercase border-b border-white/10 pb-4">Actividad Reciente</h3>
+      {/* Recent Activity - Receipt Style */}
+      <div className="relative z-10 max-w-4xl mx-auto w-full">
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-xl font-headline tracking-widest text-white uppercase flex items-center gap-3">
+            <ArrowUpRight className="w-5 h-5 text-emerald-500" />
+            Transacciones Recientes
+          </h3>
+          <button className="text-[10px] text-white/40 hover:text-white uppercase tracking-[0.2em] transition-colors border-b border-white/10 hover:border-white pb-1">Ver Historial</button>
+        </div>
+
         <div className="space-y-4">
           {recentTransactions.map((tx, index) => (
             <motion.div 
@@ -77,23 +79,22 @@ export default function EarningsPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 + 0.3 }}
               key={tx.id} 
-              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 md:p-6 rounded-[20px] bg-black/40 border border-white/5 hover:border-amber-500/20 hover:bg-white/[0.02] transition-all duration-300 backdrop-blur-md"
+              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-6 px-2 border-b border-white/5 hover:border-emerald-500/30 transition-all duration-300 relative"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 text-white/60 group-hover:text-amber-500 group-hover:border-amber-500/30 group-hover:bg-amber-500/10 transition-colors">
-                  <Scissors className="w-5 h-5" />
-                </div>
+              <div className="absolute left-0 w-1 h-full bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center rounded-r-md" />
+
+              <div className="flex items-center gap-6 pl-4 sm:pl-6">
+                <span className="text-white/20 font-mono text-sm tracking-widest w-16">{tx.time}</span>
                 <div>
-                  <h4 className="text-white font-headline tracking-widest text-sm md:text-base">{tx.type}</h4>
-                  <p className="text-xs md:text-sm text-white/40 font-light mt-1">Cliente: <span className="text-white/80">{tx.client}</span> • {tx.time}</p>
+                  <h4 className="text-white font-headline tracking-widest text-base group-hover:text-emerald-100 transition-colors">{tx.type}</h4>
+                  <p className="text-xs text-white/40 font-light mt-1 tracking-wide">Ref: <span className="text-white/60">{tx.client}</span></p>
                 </div>
               </div>
               
-              <div className="text-left sm:text-right w-full sm:w-auto pl-16 sm:pl-0">
-                <p className="text-lg md:text-xl font-headline text-white tracking-wider">{tx.amount}</p>
-                <div className="inline-flex items-center gap-1 mt-1 px-2 py-1 rounded bg-amber-500/10 border border-amber-500/20">
-                  <Wallet className="w-3 h-3 text-amber-500" />
-                  <span className="text-[10px] text-amber-500 font-headline tracking-widest uppercase">Propina: {tx.tip}</span>
+              <div className="text-left sm:text-right w-full sm:w-auto pl-[88px] sm:pl-0 pr-4">
+                <p className="text-xl font-mono text-white tracking-widest group-hover:text-emerald-400 transition-colors">{tx.amount}</p>
+                <div className="flex items-center sm:justify-end gap-1.5 mt-1 text-emerald-500/70 text-[10px] font-headline uppercase tracking-widest">
+                  <Wallet className="w-3 h-3" /> Propina incl. {tx.tip}
                 </div>
               </div>
             </motion.div>

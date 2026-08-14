@@ -63,127 +63,134 @@ export default function AppointmentsPage() {
   const pendingCount = appointments.filter((a) => a.status === 'pending' || a.status === 'in-progress').length;
 
   return (
-    <div className="flex flex-col w-full animate-in fade-in duration-700">
-      {/* Header */}
-      <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 relative">
-        <div className="absolute top-0 left-0 w-32 h-32 bg-amber-500/10 blur-[60px] rounded-full pointer-events-none" />
+    <div className="flex flex-col w-full min-h-screen animate-in fade-in duration-700 relative pb-20">
+      
+      {/* Elementos Ambientales (Glows) */}
+      <div className="fixed top-0 left-1/4 w-[50vw] h-[50vw] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 mix-blend-screen" />
 
-        <div className="relative z-10">
-          <h2 className="text-3xl md:text-4xl font-headline text-white tracking-widest uppercase">Mi Agenda</h2>
-          <p className="text-white/40 font-light tracking-wide mt-2 text-sm">
-            Tienes{' '}
-            <span className="text-amber-500 font-medium">{appointments.length} citas</span> programadas hoy —{' '}
-            <span className="text-amber-400/70">{pendingCount} pendientes</span>.
+      {/* Header */}
+      <div className="mb-10 md:mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
+        <div>
+          <p className="text-amber-500 font-headline tracking-[0.2em] uppercase text-xs sm:text-sm mb-2">Agenda de Hoy</p>
+          <h2 className="text-4xl md:text-5xl font-headline text-white tracking-widest uppercase">
+            Tus <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]">Citas</span>
+          </h2>
+          <p className="text-white/40 font-light tracking-wide mt-3 text-sm md:text-base">
+            Tienes <span className="text-amber-500 font-medium">{appointments.length} citas</span> hoy — <span className="text-amber-400/70">{pendingCount} pendientes</span>.
           </p>
         </div>
 
         <PremiumButton
-          variant="outline"
-          className="relative z-10 hidden sm:flex items-center gap-2"
+          className="relative z-10 flex items-center justify-center gap-2"
           onClick={() => {
             setEditingAppointment(null);
             setIsFormOpen(true);
           }}
         >
           <CalendarPlus className="w-4 h-4" />
-          <span>Nueva Cita (Walk-in)</span>
+          <span className="tracking-widest text-[10px] sm:text-xs uppercase">Nueva Cita (Walk-in)</span>
         </PremiumButton>
       </div>
 
-      {/* Appointment List */}
-      <div className="space-y-4 relative z-10">
-        {appointments.map((apt, index) => (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            key={apt.id}
-            className="group relative overflow-hidden rounded-[20px] bg-black/40 border border-white/5 hover:bg-black/60 hover:border-amber-500/30 transition-all duration-500 p-5 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 backdrop-blur-xl"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/0 via-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      {/* Timeline Layout */}
+      <div className="relative z-10 pl-6 sm:pl-10 md:pl-16">
+        
+        {/* Línea vertical central */}
+        <div className="absolute top-0 bottom-0 left-[23px] sm:left-[39px] md:left-[63px] w-px bg-gradient-to-b from-amber-500/50 via-white/10 to-transparent" />
 
-            <div className="flex items-center gap-5 md:gap-8 relative z-10 w-full sm:w-auto">
-              <div className="flex flex-col items-center justify-center min-w-[80px] border-r border-white/10 pr-5 md:pr-8">
-                <Clock
-                  className={`w-5 h-5 mb-1 ${
-                    apt.status === 'completed'
-                      ? 'text-green-500'
-                      : apt.status === 'in-progress'
-                      ? 'text-amber-500'
-                      : 'text-white/40'
-                  }`}
-                />
-                <span className="text-sm md:text-base font-headline tracking-widest text-white whitespace-nowrap">
-                  {apt.time}
-                </span>
+        <div className="space-y-8 md:space-y-12">
+          {appointments.map((apt, index) => (
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.15, type: "spring", stiffness: 100 }}
+              key={apt.id}
+              className="relative group"
+            >
+              
+              {/* Timeline Dot */}
+              <div className="absolute -left-6 sm:-left-10 md:-left-16 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#0A0A0A] border-2 border-white/20 group-hover:border-amber-500 group-hover:shadow-[0_0_15px_rgba(245,158,11,0.5)] transition-all duration-300 z-10">
+                {apt.status === 'in-progress' && <div className="absolute inset-0 bg-amber-500 rounded-full animate-ping opacity-50" />}
+                {apt.status === 'in-progress' && <div className="absolute inset-[3px] bg-amber-500 rounded-full" />}
+                {apt.status === 'completed' && <div className="absolute inset-[3px] bg-green-500 rounded-full" />}
               </div>
 
-              <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12 border border-white/10 group-hover:border-amber-500/30 transition-colors bg-white/5">
-                  <AvatarFallback className="bg-transparent text-white/80 font-headline">
-                    {apt.avatar}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="text-base md:text-lg font-headline text-white tracking-widest group-hover:text-amber-100 transition-colors">
-                    {apt.client}
-                  </h3>
-                  <p className="text-xs md:text-sm text-white/40 font-light tracking-wide">{apt.service}</p>
+              {/* Timeline Card */}
+              <div className="relative overflow-hidden rounded-3xl bg-[#0F0F0F] border border-white/5 group-hover:border-amber-500/30 transition-all duration-500 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 group-hover:bg-[#151515] shadow-2xl">
+                
+                {/* Reflejo Glass */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6 relative z-10 w-full md:w-auto">
+                  
+                  {/* Hora */}
+                  <div className="flex flex-row md:flex-col items-center justify-between md:justify-center w-full md:w-28 border-b md:border-b-0 md:border-r border-white/10 pb-4 md:pb-0 pr-0 md:pr-6">
+                    <span className={`text-xl md:text-2xl font-headline tracking-widest ${apt.status === 'completed' ? 'text-white/40' : apt.status === 'in-progress' ? 'text-amber-500' : 'text-white'} whitespace-nowrap`}>
+                      {apt.time.split(' ')[0]}
+                    </span>
+                    <span className="text-[10px] md:text-xs tracking-[0.2em] text-white/40 font-light mt-1">
+                      {apt.time.split(' ')[1]}
+                    </span>
+                  </div>
+
+                  {/* Info Cliente */}
+                  <div className="flex items-center gap-5">
+                    <Avatar className="h-14 w-14 border border-white/10 group-hover:border-amber-500/30 transition-colors bg-black/50 shadow-inner">
+                      <AvatarFallback className="bg-transparent text-white/80 font-headline text-lg">
+                        {apt.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="text-lg md:text-xl font-headline text-white tracking-widest group-hover:text-amber-100 transition-colors">
+                        {apt.client}
+                      </h3>
+                      <p className="text-sm text-amber-500/70 font-light tracking-wide mt-1">{apt.service}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Acciones */}
+                <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto relative z-10 border-t md:border-t-0 border-white/5 pt-4 md:pt-0">
+                  {apt.status === 'completed' && (
+                    <div className="flex items-center gap-2 text-green-400/80 bg-green-500/10 px-5 py-2 rounded-full text-[10px] md:text-xs font-headline uppercase tracking-widest border border-green-500/20">
+                      <CheckCircle2 className="w-4 h-4" /> Finalizado
+                    </div>
+                  )}
+                  {apt.status === 'in-progress' && (
+                    <PremiumButton
+                      size="sm"
+                      className="w-full md:w-auto text-[10px] tracking-widest"
+                      onClick={() => updateStatus(apt.id, 'completed')}
+                    >
+                      Completar
+                    </PremiumButton>
+                  )}
+                  {apt.status === 'pending' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full md:w-auto border-white/10 bg-white/5 hover:bg-white/10 hover:text-white text-white/70 text-[10px] tracking-widest uppercase transition-all rounded-full h-10 px-6"
+                      onClick={() => updateStatus(apt.id, 'in-progress')}
+                    >
+                      Iniciar
+                    </Button>
+                  )}
+                  <button className="text-white/30 hover:text-amber-500 p-2 rounded-full hover:bg-amber-500/10 transition-colors shrink-0">
+                    <MoreHorizontal className="w-5 h-5" />
+                  </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
+          ))}
 
-            <div className="flex items-center gap-3 w-full sm:w-auto relative z-10 pl-[100px] sm:pl-0">
-              {apt.status === 'completed' && (
-                <div className="flex items-center gap-2 text-green-400 bg-green-500/10 px-4 py-2 rounded-full text-[10px] md:text-xs font-headline uppercase tracking-widest border border-green-500/20">
-                  <CheckCircle2 className="w-4 h-4" /> Finalizado
-                </div>
-              )}
-              {apt.status === 'in-progress' && (
-                <PremiumButton
-                  size="sm"
-                  className="w-full sm:w-auto text-xs"
-                  onClick={() => updateStatus(apt.id, 'completed')}
-                >
-                  Completar
-                </PremiumButton>
-              )}
-              {apt.status === 'pending' && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full sm:w-auto border-white/10 hover:bg-white/10 hover:text-white text-white/60 text-xs tracking-widest uppercase"
-                  onClick={() => updateStatus(apt.id, 'in-progress')}
-                >
-                  Iniciar
-                </Button>
-              )}
-              <button className="text-white/40 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors shrink-0">
-                <MoreHorizontal className="w-5 h-5" />
-              </button>
+          {appointments.length === 0 && (
+            <div className="text-center py-20 bg-[#0F0F0F] rounded-3xl border border-white/5">
+              <Clock className="w-12 h-12 text-white/20 mx-auto mb-4" />
+              <p className="text-white/40 font-light tracking-wide text-sm">No hay citas programadas para hoy.</p>
             </div>
-          </motion.div>
-        ))}
-
-        {appointments.length === 0 && (
-          <div className="text-center py-16 text-white/30 font-light tracking-wide">
-            No hay citas programadas. Agrega una nueva cita walk-in.
-          </div>
-        )}
+          )}
+        </div>
       </div>
-
-      {/* Mobile only button */}
-      <PremiumButton
-        variant="outline"
-        className="w-full mt-6 sm:hidden flex items-center justify-center gap-2"
-        onClick={() => {
-          setEditingAppointment(null);
-          setIsFormOpen(true);
-        }}
-      >
-        <CalendarPlus className="w-4 h-4" />
-        <span>Nueva Cita</span>
-      </PremiumButton>
 
       {/* Appointment Form Dialog */}
       <AddAppointmentForm

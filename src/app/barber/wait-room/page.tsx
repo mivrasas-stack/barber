@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { dummyWaitingRoomOrders, dummyWaitingRoomProducts } from "@/app/dashboard/data";
+import { dummyWaitingRoomOrders, dummyWaitingRoomProducts } from "@/app/clientes/data";
 import { Coffee, CheckCircle2, XCircle, Search } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { Input } from "@/components/ui/input";

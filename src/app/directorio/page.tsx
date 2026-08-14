@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin, Star, Navigation, Search, Map } from "lucide-react";
+import { MapPin, Star, Navigation, Search, Map, ArrowLeft } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { barbershops } from "@/lib/data";
 
@@ -78,6 +79,12 @@ export default function DirectorioPage() {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/5 blur-[120px] rounded-[100%] pointer-events-none" />
 
       <div className="container mx-auto px-6 md:px-12 relative z-10">
+        <div className="mb-8">
+          <Link href="/" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors tracking-widest uppercase">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al Inicio
+          </Link>
+        </div>
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-headline font-bold text-foreground uppercase tracking-widest mb-4">Directorio de Barberías</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">Encuentra los mejores estilos y profesionales cerca de ti.</p>

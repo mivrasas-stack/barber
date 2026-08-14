@@ -2,9 +2,9 @@ export type Location = { id: string; name: string; address: string; revenue: num
 import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder, PortfolioItem, Barber } from "@/lib/types";
 
 export const dummyLocations: Location[] = [
-    { id: 'LOC001', name: 'Sede Principal (Centro)', address: 'Av. El Dorado #12-34', revenue: 5423000 },
-    { id: 'LOC002', name: 'Sede Norte (VIP)', address: 'Calle 116 #15-50', revenue: 3200000 },
-    { id: 'LOC003', name: 'Sede Sur', address: 'Av. Boyacá #45-67', revenue: 1850000 },
+    { id: 'LOC001', name: 'The Gentleman\'s Lounge', address: 'Av. El Dorado #12-34', revenue: 5423000 },
+    { id: 'LOC002', name: 'Classic Cuts Barber', address: 'Calle 116 #15-50', revenue: 3200000 },
+    { id: 'LOC003', name: 'Barbería Vintage Style', address: 'Av. Boyacá #45-67', revenue: 1850000 },
 ];
 
 export const dummyBarbers: Barber[] = [
@@ -141,6 +141,12 @@ export const dummyPortfolioItems: PortfolioItem[] = [
         imageUrl: 'https://images.unsplash.com/photo-1590509294910-32752e061399?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYXJiZXIlMjBzdHlsaW5nfGVufDB8fHx8MTc1ODk4ODM0N3ww&ixlib=rb-4.1.0&q=80&w=1080',
         description: 'A barber styling a client\'s hair after a fresh cut.',
         category: 'Haircut',
+    },
+    {
+        id: 'PORT003',
+        imageUrl: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+        description: 'Técnica de navaja clásica.',
+        category: 'Shave',
     }
 ];
     

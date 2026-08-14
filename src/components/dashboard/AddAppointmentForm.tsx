@@ -22,7 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import type { Appointment } from '@/lib/types';
-import { dummyServices, dummyBarbers } from '@/app/dashboard/data';
+import { dummyServices, dummyBarbers } from '@/app/clientes/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const formSchema = z.object({

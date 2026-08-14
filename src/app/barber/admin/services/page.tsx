@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { dummyServices } from "@/app/dashboard/data";
+import { dummyServices } from "@/app/clientes/data";
 import { Scissors, Search, Plus, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PremiumButton } from "@/components/ui/premium-button";

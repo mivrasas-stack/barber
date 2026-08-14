@@ -1,48 +1,101 @@
 "use client";
 
 import Link from 'next/link';
-import { Moon, LogOut } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import { 
+  LayoutDashboard, 
+  Building2, 
+  CreditCard, 
+  Users, 
+  ShieldAlert, 
+  Activity, 
+  Settings,
+  LogOut
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const DOCK_ITEMS = [
+  { href: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/admin/tenants', icon: Building2, label: 'Negocios' },
+  { href: '/admin/subscriptions', icon: CreditCard, label: 'Suscripciones' },
+  { href: '/admin/users', icon: Users, label: 'Usuarios' },
+  { href: '/admin/audit', icon: ShieldAlert, label: 'Auditoría' },
+  { href: '/admin/metrics', icon: Activity, label: 'Métricas' },
+  { href: '/admin/settings', icon: Settings, label: 'Configuración' },
+];
 
 export default function SuperAdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
   return (
-    <div className="dark bg-[#050505] min-h-[100vh] text-foreground selection:bg-amber-500/30 overflow-x-hidden relative flex flex-col">
+    <div className="dark bg-[#050505] min-h-[100vh] text-foreground selection:bg-amber-500/30 overflow-x-hidden relative flex flex-col pb-32">
       {/* Global Ambient Glow */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-amber-900/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-amber-900/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
+      <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-amber-900/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen z-0" />
+      <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-amber-900/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen z-0" />
 
-      {/* Top Navigation Bar */}
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="fixed top-0 left-0 w-full flex items-center justify-between px-6 sm:px-8 lg:px-12 py-3 z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-white/5 h-[72px]"
-      >
-        <Link href="/admin" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <img src="/logo.png" alt="MIVRA BARBER Logo" className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shadow-[0_0_20px_rgba(245,158,11,0.2)]" />
-          <span className="font-headline tracking-widest text-[clamp(1rem,2vw,1.5rem)] uppercase text-white">
-            Admin<span className="text-amber-500">Portal</span>
-          </span>
-        </Link>
-        <div className="flex items-center gap-4">
-          <button className="w-8 h-8 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/[0.05] transition-all">
-            <Moon className="w-4 h-4" />
-          </button>
-          <div className="w-px h-6 bg-white/10" />
-          <Link href="/" className="flex items-center gap-2 px-3 sm:px-4 h-8 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] font-headline tracking-widest uppercase hover:bg-red-500/20 hover:text-red-300 transition-all">
-            <LogOut className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Cerrar Sesión</span>
-          </Link>
-        </div>
-      </motion.div>
-
-      <div className="relative z-10 w-full flex-1 flex flex-col pt-[72px]">
+      {/* Main Content Area */}
+      <div className="relative z-10 w-full flex-1 flex flex-col">
         {children}
       </div>
+
+      {/* Mac-style Interactive Dock */}
+      <AnimatePresence>
+        {!(pathname === '/admin' || pathname === '/admin/') && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+            <motion.div 
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="flex items-center gap-2 px-4 py-3 bg-black/60 backdrop-blur-3xl border border-white/10 rounded-[32px] shadow-[0_20px_40px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.1)]"
+            >
+              {DOCK_ITEMS.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link key={item.href} href={item.href} className="relative group">
+                    {isActive && (
+                      <motion.div 
+                        layoutId="dock-indicator"
+                        className="absolute inset-0 bg-white/10 rounded-2xl"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    <div className={`relative z-10 w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:-translate-y-4 group-hover:scale-125 group-hover:bg-amber-500/20 group-hover:shadow-[0_10px_20px_rgba(245,158,11,0.2)] ${isActive ? 'text-amber-500' : 'text-white/50'}`}>
+                      <item.icon className="w-6 h-6 transition-all duration-300 group-hover:text-amber-400" />
+                      
+                      {/* Tooltip */}
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/10 rounded-lg text-[10px] font-headline tracking-[0.2em] text-white/90 uppercase opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
+                        {item.label}
+                      </div>
+                    </div>
+                    {isActive && (
+                      <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-amber-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
+                    )}
+                  </Link>
+                );
+              })}
+              
+              <div className="w-px h-10 bg-white/10 mx-2" />
+              
+              <Link href="/" className="relative group">
+                <div className="relative z-10 w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 group-hover:-translate-y-4 group-hover:scale-125 group-hover:bg-red-500/20 group-hover:shadow-[0_10px_20px_rgba(239,68,68,0.2)] text-white/50">
+                  <LogOut className="w-6 h-6 transition-all duration-300 group-hover:text-red-400" />
+                  
+                  {/* Tooltip */}
+                  <div className="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-black/80 backdrop-blur-md border border-white/10 rounded-lg text-[10px] font-headline tracking-[0.2em] text-white/90 uppercase opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
+                    Cerrar Sesión
+                  </div>
+                </div>
+              </Link>
+
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

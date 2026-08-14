@@ -77,20 +77,7 @@ export default function Header() {
           {/* Theme toggle — always visible regardless of scroll state */}
           <ThemeToggle scrolled={scrolled} />
 
-          {/* "Iniciar Sesión" outline button — adapts border/text to scroll state */}
-          {scrolled ? (
-            <PremiumButton asChild variant="outline" size="sm" className="hidden lg:flex">
-              <Link href="/login">Iniciar Sesión</Link>
-            </PremiumButton>
-          ) : (
-            <PremiumButton
-              asChild
-              size="sm"
-              className="hidden lg:flex bg-transparent border border-white/50 text-white hover:bg-white/10 hover:border-white"
-            >
-              <Link href="/login">Iniciar Sesión</Link>
-            </PremiumButton>
-          )}
+
 
           <PremiumButton asChild size="sm">
             <Link href="/login">Reservar</Link>
@@ -153,14 +140,7 @@ export default function Header() {
                   ))}
                 </nav>
                 <div className="mt-auto space-y-4">
-                  <PremiumButton
-                    asChild
-                    variant="outline"
-                    className="w-full justify-center"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Link href="/login">Iniciar Sesión</Link>
-                  </PremiumButton>
+
                   <PremiumButton
                     asChild
                     className="w-full justify-center"

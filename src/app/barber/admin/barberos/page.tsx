@@ -4,7 +4,7 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
-import { dummyBarbers } from "@/app/dashboard/data";
+import { dummyBarbers } from "@/app/clientes/data";
 import { UserCheck, Plus, Star, MoreVertical } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { dummyPortfolioItems } from "@/app/dashboard/data";
+import { dummyPortfolioItems } from "@/app/clientes/data";
 
 export default function Portfolio() {
   return (
@@ -17,8 +17,8 @@ export default function Portfolio() {
           </h2>
         </div>
 
-        {/* Masonry Layout Approximation with Columns */}
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        {/* Grid Layout for uniform image sizes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {dummyPortfolioItems.map((item, index) => (
             <motion.div
               key={item.id}
@@ -26,14 +26,13 @@ export default function Portfolio() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: (index % 3) * 0.1, duration: 0.8 }}
-              className="relative group overflow-hidden break-inside-avoid bg-muted"
+              className="relative group overflow-hidden bg-muted aspect-[3/4] rounded-xl"
             >
               <Image
                 src={item.imageUrl}
                 alt={item.description || "Portfolio item"}
-                width={800}
-                height={1000}
-                className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105"
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               
               {/* Overlay */}

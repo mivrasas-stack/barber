@@ -24,7 +24,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { dummyBarbers } from '@/app/dashboard/data';
+import { dummyBarbers } from '@/app/clientes/data';
 
 const navItems = [
   { href: '/barber/appointments', icon: CalendarDays, label: 'Mi Agenda' },
@@ -48,11 +48,11 @@ export default function BarberLayout({
   // When on root /barber, render full-screen like AdminPortal
   if (isRoot) {
     return (
-      <div className="dark bg-[#050505] min-h-[100vh] h-[100vh] text-foreground selection:bg-amber-500/30 overflow-hidden relative flex flex-col">
+      <div className="dark bg-[#050505] min-h-screen text-foreground selection:bg-amber-500/30 overflow-x-hidden relative flex flex-col">
         {/* Global Ambient Glow */}
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-amber-900/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-amber-900/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen" />
-        <div className="relative z-10 w-full flex-1 flex flex-col min-h-0 h-full">
+        <div className="relative z-10 w-full flex-1 flex flex-col">
           {children}
         </div>
       </div>
@@ -61,27 +61,32 @@ export default function BarberLayout({
 
   return (
     <div className="dark bg-background min-h-screen text-foreground selection:bg-primary/30">
-        <SidebarProvider>
-        <Sidebar className="border-r border-white/10 bg-black/80 backdrop-blur-3xl">
-            <SidebarHeader className="pt-8 pb-6 px-6">
-                <div className="flex flex-col items-center gap-4 text-center">
-                    <div className="relative group">
-                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-md group-hover:bg-primary/40 transition-colors duration-500" />
-                        <Avatar className="relative h-20 w-20 border border-primary/30 p-1 bg-black/50 ring-1 ring-primary/20 ring-offset-2 ring-offset-background">
+        <SidebarProvider defaultOpen={false}>
+        <Sidebar className="border-r border-white/5 bg-[#050505]/95 backdrop-blur-3xl shadow-[20px_0_40px_rgba(0,0,0,0.5)]">
+            <SidebarHeader className="pt-10 pb-8 px-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-[50px] rounded-full pointer-events-none" />
+                <div className="flex flex-col items-center gap-5 text-center relative z-10">
+                    <div className="relative group cursor-pointer">
+                        <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-xl group-hover:bg-amber-500/40 transition-colors duration-700" />
+                        <Avatar className="relative h-24 w-24 border border-white/10 p-1 bg-black ring-2 ring-black shadow-2xl transition-all duration-700 group-hover:scale-105 group-hover:border-amber-500/30">
                             <AvatarImage src={me.avatarUrl} alt={me.name} className="rounded-full object-cover" />
-                            <AvatarFallback className="bg-transparent text-white font-headline text-2xl">{me.name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="bg-transparent text-white font-headline text-3xl">{me.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                     </div>
                     
                     <div>
-                        <h2 className="text-xl font-headline tracking-widest uppercase text-white">{me.name}</h2>
-                        <p className="text-[10px] font-light tracking-[0.2em] text-primary uppercase mt-1">Master Barber</p>
+                        <h2 className="text-2xl font-headline tracking-widest uppercase text-white group-hover:text-amber-100 transition-colors">{me.name}</h2>
+                        <div className="flex items-center justify-center gap-2 mt-2">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                            <p className="text-[10px] font-headline tracking-[0.3em] text-amber-500 uppercase">Master Barber</p>
+                        </div>
                     </div>
                 </div>
             </SidebarHeader>
-            <div className="mx-6 h-px bg-white/5 mb-4" />
-            <SidebarContent className="px-4 py-2">
-            <SidebarMenu className="gap-2">
+            <div className="mx-8 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6" />
+            
+            <SidebarContent className="px-6 py-2">
+            <SidebarMenu className="gap-3">
                 {navItems.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                 return (
@@ -90,11 +95,12 @@ export default function BarberLayout({
                         asChild
                         isActive={isActive}
                         tooltip={item.label}
-                        className={`h-14 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary/10 text-primary hover:bg-primary/20' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                        className={`h-14 rounded-2xl transition-all duration-500 relative overflow-hidden group ${isActive ? 'bg-amber-500/10 text-amber-500 hover:bg-amber-500/20' : 'text-white/50 hover:text-white hover:bg-white/5'}`}
                     >
-                        <Link href={item.href} className="flex items-center gap-4 px-4">
-                        <item.icon className={`h-5 w-5 ${isActive ? 'text-primary' : ''}`} />
-                        <span className="font-light tracking-wide text-[13px] uppercase">{item.label}</span>
+                        <Link href={item.href} className="flex items-center gap-5 px-6">
+                        {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-amber-500 rounded-r-full shadow-[0_0_10px_rgba(245,158,11,0.5)]" />}
+                        <item.icon className={`h-5 w-5 transition-transform duration-500 group-hover:scale-110 ${isActive ? 'text-amber-500' : 'text-white/40 group-hover:text-amber-400'}`} />
+                        <span className="font-headline tracking-[0.2em] text-[11px] uppercase">{item.label}</span>
                         </Link>
                     </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -102,39 +108,42 @@ export default function BarberLayout({
                 })}
             </SidebarMenu>
             </SidebarContent>
-            <SidebarFooter className="p-4">
-                <SidebarMenuButton tooltip="Cerrar Sesión" asChild className="h-14 rounded-xl text-white/60 hover:text-white hover:bg-destructive/20 transition-all px-4">
+            
+            <SidebarFooter className="p-6">
+                <SidebarMenuButton tooltip="Cerrar Sesión" asChild className="h-14 rounded-2xl text-white/40 hover:text-white hover:bg-red-500/20 hover:border-red-500/30 border border-transparent transition-all duration-500 px-6 group">
                 <Link href="/">
-                    <LogOut className="h-5 w-5" />
-                    <span className="font-light tracking-wide text-[13px] uppercase">Cerrar Sesión</span>
+                    <LogOut className="h-5 w-5 transition-transform duration-500 group-hover:-translate-x-1 group-hover:text-red-400" />
+                    <span className="font-headline tracking-[0.2em] text-[11px] uppercase group-hover:text-red-100">Cerrar Sesión</span>
                 </Link>
                 </SidebarMenuButton>
             </SidebarFooter>
         </Sidebar>
         
         <SidebarInset className="bg-transparent flex flex-col">
-            <header className="sticky top-0 z-30 flex h-20 items-center justify-between gap-4 border-b border-white/5 bg-background/80 backdrop-blur-xl px-6 lg:px-10">
-                <div className="flex items-center gap-4">
-                    <SidebarTrigger className="text-white hover:text-primary transition-colors" />
-                    <div className="h-6 w-px bg-white/10 hidden md:block" />
-                    <button onClick={() => router.push('/barber')} className="text-white/60 hover:text-white transition-colors flex items-center gap-2">
-                        <ArrowLeft className="w-4 h-4" />
-                        <span className="text-sm font-light tracking-widest uppercase hidden sm:block">Volver</span>
+            <header className="sticky top-0 z-30 flex h-24 items-center justify-between gap-4 border-b border-white/5 bg-[#050505]/80 backdrop-blur-2xl px-6 lg:px-12 shadow-sm">
+                <div className="flex items-center gap-6">
+                    <SidebarTrigger className="text-white/60 hover:text-amber-500 transition-colors w-12 h-12 rounded-2xl hover:bg-amber-500/10 flex items-center justify-center" />
+                    <div className="h-8 w-px bg-white/5 hidden md:block" />
+                    <button onClick={() => router.push('/barber')} className="text-white/40 hover:text-white transition-colors flex items-center gap-3 group">
+                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:text-amber-500 transition-colors">
+                            <ArrowLeft className="w-4 h-4" />
+                        </div>
+                        <span className="text-[10px] font-headline tracking-[0.2em] uppercase hidden sm:block">Volver</span>
                     </button>
-                    <div className="h-6 w-px bg-white/10 hidden md:block" />
-                    <h2 className="hidden md:block text-sm font-light tracking-widest text-white/60 uppercase">
+                    <div className="h-8 w-px bg-white/5 hidden md:block" />
+                    <h2 className="hidden md:block text-[10px] font-headline tracking-[0.25em] text-white/30 uppercase">
                         Portal Profesional
                     </h2>
                 </div>
                 
                 <div className="flex items-center gap-4">
-                    <Link href="/barber" className="flex items-center gap-2 group">
-                        <img src="/logo.png" alt="MIVRA BARBER Logo" className="h-8 w-8 rounded-md object-cover shadow-[0_0_10px_rgba(245,158,11,0.2)]" />
-                        <span className="text-sm font-bold tracking-widest text-white font-headline uppercase leading-none hidden sm:block">MivraBarber</span>
+                    <Link href="/barber" className="flex items-center gap-3 group">
+                        <img src="/logo.png" alt="MIVRA BARBER Logo" className="h-10 w-10 rounded-xl object-cover shadow-[0_0_15px_rgba(245,158,11,0.2)] group-hover:scale-105 transition-transform duration-500" />
+                        <span className="text-[12px] font-bold tracking-[0.25em] text-white font-headline uppercase leading-none hidden sm:block group-hover:text-amber-400 transition-colors">MivraBarber</span>
                     </Link>
                 </div>
             </header>
-            <main className="flex-1 p-6 lg:p-10 max-w-5xl mx-auto w-full">
+            <main className="flex-1 p-6 lg:p-12 max-w-6xl mx-auto w-full">
                 {children}
             </main>
         </SidebarInset>
