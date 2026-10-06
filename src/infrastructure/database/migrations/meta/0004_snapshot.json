@@ -1,6 +1,6 @@
 {
-  "id": "b0f78dfa-f424-4ce5-8d5d-1e4687e33689",
-  "prevId": "aa199123-dcf5-4014-bb78-e91a39c3a999",
+  "id": "70275081-6673-4a3e-8eae-480138640c16",
+  "prevId": "94061daf-c7a2-484d-ad46-43123b4169f1",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -5718,6 +5718,12 @@
           "name": "je_source_unique_posted_idx",
           "columns": [
             {
+              "expression": "tenant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
               "expression": "source_type",
               "isExpression": false,
               "asc": true,
@@ -5738,6 +5744,22 @@
           ],
           "isUnique": true,
           "where": "status = 'POSTED' AND source_id IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "je_reversal_of_unique_idx": {
+          "name": "je_reversal_of_unique_idx",
+          "columns": [
+            {
+              "expression": "reversal_of_entry_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "status = 'POSTED' AND reversal_of_entry_id IS NOT NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -6277,6 +6299,34 @@
         }
       },
       "indexes": {
+        "settle_affil_period_type_idx": {
+          "name": "settle_affil_period_type_idx",
+          "columns": [
+            {
+              "expression": "affiliation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "period_start",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "settlement_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "status != 'CANCELLED' AND affiliation_id IS NOT NULL AND period_start IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "settle_from_to_idx": {
           "name": "settle_from_to_idx",
           "columns": [

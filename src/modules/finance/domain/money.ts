@@ -122,19 +122,29 @@ export class Money {
     return this.amountMinor <= other.amountMinor;
   }
 
+  get minorUnitsString(): string {
+    return this.amountMinor.toString();
+  }
+
   toAmountNumber(): number {
     return Number(this.amountMinor);
   }
 
   format(): string {
-    const num = Number(this.amountMinor);
-    if (this.currency === "COP") {
-      return `$${num.toLocaleString("es-CO")} COP`;
+    const isSafe =
+      this.amountMinor <= BigInt(Number.MAX_SAFE_INTEGER) &&
+      this.amountMinor >= BigInt(-Number.MAX_SAFE_INTEGER);
+    if (isSafe) {
+      const num = Number(this.amountMinor);
+      if (this.currency === "COP") {
+        return `$${num.toLocaleString("es-CO")} COP`;
+      }
+      if (this.currency === "USD") {
+        return `$${(num / 100).toFixed(2)} USD`;
+      }
+      return `${num.toLocaleString()} ${this.currency}`;
     }
-    if (this.currency === "USD") {
-      return `$${(num / 100).toFixed(2)} USD`;
-    }
-    return `${num.toLocaleString()} ${this.currency}`;
+    return `${this.amountMinor.toString()} ${this.currency}`;
   }
 
   toFormattedString(): string {
@@ -142,8 +152,12 @@ export class Money {
   }
 
   toJSON() {
+    const isSafe =
+      this.amountMinor <= BigInt(Number.MAX_SAFE_INTEGER) &&
+      this.amountMinor >= BigInt(-Number.MAX_SAFE_INTEGER);
     return {
-      amountMinor: this.toAmountNumber(),
+      amountMinor: isSafe ? Number(this.amountMinor) : this.amountMinor.toString(),
+      amountMinorStr: this.amountMinor.toString(),
       currency: this.currency,
       formatted: this.format(),
     };

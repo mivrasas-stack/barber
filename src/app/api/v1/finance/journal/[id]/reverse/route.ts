@@ -26,6 +26,7 @@ export async function POST(
       tenantId,
       actorUserId: session.userId,
       reason,
+      allowClawbackAdjustment: body.allowClawbackAdjustment,
     });
 
     return NextResponse.json({

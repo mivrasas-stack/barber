@@ -66,6 +66,9 @@ export const journalEntries = pgTable(
     uniqueIndex("je_source_unique_posted_idx")
       .on(table.tenantId, table.sourceType, table.sourceId, table.entryType)
       .where(sql`status = 'POSTED' AND source_id IS NOT NULL`),
+    uniqueIndex("je_reversal_of_unique_idx")
+      .on(table.reversalOfEntryId)
+      .where(sql`status = 'POSTED' AND reversal_of_entry_id IS NOT NULL`),
     index("je_tenant_occurred_idx").on(table.tenantId, table.occurredAt),
     index("je_entry_number_idx").on(table.entryNumber),
     index("je_source_idx").on(table.sourceType, table.sourceId),
@@ -87,7 +90,7 @@ export const journalLines = pgTable(
       .notNull()
       .references(() => tenants.id, { onDelete: "cascade" }),
     direction: varchar("direction", { length: 10 }).notNull(), // DEBIT, CREDIT
-    amountMinor: bigint("amount_minor", { mode: "number" }).notNull(),
+    amountMinor: bigint("amount_minor", { mode: "bigint" }).notNull(),
     memo: text("memo"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -126,7 +129,7 @@ export const expenses = pgTable(
       .references(() => tenants.id, { onDelete: "cascade" }),
     categoryId: uuid("category_id").references(() => expenseCategories.id, { onDelete: "set null" }),
     description: text("description").notNull(),
-    amountMinor: bigint("amount_minor", { mode: "number" }).notNull(),
+    amountMinor: bigint("amount_minor", { mode: "bigint" }).notNull(),
     currency: char("currency", { length: 3 }).notNull().default("COP"),
     incurredAt: timestamp("incurred_at", { withTimezone: true }).notNull().defaultNow(),
     status: varchar("status", { length: 32 }).notNull().default("POSTED"), // POSTED, REVERSED
@@ -158,7 +161,7 @@ export const settlements = pgTable(
       onDelete: "set null",
     }),
     currency: char("currency", { length: 3 }).notNull().default("COP"),
-    amountMinor: bigint("amount_minor", { mode: "number" }).notNull(),
+    amountMinor: bigint("amount_minor", { mode: "bigint" }).notNull(),
     status: varchar("status", { length: 32 }).notNull().default("CONFIRMED"), // DRAFT, PENDING, CONFIRMED, CANCELLED
     periodStart: timestamp("period_start", { withTimezone: true }),
     periodEnd: timestamp("period_end", { withTimezone: true }),
@@ -173,6 +176,9 @@ export const settlements = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
+    uniqueIndex("settle_affil_period_type_idx")
+      .on(table.affiliationId, table.periodStart, table.settlementType)
+      .where(sql`status != 'CANCELLED' AND affiliation_id IS NOT NULL AND period_start IS NOT NULL`),
     index("settle_from_to_idx").on(table.fromTenantId, table.toTenantId),
     index("settle_affiliation_idx").on(table.affiliationId),
     index("settle_status_idx").on(table.status),
@@ -190,7 +196,7 @@ export const professionalAffiliationTermVersions = pgTable(
     versionNumber: integer("version_number").notNull().default(1),
     settlementModel: varchar("settlement_model", { length: 32 }).notNull().default("CHAIR_RENTAL"),
     commissionBasisPoints: integer("commission_basis_points"), // e.g. 2000 = 20.00%
-    fixedRentAmountMinor: bigint("fixed_rent_amount_minor", { mode: "number" }),
+    fixedRentAmountMinor: bigint("fixed_rent_amount_minor", { mode: "bigint" }),
     currency: varchar("currency", { length: 3 }).notNull().default("COP"),
     settlementFrequency: varchar("settlement_frequency", { length: 32 }).default("MONTHLY"),
     effectiveFrom: timestamp("effective_from", { withTimezone: true }).notNull().defaultNow(),

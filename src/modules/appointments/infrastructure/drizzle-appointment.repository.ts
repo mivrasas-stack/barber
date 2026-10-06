@@ -206,14 +206,15 @@ export class DrizzleAppointmentRepository implements AppointmentRepository {
       });
     } catch (error: any) {
       const pgErr = error?.cause ?? error;
+      const errStr = `${error?.message || ""} ${error?.code || ""} ${pgErr?.message || ""} ${pgErr?.code || ""} ${pgErr?.constraint || ""}`;
       // PostgreSQL error code 23P01 is exclusion_violation
       if (
         pgErr?.code === "23P01" ||
         error?.code === "23P01" ||
-        pgErr?.constraint === "appointments_no_double_booking" ||
-        pgErr?.message?.includes("appointments_no_double_booking") ||
-        pgErr?.message?.includes("exclusion constraint") ||
-        error?.message?.includes("exclusion constraint")
+        errStr.includes("23P01") ||
+        errStr.includes("appointments_no_double_booking") ||
+        errStr.includes("exclusion constraint") ||
+        errStr.includes("exclusion_violation")
       ) {
         throw new ConflictError("APPOINTMENT_SLOT_UNAVAILABLE");
       }

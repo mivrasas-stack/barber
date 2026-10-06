@@ -1,4 +1,4 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, lte, or, isNull, gt, desc } from "drizzle-orm";
 import { db } from "@/infrastructure/database/client";
 import { appointments, appointmentServices } from "@/infrastructure/database/schema/appointments";
 import { staffProfiles } from "@/infrastructure/database/schema/staff";
@@ -6,6 +6,7 @@ import {
   professionalAffiliations,
   professionalAffiliationTerms,
 } from "@/infrastructure/database/schema/professionals";
+import { professionalAffiliationTermVersions } from "@/infrastructure/database/schema/finance";
 import { IFinanceRepository } from "../domain/finance-repository.interface";
 import { JournalEntry } from "../domain/journal-entry";
 import { JournalLine } from "../domain/journal-line";
@@ -93,6 +94,7 @@ export class PostServiceRevenueUseCase {
       settlementModel: SettlementModel;
       commissionBasisPoints: number | null;
       fixedRentAmountMinor: number | null;
+      termVersionNumber: number;
     } | null = null;
 
     if (appointment.staffId) {
@@ -117,20 +119,51 @@ export class PostServiceRevenueUseCase {
           .limit(1);
 
         if (affil) {
-          const [terms] = await client
+          const appointmentDate = appointment.startsAt || appointment.completedAt || new Date();
+          // First query historical term versions valid at the time of appointment
+          const [termVersion] = await client
             .select()
-            .from(professionalAffiliationTerms)
-            .where(eq(professionalAffiliationTerms.affiliationId, affil.id))
+            .from(professionalAffiliationTermVersions)
+            .where(
+              and(
+                eq(professionalAffiliationTermVersions.affiliationId, affil.id),
+                lte(professionalAffiliationTermVersions.effectiveFrom, appointmentDate),
+                or(
+                  isNull(professionalAffiliationTermVersions.effectiveUntil),
+                  gt(professionalAffiliationTermVersions.effectiveUntil, appointmentDate)
+                )
+              )
+            )
+            .orderBy(desc(professionalAffiliationTermVersions.versionNumber))
             .limit(1);
 
-          if (terms) {
+          if (termVersion) {
             affiliationTermsRow = {
               affiliationId: affil.id,
               professionalWorkspaceTenantId: affil.professionalWorkspaceTenantId,
-              settlementModel: terms.settlementModel as SettlementModel,
-              commissionBasisPoints: terms.commissionBasisPoints,
-              fixedRentAmountMinor: terms.fixedRentAmountMinor,
+              settlementModel: termVersion.settlementModel as SettlementModel,
+              commissionBasisPoints: termVersion.commissionBasisPoints,
+              fixedRentAmountMinor: termVersion.fixedRentAmountMinor ? Number(termVersion.fixedRentAmountMinor) : null,
+              termVersionNumber: termVersion.versionNumber,
             };
+          } else {
+            // Fallback to active terms table
+            const [terms] = await client
+              .select()
+              .from(professionalAffiliationTerms)
+              .where(eq(professionalAffiliationTerms.affiliationId, affil.id))
+              .limit(1);
+
+            if (terms) {
+              affiliationTermsRow = {
+                affiliationId: affil.id,
+                professionalWorkspaceTenantId: affil.professionalWorkspaceTenantId,
+                settlementModel: terms.settlementModel as SettlementModel,
+                commissionBasisPoints: terms.commissionBasisPoints,
+                fixedRentAmountMinor: terms.fixedRentAmountMinor,
+                termVersionNumber: 1,
+              };
+            }
           }
         }
       }
@@ -304,6 +337,19 @@ export class PostServiceRevenueUseCase {
         sourceId: appointment.id,
         description: `Service revenue for appointment ${appointment.id}`,
         createdByUserId: safeActorUserId,
+        metadata: {
+          correlationId: appointment.id,
+          financialOperationId: `op_appt_${appointment.id}`,
+          counterpartyTenantId: affiliationTermsRow?.professionalWorkspaceTenantId || null,
+          termVersionNumber: affiliationTermsRow?.termVersionNumber || null,
+          settlementModel: affiliationTermsRow?.settlementModel || "EMPLOYEE",
+          commissionBasisPoints: breakdown.commissionBasisPoints,
+          collectorParty,
+          grossMinor: breakdown.grossServiceAmount.minorUnitsString,
+          professionalShareMinor: breakdown.professionalTotalShare.minorUnitsString,
+          hostCommissionMinor: breakdown.hostCommissionAmount.minorUnitsString,
+          tipMinor: breakdown.tipAmount.minorUnitsString,
+        },
         lines: hostLines,
       });
 
@@ -451,6 +497,19 @@ export class PostServiceRevenueUseCase {
           sourceId: appointment.id,
           description: `Service revenue for appointment ${appointment.id}`,
           createdByUserId: safeActorUserId,
+          metadata: {
+            correlationId: appointment.id,
+            financialOperationId: `op_appt_${appointment.id}`,
+            counterpartyTenantId: appointment.tenantId,
+            termVersionNumber: affiliationTermsRow?.termVersionNumber || null,
+            settlementModel: affiliationTermsRow?.settlementModel || "COMMISSION",
+            commissionBasisPoints: breakdown.commissionBasisPoints,
+            collectorParty,
+            grossMinor: breakdown.grossServiceAmount.minorUnitsString,
+            professionalShareMinor: breakdown.professionalTotalShare.minorUnitsString,
+            hostCommissionMinor: breakdown.hostCommissionAmount.minorUnitsString,
+            tipMinor: breakdown.tipAmount.minorUnitsString,
+          },
           lines: profLines,
         });
 

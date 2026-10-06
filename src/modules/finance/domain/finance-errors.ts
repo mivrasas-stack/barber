@@ -153,3 +153,13 @@ export class FinanceModuleDisabledError extends AppError {
     super(message);
   }
 }
+
+export class SettledOperationReversalBlockedError extends AppError {
+  readonly statusCode = 409;
+  readonly code = "SETTLED_OPERATION_REVERSAL_BLOCKED";
+  constructor(
+    message = "Cannot reverse journal entry after funds have already been partially or fully settled. Create an explicit adjustment or counter-settlement first."
+  ) {
+    super(message);
+  }
+}

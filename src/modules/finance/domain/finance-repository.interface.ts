@@ -97,6 +97,7 @@ export interface IFinanceRepository {
     journalEntryId: string,
     actorUserId: string,
     reason: string,
+    options?: { allowClawbackAdjustment?: boolean },
     tx?: any
   ): Promise<JournalEntry>;
 

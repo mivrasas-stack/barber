@@ -28,6 +28,8 @@ export interface ServiceFinancialBreakdown {
   professionalNetReceivable: Money; // Amount Professional is owed by Host (if host collected)
 }
 
+export type FinancialAllocation = ServiceFinancialBreakdown;
+
 export class SettlementPolicy {
   /**
    * Calculates deterministic breakdown for an appointment service according to affiliation terms.

@@ -1,4 +1,4 @@
-import { eq, and, sql, desc, gte, lte } from "drizzle-orm";
+import { eq, and, or, sql, desc, gte, lte } from "drizzle-orm";
 import { db } from "@/infrastructure/database/client";
 import {
   financialAccounts,
@@ -42,6 +42,8 @@ import {
   JournalEntryNotFoundError,
   JournalEntryAlreadyReversedError,
   FinancialAccountNotFoundError,
+  SettlementExceedsOutstandingError,
+  SettledOperationReversalBlockedError,
 } from "../domain/finance-errors";
 import { NotFoundError } from "@/shared/errors/app-error";
 
@@ -405,30 +407,69 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
     journalEntryId: string,
     actorUserId: string,
     reason: string,
+    options?: { allowClawbackAdjustment?: boolean },
     tx?: any
   ): Promise<JournalEntry> {
     const runInTx = async (trx: any) => {
-      const original = await this.findJournalEntryById(journalEntryId, trx);
-      if (!original) {
+      // Row lock on original journal entry to serialize concurrent reversals
+      const [lockedRow] = await trx
+        .select()
+        .from(journalEntries)
+        .where(eq(journalEntries.id, journalEntryId))
+        .for("update");
+
+      if (!lockedRow) {
         throw new JournalEntryNotFoundError(journalEntryId);
       }
-      if (original.isReversed()) {
+      if (lockedRow.status === "REVERSED") {
         throw new JournalEntryAlreadyReversedError(journalEntryId);
       }
 
+      // If reversing an operation whose obligations were already settled
+      if (lockedRow.sourceType === "APPOINTMENT" && lockedRow.sourceId) {
+        const [settledRow] = await trx
+          .select()
+          .from(settlements)
+          .where(
+            and(
+              or(
+                eq(settlements.fromTenantId, lockedRow.tenantId),
+                eq(settlements.toTenantId, lockedRow.tenantId)
+              ),
+              eq(settlements.status, "CONFIRMED")
+            )
+          )
+          .limit(1);
+
+        if (settledRow && options?.allowClawbackAdjustment === false) {
+          throw new SettledOperationReversalBlockedError();
+        }
+      }
+
+      const originalLines = await trx
+        .select()
+        .from(journalLines)
+        .where(eq(journalLines.journalEntryId, lockedRow.id));
+
+      const original = this.toJournalEntryDomain(lockedRow, originalLines);
       const reversalNumber = `REV-${original.entryNumber}-${Date.now()}`;
       const reversalDomain = original.createReversal(reversalNumber, actorUserId, reason);
 
       const postedReversal = await this.postJournalEntry(reversalDomain, trx);
 
-      // Update original entry status to REVERSED and point to reversal
-      await trx
+      // Atomic update with status check
+      const [updatedOriginal] = await trx
         .update(journalEntries)
         .set({
           status: "REVERSED",
           reversedEntryId: postedReversal.id,
         })
-        .where(eq(journalEntries.id, original.id!));
+        .where(and(eq(journalEntries.id, original.id!), eq(journalEntries.status, "POSTED")))
+        .returning();
+
+      if (!updatedOriginal) {
+        throw new JournalEntryAlreadyReversedError(journalEntryId);
+      }
 
       return postedReversal;
     };
@@ -668,7 +709,7 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
           tenantId: expense.tenantId,
           categoryId: expense.categoryId,
           description: expense.description,
-          amountMinor: Number(expense.amount.amountMinor),
+          amountMinor: expense.amount.amountMinor,
           currency: expense.amount.currency,
           incurredAt: expense.incurredAt,
           status: expense.status,
@@ -795,6 +836,8 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
 
   async createSettlement(settlement: Settlement, tx?: any): Promise<Settlement> {
     const runInTx = async (trx: any) => {
+      const settlementId = settlement.id || crypto.randomUUID();
+
       // Create accounts for both payer and payee workspaces
       const payerAccounts = await this.getOrCreateDefaultAccounts(
         settlement.fromTenantId,
@@ -815,6 +858,44 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
         payerAccounts.get(STANDARD_ACCOUNT_CODES.PROFESSIONAL_COMMISSION_PAYABLE) ??
         payerAccounts.get(STANDARD_ACCOUNT_CODES.SETTLEMENT_CLEARING)!;
 
+      // Row-level lock on the payable account to prevent race condition over-settlement
+      await trx
+        .select()
+        .from(financialAccounts)
+        .where(eq(financialAccounts.id, payerPayableAcc.id))
+        .for("update");
+
+      // Verify that this settlement doesn't exceed the outstanding payable balance
+      if (
+        settlement.settlementType === "COMMISSION" ||
+        settlement.settlementType === "CHAIR_RENT"
+      ) {
+        const [payerAgg] = await trx
+          .select({
+            credits: sql<string>`coalesce(sum(case when ${journalLines.direction} = 'CREDIT' then ${journalLines.amountMinor} else 0 end), 0)::text`,
+            debits: sql<string>`coalesce(sum(case when ${journalLines.direction} = 'DEBIT' then ${journalLines.amountMinor} else 0 end), 0)::text`,
+          })
+          .from(journalLines)
+          .innerJoin(
+            journalEntries,
+            and(
+              eq(journalLines.journalEntryId, journalEntries.id),
+              eq(journalEntries.status, "POSTED")
+            )
+          )
+          .where(eq(journalLines.financialAccountId, payerPayableAcc.id));
+
+        const credits = BigInt(payerAgg?.credits || "0");
+        const debits = BigInt(payerAgg?.debits || "0");
+        const outstandingPayable = credits - debits;
+
+        if (settlement.amount.amountMinor > outstandingPayable) {
+          throw new SettlementExceedsOutstandingError(
+            `Settlement amount (${settlement.amount.amountMinor}) exceeds outstanding balance (${outstandingPayable})`
+          );
+        }
+      }
+
       const payerJeNumber = `SETTLE-PAYER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
       const payerJe = new JournalEntry({
         tenantId: settlement.fromTenantId,
@@ -822,8 +903,16 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
         entryType: "SETTLEMENT",
         currency: settlement.currency,
         sourceType: "SETTLEMENT",
+        sourceId: settlementId,
         description: `Settlement payout to ${settlement.toTenantId}: ${settlement.notes || "Settlement"}`,
         createdByUserId: settlement.createdByUserId,
+        metadata: {
+          correlationId: settlementId,
+          financialOperationId: `op_settle_${settlementId}`,
+          counterpartyTenantId: settlement.toTenantId,
+          role: "PAYER",
+          settlementType: settlement.settlementType,
+        },
         lines: [
           new JournalLine({
             financialAccountId: payerPayableAcc.id,
@@ -859,8 +948,16 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
         entryType: "SETTLEMENT",
         currency: settlement.currency,
         sourceType: "SETTLEMENT",
+        sourceId: settlementId,
         description: `Settlement receipt from ${settlement.fromTenantId}: ${settlement.notes || "Settlement"}`,
         createdByUserId: settlement.createdByUserId,
+        metadata: {
+          correlationId: settlementId,
+          financialOperationId: `op_settle_${settlementId}`,
+          counterpartyTenantId: settlement.fromTenantId,
+          role: "PAYEE",
+          settlementType: settlement.settlementType,
+        },
         lines: [
           new JournalLine({
             financialAccountId: payeeCashAcc.id,
@@ -885,11 +982,12 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
       const [settlementRow] = await trx
         .insert(settlements)
         .values({
+          id: settlementId,
           fromTenantId: settlement.fromTenantId,
           toTenantId: settlement.toTenantId,
           affiliationId: settlement.affiliationId,
           currency: settlement.currency,
-          amountMinor: Number(settlement.amount.amountMinor),
+          amountMinor: settlement.amount.amountMinor,
           status: settlement.status,
           periodStart: settlement.periodStart,
           periodEnd: settlement.periodEnd,

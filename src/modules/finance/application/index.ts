@@ -6,3 +6,5 @@ export * from "./reverse-journal-entry.usecase";
 export * from "./get-financial-summary.usecase";
 export * from "./get-ledger-entries.usecase";
 export * from "./post-service-revenue.usecase";
+export * from "./post-chair-rent-obligation.usecase";
+

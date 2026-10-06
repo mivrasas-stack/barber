@@ -11,6 +11,7 @@ export async function authorizeFinanceRequest(
   options?: {
     requiredModule?: string;
     targetTenantId?: string;
+    disallowAffiliatedRole?: boolean;
   }
 ) {
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
@@ -37,6 +38,18 @@ export async function authorizeFinanceRequest(
   // Validate user has membership or authorized affiliation in this tenant
   const workspaceResolver = new ResolveWorkspacesUseCase();
   const workspace = await workspaceResolver.validateAccess(session.userId, tenantId);
+
+  // Privacy boundary: Affiliated professionals in a host workspace cannot inspect host expenses or ledger
+  const disallowAffiliated =
+    options?.disallowAffiliatedRole ||
+    options?.requiredModule === "finance.expenses" ||
+    options?.requiredModule === "finance.ledger";
+
+  if (disallowAffiliated && workspace.role === "AFFILIATED_PROFESSIONAL") {
+    throw new ForbiddenError(
+      "FORBIDDEN: Affiliated professionals cannot access internal business ledger or expenses of the host shop."
+    );
+  }
 
   // Validate module entitlement if required
   if (options?.requiredModule) {

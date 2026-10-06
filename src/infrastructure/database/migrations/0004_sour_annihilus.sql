@@ -139,6 +139,13 @@ CREATE INDEX "jl_account_created_idx" ON "journal_lines" USING btree ("financial
 CREATE INDEX "jl_tenant_created_idx" ON "journal_lines" USING btree ("tenant_id","created_at");--> statement-breakpoint
 CREATE INDEX "affil_term_versions_affil_idx" ON "professional_affiliation_term_versions" USING btree ("affiliation_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "affil_term_versions_num_idx" ON "professional_affiliation_term_versions" USING btree ("affiliation_id","version_number");--> statement-breakpoint
+CREATE UNIQUE INDEX "je_reversal_of_unique_idx" ON "journal_entries" USING btree ("reversal_of_entry_id") WHERE status = 'POSTED' AND reversal_of_entry_id IS NOT NULL;--> statement-breakpoint
 CREATE INDEX "settle_from_to_idx" ON "settlements" USING btree ("from_tenant_id","to_tenant_id");--> statement-breakpoint
 CREATE INDEX "settle_affiliation_idx" ON "settlements" USING btree ("affiliation_id");--> statement-breakpoint
-CREATE INDEX "settle_status_idx" ON "settlements" USING btree ("status");
+CREATE INDEX "settle_status_idx" ON "settlements" USING btree ("status");--> statement-breakpoint
+CREATE UNIQUE INDEX "settle_affil_period_type_idx" ON "settlements" USING btree ("affiliation_id","period_start","settlement_type") WHERE status != 'CANCELLED' AND affiliation_id IS NOT NULL AND period_start IS NOT NULL;--> statement-breakpoint
+ALTER TABLE "professional_affiliation_term_versions" ADD CONSTRAINT "affiliation_terms_no_overlap"
+EXCLUDE USING gist (
+    "affiliation_id" WITH =,
+    tstzrange("effective_from", coalesce("effective_until", 'infinity'::timestamptz), '[)') WITH &&
+);
