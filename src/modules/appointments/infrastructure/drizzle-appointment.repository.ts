@@ -303,6 +303,23 @@ export class DrizzleAppointmentRepository implements AppointmentRepository {
         },
       });
 
+      // Pure PostgreSQL transactional authority: financialize appointment on COMPLETED
+      if (input.toStatus === "COMPLETED") {
+        const { DrizzleFinanceRepository } = await import(
+          "@/modules/finance/infrastructure/drizzle-finance.repository"
+        );
+        const { PostServiceRevenueUseCase } = await import(
+          "@/modules/finance/application/post-service-revenue.usecase"
+        );
+        const financeRepo = new DrizzleFinanceRepository();
+        const postRevenueUseCase = new PostServiceRevenueUseCase(financeRepo);
+        await postRevenueUseCase.execute({
+          appointmentId: input.appointmentId,
+          actorUserId: input.actorUserId || undefined,
+          tx,
+        });
+      }
+
       return this.toAppointmentDomain(updated);
     });
   }
