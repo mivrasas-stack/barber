@@ -3,6 +3,7 @@ import { tenants } from "./tenants";
 import { locations } from "./locations";
 import { memberships } from "./memberships";
 import { services } from "./services";
+import { professionalProfiles } from "./professionals";
 
 export const staffProfiles = pgTable(
   "staff_profiles",
@@ -14,6 +15,8 @@ export const staffProfiles = pgTable(
     membershipId: uuid("membership_id")
       .notNull()
       .references(() => memberships.id, { onDelete: "cascade" }),
+    professionalProfileId: uuid("professional_profile_id")
+      .references(() => professionalProfiles.id, { onDelete: "set null" }),
     displayName: varchar("display_name", { length: 255 }).notNull(),
     bio: text("bio"),
     status: varchar("status", { length: 32 }).notNull().default("ACTIVE"),
@@ -23,6 +26,7 @@ export const staffProfiles = pgTable(
   (table) => [
     uniqueIndex("staff_profiles_membership_idx").on(table.membershipId),
     index("staff_profiles_tenant_id_idx").on(table.tenantId),
+    index("staff_profiles_prof_id_idx").on(table.professionalProfileId),
   ]
 );
 

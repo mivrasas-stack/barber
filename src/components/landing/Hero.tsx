@@ -63,14 +63,23 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-12 flex flex-col sm:flex-row items-center gap-6"
+          className="mt-12 flex flex-col items-center gap-6"
         >
-          <PremiumButton asChild size="lg">
-            <Link href="/login">Reservar Cita</Link>
-          </PremiumButton>
-          <PremiumButton asChild variant="glass" size="lg">
-            <Link href="#services">Ver Servicios</Link>
-          </PremiumButton>
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <PremiumButton asChild size="lg">
+              <Link href="/login">Reservar Cita</Link>
+            </PremiumButton>
+            <PremiumButton asChild variant="glass" size="lg">
+              <Link href="#services">Ver Servicios</Link>
+            </PremiumButton>
+          </div>
+
+          <div className="pt-2 flex items-center justify-center gap-2 text-xs md:text-sm text-foreground/80 bg-background/40 backdrop-blur-md px-4 py-2 rounded-full border border-border/50">
+            <span>¿Eres barbero profesional independiente?</span>
+            <Link href="/profesionales" className="text-primary hover:underline font-semibold flex items-center gap-1">
+              Crea tu propio espacio &rarr;
+            </Link>
+          </div>
         </motion.div>
       </div>
 

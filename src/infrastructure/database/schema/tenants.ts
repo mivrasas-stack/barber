@@ -4,6 +4,7 @@ export const tenants = pgTable("tenants", {
   id: uuid("id").primaryKey().defaultRandom(),
   slug: varchar("slug", { length: 100 }).notNull().unique(),
   name: varchar("name", { length: 255 }).notNull(),
+  tenantType: varchar("tenant_type", { length: 32 }).notNull().default("BUSINESS"), // BUSINESS, SOLO_PROFESSIONAL
   status: varchar("status", { length: 32 }).notNull().default("ACTIVE"), // ACTIVE, SUSPENDED, CANCELLED
   defaultCurrency: char("default_currency", { length: 3 }).notNull().default("COP"),
   defaultTimezone: varchar("default_timezone", { length: 100 }).notNull().default("America/Bogota"),

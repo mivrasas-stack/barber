@@ -2395,9 +2395,9 @@
       "name": "appointments",
       "schema": "",
       "columns": {
-        "50": {
-          "name": "50",
-          "type": "varchar",
+        "source": {
+          "name": "source",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true,
           "default": "'ONLINE'"

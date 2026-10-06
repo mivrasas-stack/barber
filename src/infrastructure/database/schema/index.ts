@@ -12,3 +12,7 @@ export * from "./scheduling";
 export * from "./appointments";
 export * from "./idempotency";
 export * from "./outbox";
+export * from "./professionals";
+export * from "./subscriptions";
+export * from "./modules";
+export * from "./onboarding";

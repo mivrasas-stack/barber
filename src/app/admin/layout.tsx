@@ -10,6 +10,7 @@ import {
   ShieldAlert, 
   Activity, 
   Settings,
+  Scissors,
   LogOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +19,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 const DOCK_ITEMS = [
   { href: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/admin/tenants', icon: Building2, label: 'Negocios' },
+  { href: '/admin/independent-professionals', icon: Scissors, label: 'Independientes' },
   { href: '/admin/subscriptions', icon: CreditCard, label: 'Suscripciones' },
   { href: '/admin/users', icon: Users, label: 'Usuarios' },
   { href: '/admin/audit', icon: ShieldAlert, label: 'Auditoría' },

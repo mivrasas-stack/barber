@@ -11,7 +11,8 @@ import {
   UserCircle,
   ArrowLeft,
   Wallet,
-  UserCheck
+  UserCheck,
+  Building2
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -28,10 +29,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { dummyBarbers } from '@/app/clientes/data';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { WorkspaceSwitcher } from '@/components/navigation/workspace-switcher';
 
 const navItems = [
   { href: '/barber/appointments', icon: CalendarDays, label: 'Mi Agenda' },
   { href: '/barber/barberos', icon: Users, label: 'Barberos' },
+  { href: '/barber/affiliations', icon: Building2, label: 'Afiliaciones' },
   { href: '/barber/accounting', icon: Wallet, label: 'Contabilidad' },
   { href: '/barber/customers', icon: UserCheck, label: 'Mis Clientes' },
   { href: '/barber/services', icon: Scissors, label: 'Servicios' },
@@ -126,6 +129,7 @@ export default function BarberLayout({
             <header className="sticky top-0 z-30 flex h-24 items-center justify-between gap-4 border-b border-border bg-background/80 backdrop-blur-2xl px-6 lg:px-12 shadow-sm">
                 <div className="flex items-center gap-6">
                     <SidebarTrigger className="text-foreground/60 hover:text-amber-500 transition-colors w-12 h-12 rounded-2xl hover:bg-amber-500/10 flex items-center justify-center" />
+                    <WorkspaceSwitcher />
                     <div className="h-8 w-px bg-foreground/5 hidden md:block" />
                     <button onClick={() => router.push('/barber')} className="text-foreground/40 hover:text-foreground transition-colors flex items-center gap-3 group">
                         <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-amber-500/20 group-hover:text-amber-500 transition-colors">

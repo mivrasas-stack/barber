@@ -15,6 +15,13 @@
       "when": 1791245868970,
       "tag": "0001_tricky_inhumans",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791257797119,
+      "tag": "0002_shallow_raza",
+      "breakpoints": true
     }
   ]
 }

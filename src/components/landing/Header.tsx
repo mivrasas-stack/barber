@@ -15,6 +15,7 @@ const navLinks = [
   { href: "#about", label: "Manifiesto" },
   { href: "#ranking", label: "Top Barberías" },
   { href: "#pricing", label: "Planes" },
+  { href: "/profesionales", label: "Para Barberos" },
   { href: "#portfolio", label: "Galería" },
   { href: "#products", label: "Boutique" },
 ];
@@ -73,11 +74,13 @@ export default function Header() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-3">
           {/* Theme toggle — always visible regardless of scroll state */}
           <ThemeToggle scrolled={scrolled} />
 
-
+          <Button asChild variant="ghost" size="sm" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground">
+            <Link href="/profesionales">Soy Barbero</Link>
+          </Button>
 
           <PremiumButton asChild size="sm">
             <Link href="/login">Reservar</Link>

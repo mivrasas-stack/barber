@@ -1,9 +1,15 @@
 import { createHash } from "crypto";
+import { eq } from "drizzle-orm";
+import { db } from "@/infrastructure/database/client";
+import { locations } from "@/infrastructure/database/schema/locations";
 import { AppointmentRepository, AppointmentWithServices } from "../domain/appointment-repository.interface";
 import { IdempotencyRepository } from "../domain/idempotency.interface";
 import { ServiceRepository } from "@/modules/catalog/domain/service-repository.interface";
 import { StaffRepository } from "@/modules/staff/domain/staff-repository.interface";
-import { ConflictError, NotFoundError, ValidationError } from "@/shared/errors/app-error";
+import { AffiliationRepository } from "@/modules/professionals/domain/affiliation-repository.interface";
+import { DrizzleAffiliationRepository } from "@/modules/professionals/infrastructure/drizzle-affiliation.repository";
+import { DrizzleProfessionalRepository } from "@/modules/professionals/infrastructure/drizzle-professional.repository";
+import { ConflictError, NotFoundError, ValidationError, ForbiddenError } from "@/shared/errors/app-error";
 import { AppointmentSource, AppointmentStatus } from "../domain/appointment";
 
 export interface CreateAppointmentInput {
@@ -24,12 +30,20 @@ export interface CreateAppointmentInput {
 }
 
 export class CreateAppointmentUseCase {
+  private readonly affiliationRepo: AffiliationRepository;
+  private readonly professionalRepo: DrizzleProfessionalRepository;
+
   constructor(
     private readonly appointmentRepo: AppointmentRepository,
     private readonly idempotencyRepo: IdempotencyRepository,
     private readonly serviceRepo: ServiceRepository,
-    private readonly staffRepo: StaffRepository
-  ) {}
+    private readonly staffRepo: StaffRepository,
+    affiliationRepo?: AffiliationRepository,
+    professionalRepo?: DrizzleProfessionalRepository
+  ) {
+    this.affiliationRepo = affiliationRepo ?? new DrizzleAffiliationRepository();
+    this.professionalRepo = professionalRepo ?? new DrizzleProfessionalRepository();
+  }
 
   async execute(input: CreateAppointmentInput): Promise<{
     appointment: AppointmentWithServices;
@@ -88,7 +102,44 @@ export class CreateAppointmentUseCase {
     }
 
     try {
-      // 2. Validate Staff
+      // 2. Validate Location & Cross-Tenant Affiliation (Case A vs Case B)
+      const [loc] = await db
+        .select()
+        .from(locations)
+        .where(eq(locations.id, input.locationId))
+        .limit(1);
+
+      if (!loc) {
+        throw new NotFoundError("Location not found");
+      }
+
+      const isSameTenant = loc.tenantId === input.tenantId;
+      if (!isSameTenant) {
+        // Case B: Cross-tenant booking. Must have an ACTIVE affiliation
+        const affiliation = await this.affiliationRepo.findActiveAffiliation(
+          input.tenantId, // Solo professional workspace tenant
+          loc.tenantId    // Host barbershop tenant
+        );
+
+        if (!affiliation || !affiliation.isActive) {
+          throw new ForbiddenError(
+            "AFFILIATION_NOT_ACTIVE: No active affiliation between professional workspace and host barbershop"
+          );
+        }
+
+        const isLocAllowed = await this.affiliationRepo.isLocationAuthorized(
+          affiliation.id,
+          input.locationId
+        );
+
+        if (!isLocAllowed) {
+          throw new ForbiddenError(
+            "AFFILIATION_LOCATION_NOT_ALLOWED: Host location is not authorized for this professional affiliation"
+          );
+        }
+      }
+
+      // 3. Validate Staff
       const staff = await this.staffRepo.findById(input.staffId);
       if (!staff || staff.tenantId !== input.tenantId) {
         throw new NotFoundError("Staff member not found in this tenant");
@@ -97,7 +148,7 @@ export class CreateAppointmentUseCase {
         throw new ValidationError("Staff member is inactive");
       }
 
-      // 3. Validate and Calculate Services
+      // 4. Validate and Calculate Services
       if (!input.serviceIds || input.serviceIds.length === 0) {
         throw new ValidationError("At least one service must be selected");
       }
@@ -133,14 +184,14 @@ export class CreateAppointmentUseCase {
         });
       }
 
-      // 4. Calculate Time Range
+      // 5. Calculate Time Range
       const startsAtDate = new Date(input.startsAt);
       if (isNaN(startsAtDate.getTime())) {
         throw new ValidationError("Invalid startsAt date format");
       }
       const endsAtDate = new Date(startsAtDate.getTime() + totalDurationMinutes * 60 * 1000);
 
-      // 5. Create in atomic transaction
+      // 6. Create in atomic transaction
       const result = await this.appointmentRepo.createWithDetails({
         appointment: {
           tenantId: input.tenantId,
@@ -188,7 +239,15 @@ export class CreateAppointmentUseCase {
         },
       });
 
-      // 6. Complete Idempotency record if applicable
+      // 7. Track Customer Relationship for Commercial Owner (Tenant)
+      if (input.customerUserId) {
+        await this.professionalRepo.recordCustomerRelationship(
+          input.tenantId,
+          input.customerUserId
+        );
+      }
+
+      // 8. Complete Idempotency record if applicable
       if (idempotencyRecordId) {
         await this.idempotencyRepo.complete(idempotencyRecordId, 201, {
           appointment: {
