@@ -48,6 +48,14 @@ export async function seedDatabase() {
     { code: "inventory.read", description: "View products and stock levels" },
     { code: "inventory.manage", description: "Adjust stock, register purchases and sales" },
     { code: "finance.read", description: "View financial reports, earnings, and cash registers" },
+    { code: "finance.ledger.read", description: "View double-entry ledger journal entries" },
+    { code: "finance.expenses.read", description: "View recorded operational expenses" },
+    { code: "finance.expenses.create", description: "Record new expenses" },
+    { code: "finance.expenses.manage", description: "Reverse or edit operational expenses" },
+    { code: "finance.settlements.read", description: "View liquidations and settlement transfers" },
+    { code: "finance.settlements.create", description: "Initiate new settlement transfers" },
+    { code: "finance.settlements.confirm", description: "Confirm received settlement liquidations" },
+    { code: "finance.adjustments.create", description: "Create manual accounting adjustments" },
     { code: "settings.read", description: "View general settings" },
     { code: "settings.manage", description: "Modify general business settings" },
     { code: "roles.read", description: "View roles and assigned permissions" },
@@ -106,6 +114,11 @@ export async function seedDatabase() {
     "inventory.read",
     "inventory.manage",
     "finance.read",
+    "finance.ledger.read",
+    "finance.expenses.read",
+    "finance.expenses.create",
+    "finance.settlements.read",
+    "finance.settlements.create",
     "settings.read",
   ];
   const employeePerms = [
@@ -119,6 +132,13 @@ export async function seedDatabase() {
   const affiliatedProfessionalPerms = [
     "locations.read",
     "appointments.create",
+    "finance.read",
+    "finance.ledger.read",
+    "finance.expenses.read",
+    "finance.expenses.create",
+    "finance.settlements.read",
+    "finance.settlements.create",
+    "finance.settlements.confirm",
   ];
 
   const rolePermBindings: [string, string[]][] = [
@@ -661,10 +681,13 @@ export async function seedDatabase() {
     { code: "analytics.overview", name: "Métricas y Rendimiento", description: "Reportes de ocupación, horas pico e ingresos proyectados", category: "ANALYTICS", status: "AVAILABLE", sortOrder: 11 },
     { code: "marketing.promotions", name: "Promociones y Fidelización", description: "Cupones de descuento y campañas de retorno de clientes", category: "CUSTOMERS", status: "AVAILABLE", sortOrder: 12 },
     { code: "notifications.reminders", name: "Recordatorios Automáticos", description: "Notificaciones para reducir inasistencias de clientes", category: "OPERATIONS", status: "AVAILABLE", sortOrder: 13 },
-    { code: "finance.overview", name: "Finanzas y Liquidación", description: "Control de caja, liquidación de alquiler de silla y comisiones", category: "FINANCE", status: "COMING_SOON", sortOrder: 14 },
-    { code: "finance.invoicing", name: "Facturación Electrónica", description: "Emisión de facturas y recibos autorizados", category: "FINANCE", status: "COMING_SOON", sortOrder: 15 },
-    { code: "finance.commissions", name: "Cálculo de Comisiones", description: "Cálculo automático de porcentajes y comisiones sobre servicios", category: "FINANCE", status: "COMING_SOON", sortOrder: 16 },
-    { code: "ai.assistant", name: "Asistente AI de Agenda", description: "Copiloto inteligente para agendamiento por WhatsApp y optimización", category: "AI", status: "COMING_SOON", sortOrder: 17 },
+    { code: "finance.overview", name: "Finanzas y Liquidación", description: "Control de caja, liquidación de alquiler de silla y comisiones", category: "FINANCE", status: "AVAILABLE", sortOrder: 14 },
+    { code: "finance.expenses", name: "Control de Gastos", description: "Registro y control de egresos y gastos operativos", category: "FINANCE", status: "AVAILABLE", sortOrder: 15 },
+    { code: "finance.settlements", name: "Liquidaciones y Pagos", description: "Transferencias y liquidación entre anfitriones y profesionales", category: "FINANCE", status: "AVAILABLE", sortOrder: 16 },
+    { code: "finance.ledger", name: "Libro Mayor Contable", description: "Auditoría transaccional de partida doble y asientos contables", category: "FINANCE", status: "AVAILABLE", sortOrder: 17 },
+    { code: "finance.invoicing", name: "Facturación Electrónica", description: "Emisión de facturas y recibos autorizados", category: "FINANCE", status: "COMING_SOON", sortOrder: 18 },
+    { code: "finance.commissions", name: "Cálculo de Comisiones", description: "Cálculo automático de porcentajes y comisiones sobre servicios", category: "FINANCE", status: "COMING_SOON", sortOrder: 19 },
+    { code: "ai.assistant", name: "Asistente AI de Agenda", description: "Copiloto inteligente para agendamiento por WhatsApp y optimización", category: "AI", status: "COMING_SOON", sortOrder: 20 },
   ];
 
   const modMap = new Map<string, string>();
@@ -691,6 +714,9 @@ export async function seedDatabase() {
   const dependencies = [
     { module: "scheduling.appointments", dependsOn: "scheduling.calendar" },
     { module: "customers.history", dependsOn: "customers.directory" },
+    { module: "finance.expenses", dependsOn: "finance.overview" },
+    { module: "finance.settlements", dependsOn: "finance.overview" },
+    { module: "finance.ledger", dependsOn: "finance.overview" },
     { module: "finance.invoicing", dependsOn: "finance.overview" },
     { module: "finance.commissions", dependsOn: "finance.overview" },
   ];
@@ -726,6 +752,9 @@ export async function seedDatabase() {
       "analytics.overview",
       "notifications.reminders",
       "finance.overview",
+      "finance.expenses",
+      "finance.settlements",
+      "finance.ledger",
     ];
 
     for (const code of soloProModules) {

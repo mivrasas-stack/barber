@@ -73,7 +73,13 @@ export default function ProfessionalWorkspaceLayout({
     loadData();
   }, []);
 
-  const navItems = [
+  const navItems: Array<{
+    code: string;
+    href: string;
+    icon: any;
+    label: string;
+    comingSoon?: boolean;
+  }> = [
     {
       code: "core.dashboard",
       href: "/professional",
@@ -121,7 +127,6 @@ export default function ProfessionalWorkspaceLayout({
       href: "/professional/finance",
       icon: DollarSign,
       label: "Finanzas",
-      comingSoon: true,
     },
   ];
 
