@@ -39,7 +39,7 @@ export function UserWaitRoomCart() {
         />
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <button className="relative group p-2 transition-colors hover:text-white text-muted-foreground focus:outline-none">
+            <button className="relative group p-2 transition-colors hover:text-foreground text-muted-foreground focus:outline-none">
               <Coffee className="h-5 w-5 group-hover:scale-110 transition-transform" />
               {waitRoomCount > 0 && (
                 <Badge variant="destructive" className="absolute top-0 right-0 h-4 w-4 flex items-center justify-center rounded-full p-0 text-[10px] bg-primary text-primary-foreground border-none">
@@ -50,7 +50,7 @@ export function UserWaitRoomCart() {
             </button>
           </DialogTrigger>
           
-          <DialogContent className="sm:max-w-2xl bg-black/80 backdrop-blur-2xl border-white/10 p-0 overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8)] [&>button]:hidden">
+          <DialogContent className="sm:max-w-2xl bg-black/80 backdrop-blur-2xl border-border p-0 overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.8)] [&>button]:hidden">
             <DialogTitle className="sr-only">Lounge VIP</DialogTitle>
             
             {/* Decorative elements */}
@@ -60,16 +60,16 @@ export function UserWaitRoomCart() {
             <div className="relative z-10 flex flex-col max-h-[80vh]">
                 
                 {/* Header */}
-                <div className="flex items-center justify-between p-8 border-b border-white/5">
+                <div className="flex items-center justify-between p-8 border-b border-border">
                     <div>
-                        <h2 className="text-2xl font-headline tracking-widest uppercase text-white">
+                        <h2 className="text-2xl font-headline tracking-widest uppercase text-foreground">
                             Lounge VIP
                         </h2>
                         <p className="text-muted-foreground font-light text-xs tracking-wider mt-1 uppercase">Tus selecciones de cortesía</p>
                     </div>
                     <button 
                         onClick={() => setIsOpen(false)}
-                        className="p-2 text-white/40 hover:text-white hover:bg-white/5 rounded-full transition-all"
+                        className="p-2 text-foreground/40 hover:text-foreground hover:bg-foreground/5 rounded-full transition-all"
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -80,13 +80,13 @@ export function UserWaitRoomCart() {
                     {waitRoomItems.length > 0 ? (
                         <div className="space-y-6">
                             {waitRoomItems.map(item => (
-                            <div key={item.id} className="flex justify-between items-center gap-6 group p-4 border border-transparent hover:border-white/5 hover:bg-white/5 transition-all duration-300">
+                            <div key={item.id} className="flex justify-between items-center gap-6 group p-4 border border-transparent hover:border-border hover:bg-foreground/5 transition-all duration-300">
                                 <div className="flex items-center gap-6">
-                                    <div className="relative h-24 w-24 bg-transparent flex items-center justify-center overflow-hidden rounded-md border border-white/5">
+                                    <div className="relative h-24 w-24 bg-transparent flex items-center justify-center overflow-hidden rounded-md border border-border">
                                         <Image src={item.imageUrl} alt={item.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
                                     </div>
                                     <div className="space-y-1">
-                                        <p className="font-headline tracking-wide text-white text-xl">{item.name}</p>
+                                        <p className="font-headline tracking-wide text-foreground text-xl">{item.name}</p>
                                         <p className="text-sm font-light text-primary tracking-widest uppercase">
                                             Cantidad: {item.quantity}
                                         </p>
@@ -96,7 +96,7 @@ export function UserWaitRoomCart() {
                                     </div>
                                 </div>
                                 <button 
-                                    className="p-3 text-white/20 hover:text-destructive hover:bg-destructive/10 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                                    className="p-3 text-foreground/20 hover:text-destructive hover:bg-destructive/10 rounded-full transition-all opacity-0 group-hover:opacity-100"
                                     onClick={() => removeFromWaitRoom(item.id)}
                                 >
                                     <Trash2 className="h-5 w-5" />
@@ -106,8 +106,8 @@ export function UserWaitRoomCart() {
                         </div>
                     ) : (
                         <div className="h-48 flex flex-col items-center justify-center text-muted-foreground space-y-6">
-                            <div className="w-20 h-20 rounded-full border border-white/5 flex items-center justify-center bg-white/5">
-                                <Coffee className="h-8 w-8 text-white/20" />
+                            <div className="w-20 h-20 rounded-full border border-border flex items-center justify-center bg-foreground/5">
+                                <Coffee className="h-8 w-8 text-foreground/20" />
                             </div>
                             <p className="font-light tracking-widest uppercase text-sm text-center max-w-[250px]">No has solicitado ningún servicio a la sala de espera.</p>
                         </div>
@@ -116,10 +116,10 @@ export function UserWaitRoomCart() {
 
                 {/* Footer */}
                 {waitRoomItems.length > 0 && (
-                    <div className="p-8 border-t border-white/5 bg-white/[0.02]">
+                    <div className="p-8 border-t border-border bg-foreground/5">
                         <div className="flex justify-between items-end mb-8">
                             <span className="text-sm font-light tracking-widest uppercase text-muted-foreground">Total en Caja</span>
-                            <span className="text-3xl font-headline text-white tracking-wide">COP {waitRoomTotal.toLocaleString('es-CO')}</span>
+                            <span className="text-3xl font-headline text-foreground tracking-wide">COP {waitRoomTotal.toLocaleString('es-CO')}</span>
                         </div>
                         <PremiumButton className="w-full justify-center py-6" onClick={() => setIsPaymentDialogOpen(true)}>
                             Generar Código de Pago

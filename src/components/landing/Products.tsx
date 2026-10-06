@@ -45,7 +45,7 @@ export default function Products() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
-            className="lg:col-span-7 group relative flex flex-col justify-end min-h-[500px] lg:min-h-[600px] rounded-lg overflow-hidden border border-primary/30 shadow-[0_0_40px_rgba(200,155,60,0.15)] bg-[#050505]"
+            className="lg:col-span-7 group relative flex flex-col justify-end min-h-[500px] lg:min-h-[600px] rounded-lg overflow-hidden border border-primary/30 shadow-[0_0_40px_rgba(200,155,60,0.15)] bg-background"
           >
             {/* Upsell Badge */}
             <div className="absolute top-6 left-6 z-30 bg-primary text-primary-foreground text-xs font-bold tracking-widest uppercase py-2 px-4 rounded-full flex items-center gap-2 shadow-lg">
@@ -53,7 +53,7 @@ export default function Products() {
               El Más Recomendado
             </div>
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent z-10"></div>
             
             <div className="absolute inset-0 w-full h-full transform transition-transform duration-1000 group-hover:scale-105">
               <Image
@@ -66,17 +66,17 @@ export default function Products() {
             
             <div className="relative z-20 p-8 lg:p-12 w-full flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div className="flex-1">
-                <h3 className="text-3xl lg:text-4xl font-headline text-white tracking-wide uppercase mb-3 drop-shadow-md">
+                <h3 className="text-3xl lg:text-4xl font-headline text-foreground tracking-wide uppercase mb-3 drop-shadow-md">
                   {starProduct.name}
                 </h3>
-                <p className="text-white/80 text-sm md:text-base font-light leading-relaxed max-w-md">
+                <p className="text-foreground/80 text-sm md:text-base font-light leading-relaxed max-w-md">
                   Nuestra fórmula maestra, diseñada para quienes exigen lo mejor. Obtén resultados profesionales desde casa.
                 </p>
                 <div className="mt-4 flex items-center gap-4">
                   <span className="text-3xl font-light text-primary">
                     ${starProduct.price.toLocaleString("es-CO")}
                   </span>
-                  <span className="text-sm text-white/50 line-through">
+                  <span className="text-sm text-foreground/50 line-through">
                     ${(starProduct.price * 1.3).toLocaleString("es-CO")}
                   </span>
                 </div>
@@ -97,9 +97,9 @@ export default function Products() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: index * 0.2, duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
-                className="group flex flex-col sm:flex-row bg-[#0a0a0a] rounded-lg border border-white/5 overflow-hidden flex-1 hover:border-white/20 transition-colors duration-500"
+                className="group flex flex-col sm:flex-row bg-background rounded-lg border border-border overflow-hidden flex-1 hover:border-border transition-colors duration-500"
               >
-                <div className="relative w-full sm:w-2/5 aspect-[4/3] sm:aspect-auto sm:h-full bg-black">
+                <div className="relative w-full sm:w-2/5 aspect-[4/3] sm:aspect-auto sm:h-full bg-foreground/5">
                   <div className="absolute inset-0 w-full h-full transform transition-transform duration-700 group-hover:scale-105">
                     <Image
                       src={product.imageUrl}
@@ -111,14 +111,14 @@ export default function Products() {
                 </div>
                 
                 <div className="p-6 sm:w-3/5 flex flex-col justify-center">
-                  <h3 className="text-xl font-headline text-white tracking-wide uppercase mb-2">
+                  <h3 className="text-xl font-headline text-foreground tracking-wide uppercase mb-2">
                     {product.name}
                   </h3>
                   <span className="text-lg font-light text-primary mb-4 block">
                     ${product.price.toLocaleString("es-CO")}
                   </span>
                   
-                  <Link href="/portal" className="text-xs uppercase tracking-widest text-white/60 hover:text-primary transition-colors flex items-center gap-2 mt-auto">
+                  <Link href="/portal" className="text-xs uppercase tracking-widest text-foreground/60 hover:text-primary transition-colors flex items-center gap-2 mt-auto">
                     Añadir
                     <span className="w-4 h-[1px] bg-current"></span>
                   </Link>

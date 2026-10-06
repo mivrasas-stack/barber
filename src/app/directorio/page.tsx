@@ -27,7 +27,7 @@ function deg2rad(deg: number) {
 
 export default function DirectorioPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredShops, setFilteredShops] = useState(barbershops);
+  const [filteredShops, setFilteredShops] = useState<((typeof barbershops)[number] & { distance?: number })[]>(barbershops);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
 
@@ -135,7 +135,7 @@ export default function DirectorioPage() {
                   fill
                   className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
                 
                 {/* Distance Badge if available */}
                 {shop.distance !== undefined && (
@@ -146,10 +146,10 @@ export default function DirectorioPage() {
               </div>
               
               <div className="p-8 flex flex-col flex-grow relative z-10 -mt-16 pointer-events-none">
-                <div className="flex items-center gap-1 mb-2 bg-black/70 backdrop-blur-md border border-white/20 w-max px-3 py-1 rounded-full pointer-events-auto">
+                <div className="flex items-center gap-1 mb-2 bg-black/70 backdrop-blur-md border border-border w-max px-3 py-1 rounded-full pointer-events-auto">
                   <Star className="w-4 h-4 text-primary fill-primary" />
-                  <span className="text-white font-medium text-sm">{shop.rating}</span>
-                  <span className="text-white/60 text-xs ml-1">({shop.reviews})</span>
+                  <span className="text-foreground font-medium text-sm">{shop.rating}</span>
+                  <span className="text-foreground/60 text-xs ml-1">({shop.reviews})</span>
                 </div>
                 
                 <h3 className="text-2xl font-headline text-foreground mb-1 tracking-wide uppercase mt-4">{shop.name}</h3>

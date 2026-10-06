@@ -19,7 +19,7 @@ const PremiumToggle = ({ checked, onChange }: { checked: boolean, onChange: (che
       className={`relative w-14 h-7 rounded-full cursor-pointer transition-all duration-500 ease-out flex items-center p-1 border backdrop-blur-sm ${
         checked 
           ? 'bg-primary/20 border-primary/50 shadow-[inset_0_0_10px_rgba(200,155,60,0.2),0_0_15px_rgba(200,155,60,0.4)]' 
-          : 'bg-white/5 border-white/10 hover:bg-white/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]'
+          : 'bg-foreground/5 border-border hover:bg-foreground/10 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]'
       }`}
     >
       <div 
@@ -46,7 +46,7 @@ export default function AdminSettings() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-            <h1 className="text-4xl md:text-5xl font-headline text-white tracking-widest uppercase">
+            <h1 className="text-4xl md:text-5xl font-headline text-foreground tracking-widest uppercase">
             Configuración Global
             </h1>
             <p className="text-muted-foreground font-light mt-2 tracking-wide">
@@ -66,15 +66,15 @@ export default function AdminSettings() {
                   <Store className="w-5 h-5" />
                   <span className="font-light tracking-wide text-sm">Información de Sede</span>
               </button>
-              <Link href="/barber/admin/roles" className="w-full flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
+              <Link href="/barber/admin/roles" className="w-full flex items-center gap-3 px-4 py-3 text-foreground/60 hover:text-foreground hover:bg-foreground/5 rounded-xl transition-colors">
                   <Users className="w-5 h-5" />
                   <span className="font-light tracking-wide text-sm">Roles y Permisos</span>
               </Link>
-              <Link href="/barber/admin/notifications" className="w-full flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
+              <Link href="/barber/admin/notifications" className="w-full flex items-center gap-3 px-4 py-3 text-foreground/60 hover:text-foreground hover:bg-foreground/5 rounded-xl transition-colors">
                   <Bell className="w-5 h-5" />
                   <span className="font-light tracking-wide text-sm">Notificaciones</span>
               </Link>
-              <Link href="/barber/admin/security" className="w-full flex items-center gap-3 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
+              <Link href="/barber/admin/security" className="w-full flex items-center gap-3 px-4 py-3 text-foreground/60 hover:text-foreground hover:bg-foreground/5 rounded-xl transition-colors">
                   <Lock className="w-5 h-5" />
                   <span className="font-light tracking-wide text-sm">Seguridad</span>
               </Link>
@@ -83,8 +83,8 @@ export default function AdminSettings() {
           {/* Settings Content */}
           <div className="md:col-span-9 space-y-6">
               
-              <Card className="bg-white/[0.02] border-white/10">
-                  <CardHeader className="border-b border-white/5 pb-4">
+              <Card className="bg-foreground/5 border-border">
+                  <CardHeader className="border-b border-border pb-4">
                       <CardTitle className="text-sm font-light tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                           <Store className="w-4 h-4 text-primary" />
                           Detalles de la Franquicia
@@ -93,45 +93,45 @@ export default function AdminSettings() {
                   <CardContent className="p-6 space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-2">
-                              <label className="text-[10px] font-headline tracking-widest text-white/40 uppercase">Nombre de la Empresa</label>
-                              <Input defaultValue="BarberParadise Inc." className="bg-white/5 border-white/10 text-white h-12" />
+                              <label className="text-[10px] font-headline tracking-widest text-foreground/40 uppercase">Nombre de la Empresa</label>
+                              <Input defaultValue="BarberParadise Inc." className="bg-foreground/5 border-border text-foreground h-12" />
                           </div>
                           <div className="space-y-2">
-                              <label className="text-[10px] font-headline tracking-widest text-white/40 uppercase">NIT / RUC</label>
-                              <Input defaultValue="900.123.456-7" className="bg-white/5 border-white/10 text-white h-12" />
+                              <label className="text-[10px] font-headline tracking-widest text-foreground/40 uppercase">NIT / RUC</label>
+                              <Input defaultValue="900.123.456-7" className="bg-foreground/5 border-border text-foreground h-12" />
                           </div>
                           <div className="space-y-2">
-                              <label className="text-[10px] font-headline tracking-widest text-white/40 uppercase">Correo de Contacto</label>
-                              <Input defaultValue="admin@barberparadise.com" type="email" className="bg-white/5 border-white/10 text-white h-12" />
+                              <label className="text-[10px] font-headline tracking-widest text-foreground/40 uppercase">Correo de Contacto</label>
+                              <Input defaultValue="admin@barberparadise.com" type="email" className="bg-foreground/5 border-border text-foreground h-12" />
                           </div>
                           <div className="space-y-2">
-                              <label className="text-[10px] font-headline tracking-widest text-white/40 uppercase">Teléfono Principal</label>
-                              <Input defaultValue="+57 300 123 4567" className="bg-white/5 border-white/10 text-white h-12" />
+                              <label className="text-[10px] font-headline tracking-widest text-foreground/40 uppercase">Teléfono Principal</label>
+                              <Input defaultValue="+57 300 123 4567" className="bg-foreground/5 border-border text-foreground h-12" />
                           </div>
                       </div>
                   </CardContent>
               </Card>
 
-              <Card className="bg-white/[0.02] border-white/10">
-                  <CardHeader className="border-b border-white/5 pb-4">
+              <Card className="bg-foreground/5 border-border">
+                  <CardHeader className="border-b border-border pb-4">
                       <CardTitle className="text-sm font-light tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                           <Settings className="w-4 h-4 text-primary" />
                           Preferencias del Sistema
                       </CardTitle>
                   </CardHeader>
                   <CardContent className="p-6 space-y-6">
-                      <div className="group flex items-center justify-between p-4 md:p-5 border border-white/5 bg-gradient-to-r from-white/[0.02] to-transparent hover:from-white/[0.04] hover:to-white/[0.01] hover:border-white/10 rounded-2xl transition-all duration-500">
+                      <div className="group flex items-center justify-between p-4 md:p-5 border border-border bg-gradient-to-r from-foreground/[0.02] to-transparent hover:from-foreground/[0.04] hover:to-foreground/[0.01] hover:border-border rounded-2xl transition-all duration-500">
                           <div>
-                              <p className="font-headline tracking-wide text-white group-hover:text-primary transition-colors duration-300">Recordatorios SMS</p>
-                              <p className="text-xs font-light text-white/50 mt-1">Enviar SMS a los clientes 24h antes de su cita.</p>
+                              <p className="font-headline tracking-wide text-foreground group-hover:text-primary transition-colors duration-300">Recordatorios SMS</p>
+                              <p className="text-xs font-light text-foreground/50 mt-1">Enviar SMS a los clientes 24h antes de su cita.</p>
                           </div>
                           <PremiumToggle checked={smsEnabled} onChange={setSmsEnabled} />
                       </div>
                       
-                      <div className="group flex items-center justify-between p-4 md:p-5 border border-white/5 bg-gradient-to-r from-white/[0.02] to-transparent hover:from-white/[0.04] hover:to-white/[0.01] hover:border-white/10 rounded-2xl transition-all duration-500">
+                      <div className="group flex items-center justify-between p-4 md:p-5 border border-border bg-gradient-to-r from-foreground/[0.02] to-transparent hover:from-foreground/[0.04] hover:to-foreground/[0.01] hover:border-border rounded-2xl transition-all duration-500">
                           <div>
-                              <p className="font-headline tracking-wide text-white group-hover:text-primary transition-colors duration-300">Aprobación Manual de Citas</p>
-                              <p className="text-xs font-light text-white/50 mt-1">Requerir que un admin apruebe reservas web.</p>
+                              <p className="font-headline tracking-wide text-foreground group-hover:text-primary transition-colors duration-300">Aprobación Manual de Citas</p>
+                              <p className="text-xs font-light text-foreground/50 mt-1">Requerir que un admin apruebe reservas web.</p>
                           </div>
                           <PremiumToggle checked={manualApproval} onChange={setManualApproval} />
                       </div>

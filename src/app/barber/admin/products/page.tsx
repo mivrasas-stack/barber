@@ -19,7 +19,7 @@ export default function AdminProducts() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-            <h1 className="text-4xl md:text-5xl font-headline text-white tracking-widest uppercase">
+            <h1 className="text-4xl md:text-5xl font-headline text-foreground tracking-widest uppercase">
             Boutique (Inventario)
             </h1>
             <p className="text-muted-foreground font-light mt-2 tracking-wide">
@@ -36,17 +36,17 @@ export default function AdminProducts() {
       {/* Filters & Search */}
       <div className="flex flex-col sm:flex-row gap-4 items-center">
           <div className="relative w-full sm:max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
               <Input 
                 placeholder="Buscar por nombre o ID..." 
-                className="w-full bg-white/5 border-white/10 text-white pl-10 focus-visible:ring-primary h-12"
+                className="w-full bg-foreground/5 border-border text-foreground pl-10 focus-visible:ring-primary h-12"
               />
           </div>
       </div>
 
       {/* Products Table */}
-      <Card className="bg-white/[0.02] border-white/10 overflow-hidden">
-        <CardHeader className="border-b border-white/5 pb-4 bg-white/[0.01]">
+      <Card className="bg-foreground/5 border-border overflow-hidden">
+        <CardHeader className="border-b border-border pb-4 bg-white/[0.01]">
             <CardTitle className="text-sm font-light tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4 text-primary" />
                 Catálogo Actual
@@ -56,40 +56,40 @@ export default function AdminProducts() {
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="border-b border-white/5 bg-white/[0.02]">
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase">Producto</th>
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase">Precio</th>
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase">Stock Actual</th>
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase text-right">Estado</th>
+                        <tr className="border-b border-border bg-foreground/5">
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase">Producto</th>
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase">Precio</th>
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase">Stock Actual</th>
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase text-right">Estado</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                         {dummyProducts.map(product => {
                             const isLowStock = product.stock <= product.stockMin;
                             return (
-                                <tr key={product.id} className="hover:bg-white/5 transition-colors group">
+                                <tr key={product.id} className="hover:bg-foreground/5 transition-colors group">
                                     <td className="p-4">
                                         <div className="flex items-center gap-4">
-                                            <div className="relative w-12 h-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center p-2">
+                                            <div className="relative w-12 h-12 rounded-lg bg-foreground/5 border border-border flex items-center justify-center p-2">
                                                 <Image src={product.imageUrl} alt={product.name} fill className="object-contain" />
                                             </div>
                                             <div>
-                                                <div className="font-headline text-white tracking-wide text-lg">{product.name}</div>
-                                                <div className="text-[10px] tracking-widest text-white/40 uppercase">ID: {product.id}</div>
+                                                <div className="font-headline text-foreground tracking-wide text-lg">{product.name}</div>
+                                                <div className="text-[10px] tracking-widest text-foreground/40 uppercase">ID: {product.id}</div>
                                             </div>
                                         </div>
                                     </td>
                                     <td className="p-4">
-                                        <div className="font-light text-white">
+                                        <div className="font-light text-foreground">
                                             COP {product.price.toLocaleString('es-CO')}
                                         </div>
                                     </td>
                                     <td className="p-4">
                                         <div className="flex items-center gap-2">
-                                            <span className={`font-headline text-lg ${isLowStock ? 'text-yellow-500' : 'text-white'}`}>
+                                            <span className={`font-headline text-lg ${isLowStock ? 'text-yellow-500' : 'text-foreground'}`}>
                                                 {product.stock}
                                             </span>
-                                            <span className="text-[10px] tracking-widest text-white/40 uppercase">/ Mín {product.stockMin}</span>
+                                            <span className="text-[10px] tracking-widest text-foreground/40 uppercase">/ Mín {product.stockMin}</span>
                                         </div>
                                     </td>
                                     <td className="p-4 text-right">

@@ -23,6 +23,20 @@ export function UserReviewForm() {
         });
         return;
     }
+    try {
+      const storedReviews = JSON.parse(localStorage.getItem('barber_reviews') || '[]');
+      storedReviews.push({
+        id: `REV_${Date.now()}`,
+        barberId: 'BBR001',
+        rating,
+        comment: review,
+        date: new Date().toLocaleDateString('es-ES'),
+      });
+      localStorage.setItem('barber_reviews', JSON.stringify(storedReviews));
+    } catch (err) {
+      console.error('Error al guardar reseña:', err);
+    }
+
     toast({
         title: "Testimonio Recibido",
         description: "Agradecemos tu tiempo y confianza en BarberParadise.",
@@ -41,19 +55,19 @@ export function UserReviewForm() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="mb-4 w-[calc(100vw-3rem)] sm:w-[400px] overflow-hidden rounded-2xl bg-black/80 backdrop-blur-2xl border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]"
+            className="mb-4 w-[calc(100vw-3rem)] sm:w-[400px] overflow-hidden rounded-2xl bg-black/80 backdrop-blur-2xl border border-border shadow-[0_0_40px_rgba(0,0,0,0.5)]"
           >
-            <div className="relative bg-gradient-to-br from-white/5 to-transparent p-6">
+            <div className="relative bg-gradient-to-br from-foreground/5 to-transparent p-6">
               {/* Close Button */}
               <button 
                 onClick={() => setIsOpen(false)}
-                className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
+                className="absolute top-4 right-4 text-foreground/40 hover:text-foreground transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
 
               <div className="text-center mb-6">
-                <h3 className="text-xl font-headline text-white tracking-widest uppercase mb-1 mt-2">Evalúa tu Experiencia</h3>
+                <h3 className="text-xl font-headline text-foreground tracking-widest uppercase mb-1 mt-2">Evalúa tu Experiencia</h3>
                 <p className="text-muted-foreground font-light text-xs">Ayúdanos a alcanzar la perfección.</p>
               </div>
 
@@ -66,7 +80,7 @@ export function UserReviewForm() {
                         "h-8 w-8 cursor-pointer transition-all duration-300 hover:scale-110",
                         (hoverRating >= star || rating >= star)
                           ? "text-primary fill-primary drop-shadow-[0_0_10px_rgba(200,155,60,0.5)]"
-                          : "text-white/20 hover:text-white/40"
+                          : "text-foreground/20 hover:text-foreground/40"
                       )}
                       onClick={() => setRating(star)}
                       onMouseEnter={() => setHoverRating(star)}
@@ -79,7 +93,7 @@ export function UserReviewForm() {
                   placeholder="Comparte los detalles de tu experiencia..."
                   value={review}
                   onChange={(e) => setReview(e.target.value)}
-                  className="min-h-[100px] bg-white/5 border-white/10 rounded-lg focus-visible:ring-1 focus-visible:ring-primary text-white resize-none font-light placeholder:text-white/20 text-sm"
+                  className="min-h-[100px] bg-foreground/5 border-border rounded-lg focus-visible:ring-1 focus-visible:ring-primary text-foreground resize-none font-light placeholder:text-foreground/20 text-sm"
                 />
                 
                 <div className="pt-2">
@@ -99,7 +113,7 @@ export function UserReviewForm() {
         onClick={() => setIsOpen(!isOpen)}
         className="group flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-primary/25 transition-all duration-300 relative overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-background/20 to-transparent pointer-events-none" />
         {isOpen ? <X className="h-6 w-6 relative z-10" /> : <MessageSquarePlus className="h-6 w-6 relative z-10" />}
       </motion.button>
     </div>
@@ -130,13 +144,13 @@ export function UserReviewInlineForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto rounded-[24px] bg-black/40 backdrop-blur-xl border border-white/5 p-8 shadow-[0_0_40px_rgba(0,0,0,0.2)]">
+    <div className="max-w-2xl mx-auto rounded-[24px] bg-black/40 backdrop-blur-xl border border-border p-8 shadow-[0_0_40px_rgba(0,0,0,0.2)]">
       <div className="text-center mb-8">
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/5 border border-amber-500/20 flex items-center justify-center mx-auto mb-4">
           <MessageSquarePlus className="w-8 h-8 text-amber-500" />
         </div>
-        <h3 className="text-2xl font-headline text-white tracking-widest uppercase mb-2">Evalúa tu Experiencia</h3>
-        <p className="text-white/50 font-light text-sm tracking-wide">Ayúdanos a alcanzar la perfección.</p>
+        <h3 className="text-2xl font-headline text-foreground tracking-widest uppercase mb-2">Evalúa tu Experiencia</h3>
+        <p className="text-foreground/50 font-light text-sm tracking-wide">Ayúdanos a alcanzar la perfección.</p>
       </div>
 
       <div className="space-y-8">
@@ -148,7 +162,7 @@ export function UserReviewInlineForm() {
                 "h-10 w-10 sm:h-12 sm:w-12 cursor-pointer transition-all duration-300 hover:scale-110",
                 (hoverRating >= star || rating >= star)
                   ? "text-primary fill-primary drop-shadow-[0_0_15px_rgba(200,155,60,0.5)]"
-                  : "text-white/10 hover:text-white/30"
+                  : "text-foreground/10 hover:text-foreground/30"
               )}
               onClick={() => setRating(star)}
               onMouseEnter={() => setHoverRating(star)}
@@ -161,7 +175,7 @@ export function UserReviewInlineForm() {
           placeholder="Comparte los detalles de tu experiencia..."
           value={review}
           onChange={(e) => setReview(e.target.value)}
-          className="min-h-[150px] bg-white/5 border-white/10 rounded-xl focus-visible:ring-1 focus-visible:ring-primary text-white resize-none font-light placeholder:text-white/30 text-base p-4"
+          className="min-h-[150px] bg-foreground/5 border-border rounded-xl focus-visible:ring-1 focus-visible:ring-primary text-foreground resize-none font-light placeholder:text-foreground/30 text-base p-4"
         />
         
         <div className="pt-2 flex justify-center">

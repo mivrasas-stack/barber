@@ -23,7 +23,7 @@ export default function AdminAccounting() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-            <h1 className="text-4xl md:text-5xl font-headline text-white tracking-widest uppercase">
+            <h1 className="text-4xl md:text-5xl font-headline text-foreground tracking-widest uppercase">
             Finanzas
             </h1>
             <p className="text-muted-foreground font-light mt-2 tracking-wide">
@@ -42,19 +42,19 @@ export default function AdminAccounting() {
 
       {/* Financial KPIs */}
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="bg-white/[0.02] border-white/10 overflow-hidden relative group">
+        <Card className="bg-foreground/5 border-border overflow-hidden relative group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
             <CardTitle className="text-xs font-light tracking-widest text-muted-foreground uppercase">Balance General</CardTitle>
             <CreditCard className="h-4 w-4 text-primary" />
           </CardHeader>
           <CardContent className="relative z-10">
-            <div className={`text-3xl font-headline tracking-wide mt-2 ${balance >= 0 ? 'text-white' : 'text-red-500'}`}>
+            <div className={`text-3xl font-headline tracking-wide mt-2 ${balance >= 0 ? 'text-foreground' : 'text-red-500'}`}>
               COP {balance.toLocaleString('es-CO')}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/[0.02] border-white/10 overflow-hidden relative group">
+        <Card className="bg-foreground/5 border-border overflow-hidden relative group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-[40px] -mr-10 -mt-10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
             <CardTitle className="text-xs font-light tracking-widest text-muted-foreground uppercase">Ingresos (Mes)</CardTitle>
@@ -67,7 +67,7 @@ export default function AdminAccounting() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/[0.02] border-white/10 overflow-hidden relative group">
+        <Card className="bg-foreground/5 border-border overflow-hidden relative group">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-[40px] -mr-10 -mt-10" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
             <CardTitle className="text-xs font-light tracking-widest text-muted-foreground uppercase">Gastos (Mes)</CardTitle>
@@ -82,8 +82,8 @@ export default function AdminAccounting() {
       </div>
 
       {/* Transactions Table */}
-      <Card className="bg-white/[0.02] border-white/10 overflow-hidden">
-        <CardHeader className="border-b border-white/5 pb-4 bg-white/[0.01]">
+      <Card className="bg-foreground/5 border-border overflow-hidden">
+        <CardHeader className="border-b border-border pb-4 bg-white/[0.01]">
             <CardTitle className="text-sm font-light tracking-widest text-muted-foreground uppercase flex items-center gap-2">
                 <FileText className="w-4 h-4 text-primary" />
                 Registro de Transacciones
@@ -93,24 +93,24 @@ export default function AdminAccounting() {
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead>
-                        <tr className="border-b border-white/5 bg-white/[0.02]">
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase">Fecha</th>
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase">ID</th>
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase">Descripción</th>
-                            <th className="p-4 text-xs font-headline tracking-widest text-white/40 uppercase text-right">Monto</th>
+                        <tr className="border-b border-border bg-foreground/5">
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase">Fecha</th>
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase">ID</th>
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase">Descripción</th>
+                            <th className="p-4 text-xs font-headline tracking-widest text-foreground/40 uppercase text-right">Monto</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                         {allTransactions.sort((a,b) => b.date.localeCompare(a.date)).map(txn => (
-                            <tr key={txn.id} className="hover:bg-white/5 transition-colors group">
+                            <tr key={txn.id} className="hover:bg-foreground/5 transition-colors group">
                                 <td className="p-4">
-                                    <span className="font-light text-white/80">{txn.date}</span>
+                                    <span className="font-light text-foreground/80">{txn.date}</span>
                                 </td>
                                 <td className="p-4">
-                                    <span className="text-[10px] tracking-widest text-white/40 uppercase">{txn.id}</span>
+                                    <span className="text-[10px] tracking-widest text-foreground/40 uppercase">{txn.id}</span>
                                 </td>
                                 <td className="p-4">
-                                    <span className="font-light text-white tracking-wide">{txn.description}</span>
+                                    <span className="font-light text-foreground tracking-wide">{txn.description}</span>
                                 </td>
                                 <td className="p-4 text-right">
                                     <div className={`inline-flex items-center gap-2 font-headline tracking-widest text-lg ${txn.type === 'Ingreso' ? 'text-green-500' : 'text-red-500'}`}>

@@ -63,7 +63,7 @@ export default function SalaEsperaClientePage() {
 
   const itemVariants = {
     hidden: { opacity: 0, scale: 0.95 },
-    show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
+    show: { opacity: 1, scale: 1, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
   };
 
   return (
@@ -73,7 +73,7 @@ export default function SalaEsperaClientePage() {
 
       {/* Header */}
       <div className="flex flex-col mt-2 mb-4 gap-4 relative z-10">
-        <Link href="/clientes" className="inline-flex items-center text-white/40 hover:text-white transition-colors text-sm w-fit mb-2">
+        <Link href="/clientes" className="inline-flex items-center text-foreground/40 hover:text-foreground transition-colors text-sm w-fit mb-2">
           <ChevronLeft className="w-4 h-4 mr-1" /> Volver al Inicio
         </Link>
         <motion.div 
@@ -82,14 +82,14 @@ export default function SalaEsperaClientePage() {
           className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
         >
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/70 mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 border border-border text-xs text-foreground/70 mb-4">
               <Timer className="w-3.5 h-3.5 text-amber-500 animate-pulse" /> 
-              Tu turno es el <strong className="text-white">#12</strong> (Tiempo est. 15 min)
+              Tu turno es el <strong className="text-foreground">#12</strong> (Tiempo est. 15 min)
             </div>
-            <h1 className="text-3xl md:text-5xl font-headline uppercase tracking-widest text-white/90">
+            <h1 className="text-3xl md:text-5xl font-headline uppercase tracking-widest text-foreground/90">
               Lounge <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">VIP</span>
             </h1>
-            <p className="text-white/40 text-sm md:text-base font-light tracking-wide mt-2 max-w-lg">
+            <p className="text-foreground/40 text-sm md:text-base font-light tracking-wide mt-2 max-w-lg">
               Mientras esperas tu turno, disfruta de nuestro menú de cortesía y productos a la venta. Te lo llevamos a tu asiento.
             </p>
           </div>
@@ -100,10 +100,10 @@ export default function SalaEsperaClientePage() {
       <div className="space-y-12 relative z-10">
         {categories.map(category => (
           <div key={category}>
-            <h2 className="text-xl font-headline tracking-widest text-white/80 uppercase mb-6 flex items-center gap-3">
+            <h2 className="text-xl font-headline tracking-widest text-foreground/80 uppercase mb-6 flex items-center gap-3">
               <span className="w-8 h-px bg-amber-500/50"></span>
               {category}
-              <span className="flex-1 h-px bg-white/10"></span>
+              <span className="flex-1 h-px bg-foreground/10"></span>
             </h2>
             
             <motion.div 
@@ -117,9 +117,9 @@ export default function SalaEsperaClientePage() {
                 <motion.div 
                   key={product.id}
                   variants={itemVariants}
-                  className="group relative flex flex-col p-4 rounded-[1.5rem] bg-[#0A0A0A] border border-white/5 hover:border-amber-500/30 transition-all duration-300"
+                  className="group relative flex flex-col p-4 rounded-[1.5rem] bg-background border border-border hover:border-amber-500/30 transition-all duration-300"
                 >
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-4 bg-white/5">
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-4 bg-foreground/5">
                     <Image 
                       src={product.imageUrl} 
                       alt={product.name} 
@@ -127,27 +127,27 @@ export default function SalaEsperaClientePage() {
                       className="object-cover group-hover:scale-105 transition-transform duration-500 mix-blend-luminosity group-hover:mix-blend-normal"
                     />
                     <div className="absolute top-2 right-2">
-                      <Badge variant="secondary" className="bg-black/60 backdrop-blur-md border-white/10 text-white font-mono">
+                      <Badge variant="secondary" className="bg-black/60 backdrop-blur-md border-border text-foreground font-mono">
                         ${product.price.toLocaleString('es-CO')}
                       </Badge>
                     </div>
                   </div>
 
-                  <h3 className="text-sm md:text-base font-medium text-white/90 truncate mb-4">{product.name}</h3>
+                  <h3 className="text-sm md:text-base font-medium text-foreground/90 truncate mb-4">{product.name}</h3>
 
-                  <div className="mt-auto flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-full p-1 h-10">
+                  <div className="mt-auto flex items-center justify-between bg-foreground/5 border border-border rounded-full p-1 h-10">
                     {getQuantity(product.id) > 0 ? (
                       <>
                         <button 
                           onClick={() => removeFromCart(product.id)}
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-foreground/10 transition-colors"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="text-white font-medium text-sm w-4 text-center">{getQuantity(product.id)}</span>
+                        <span className="text-foreground font-medium text-sm w-4 text-center">{getQuantity(product.id)}</span>
                         <button 
                           onClick={() => addToCart(product.id)}
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-foreground/50 hover:text-foreground hover:bg-foreground/10 transition-colors"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
@@ -208,13 +208,13 @@ export default function SalaEsperaClientePage() {
               initial={{ opacity: 0, y: "100%" }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: "100%" }}
-              className="relative w-full max-w-md bg-[#111] border border-white/10 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]"
+              className="relative w-full max-w-md bg-[#111] border border-border rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]"
             >
-              <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
-                <h2 className="text-xl font-headline tracking-widest uppercase text-white flex items-center gap-2">
+              <div className="p-6 border-b border-border flex justify-between items-center bg-foreground/5">
+                <h2 className="text-xl font-headline tracking-widest uppercase text-foreground flex items-center gap-2">
                   <ShoppingCart className="w-5 h-5 text-amber-500" /> Tu Pedido
                 </h2>
-                <button onClick={() => setIsCheckoutOpen(false)} className="text-white/40 hover:text-white">✕</button>
+                <button onClick={() => setIsCheckoutOpen(false)} className="text-foreground/40 hover:text-foreground">✕</button>
               </div>
               
               <div className="p-6 overflow-y-auto flex-1 space-y-6">
@@ -225,36 +225,36 @@ export default function SalaEsperaClientePage() {
                     return (
                       <div key={item.id} className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 relative rounded-lg overflow-hidden bg-white/5">
+                          <div className="w-10 h-10 relative rounded-lg overflow-hidden bg-foreground/5">
                             <Image src={product.imageUrl} alt={product.name} fill className="object-cover mix-blend-luminosity" />
                           </div>
                           <div>
-                            <p className="text-white text-sm">{product.name}</p>
-                            <p className="text-white/40 text-xs">x{item.quantity}</p>
+                            <p className="text-foreground text-sm">{product.name}</p>
+                            <p className="text-foreground/40 text-xs">x{item.quantity}</p>
                           </div>
                         </div>
-                        <p className="text-white font-medium">${(product.price * item.quantity).toLocaleString('es-CO')}</p>
+                        <p className="text-foreground font-medium">${(product.price * item.quantity).toLocaleString('es-CO')}</p>
                       </div>
                     );
                   })}
                 </div>
 
-                <div className="h-px bg-white/5 w-full" />
+                <div className="h-px bg-foreground/5 w-full" />
 
                 <div className="space-y-2">
-                  <div className="flex justify-between text-white/50 text-sm">
+                  <div className="flex justify-between text-foreground/50 text-sm">
                     <span>Subtotal</span>
                     <span>${totalPrice.toLocaleString('es-CO')}</span>
                   </div>
-                  <div className="flex justify-between text-white text-lg font-bold">
+                  <div className="flex justify-between text-foreground text-lg font-bold">
                     <span>Total a Pagar</span>
                     <span className="text-amber-500">${totalPrice.toLocaleString('es-CO')}</span>
                   </div>
-                  <p className="text-[10px] text-white/30 text-center mt-2">El cobro se realizará al momento de finalizar tu servicio en caja.</p>
+                  <p className="text-[10px] text-foreground/30 text-center mt-2">El cobro se realizará al momento de finalizar tu servicio en caja.</p>
                 </div>
               </div>
 
-              <div className="p-6 border-t border-white/5 bg-[#0A0A0A]">
+              <div className="p-6 border-t border-border bg-background">
                 <Button 
                   onClick={handleOrder}
                   className="w-full bg-[#DFA343] hover:bg-[#c99036] text-black font-semibold rounded-full h-12 shadow-[0_4px_20px_rgba(223,163,67,0.2)] transition-all flex items-center justify-center gap-2"

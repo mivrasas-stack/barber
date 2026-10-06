@@ -1,5 +1,6 @@
 export type Location = { id: string; name: string; address: string; revenue: number };
 import type { Appointment, Service, Product, Customer, User, Transaction, SavedObject, WaitingRoomProduct, Testimonial, WaitingRoomOrder, PortfolioItem, Barber } from "@/lib/types";
+export type { WaitingRoomProduct };
 
 export const dummyLocations: Location[] = [
     { id: 'LOC001', name: 'The Gentleman\'s Lounge', address: 'Av. El Dorado #12-34', revenue: 5423000 },
@@ -8,9 +9,48 @@ export const dummyLocations: Location[] = [
 ];
 
 export const dummyBarbers: Barber[] = [
-    { id: 'BBR001', name: 'Carlos', avatarUrl: 'https://picsum.photos/seed/carlos/100/100' },
-    { id: 'BBR002', name: 'Roberto', avatarUrl: 'https://picsum.photos/seed/roberto/100/100' },
-    { id: 'BBR003', name: 'Miguel', avatarUrl: 'https://picsum.photos/seed/miguel/100/100' },
+    { 
+      id: 'BBR001', 
+      name: 'Carlos Mendoza', 
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop',
+      specialty: 'Master Barber & Diseños',
+      phone: '+57 310 456 7890',
+      email: 'carlos@mivraba.com',
+      commissionRate: 60,
+      status: 'active',
+      schedule: 'Lun - Sáb: 8:00 AM - 7:00 PM',
+      bio: 'Especialista en cortes clásicos, degradados y perfilado de barba con toalla caliente.',
+      rating: 4.9,
+      completedCuts: 1240
+    },
+    { 
+      id: 'BBR002', 
+      name: 'Roberto Gómez', 
+      avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+      specialty: 'Cortes Clásicos & Tijera',
+      phone: '+57 312 987 6543',
+      email: 'roberto@mivraba.com',
+      commissionRate: 50,
+      status: 'active',
+      schedule: 'Mar - Dom: 9:00 AM - 8:00 PM',
+      bio: 'Más de 8 años de experiencia en barbería tradicional y arreglos ejecutivos.',
+      rating: 4.8,
+      completedCuts: 890
+    },
+    { 
+      id: 'BBR003', 
+      name: 'Miguel Ángel Torres', 
+      avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop',
+      specialty: 'Fade, Freestyle & Colorimetría',
+      phone: '+57 315 222 3344',
+      email: 'miguel@mivraba.com',
+      commissionRate: 55,
+      status: 'active',
+      schedule: 'Mié - Lun: 10:00 AM - 8:00 PM',
+      bio: 'Innovador en tendencias urbanas, texturizados y colorimetría capilar.',
+      rating: 4.95,
+      completedCuts: 630
+    },
 ];
 
 export const dummyAppointments: Appointment[] = [

@@ -49,18 +49,18 @@ export default function BarberProfilePage() {
           className="flex flex-col md:flex-row gap-8 items-center md:items-start"
         >
           {/* Avatar Container */}
-          <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-3xl overflow-hidden border-2 border-white/10 shadow-2xl shrink-0 group">
+          <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-3xl overflow-hidden border-2 border-border shadow-2xl shrink-0 group">
             <Image 
               src={barber.avatar} 
               alt={barber.name} 
               fill 
               className="object-cover group-hover:scale-105 transition-transform duration-700" 
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60" />
             <div className="absolute bottom-4 left-0 w-full flex justify-center gap-1">
                <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-               <span className="text-white font-bold">{barber.rating}</span>
-               <span className="text-white/60 text-sm">({barber.reviews})</span>
+               <span className="text-foreground font-bold">{barber.rating}</span>
+               <span className="text-foreground/60 text-sm">({barber.reviews})</span>
             </div>
           </div>
 
@@ -68,23 +68,23 @@ export default function BarberProfilePage() {
           <div className="flex-1 text-center md:text-left space-y-6">
             <div>
               <div className="flex flex-col md:flex-row items-center gap-3 mb-2">
-                <h1 className="text-4xl md:text-6xl font-headline text-white tracking-widest uppercase">
+                <h1 className="text-4xl md:text-6xl font-headline text-foreground tracking-widest uppercase">
                   {barber.name}
                 </h1>
                 <Badge className="bg-primary/20 text-primary border-primary/30 uppercase tracking-widest font-headline">
                   {barber.role}
                 </Badge>
               </div>
-              <p className="text-white/70 text-lg md:text-xl font-light max-w-2xl mx-auto md:mx-0">
+              <p className="text-foreground/70 text-lg md:text-xl font-light max-w-2xl mx-auto md:mx-0">
                 {barber.bio}
               </p>
             </div>
 
-            <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-white/60">
-              <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+            <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-foreground/60">
+              <div className="flex items-center gap-2 bg-foreground/5 px-4 py-2 rounded-full border border-border">
                 <MapPin className="w-4 h-4 text-primary" /> {barber.location}
               </div>
-              <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+              <div className="flex items-center gap-2 bg-foreground/5 px-4 py-2 rounded-full border border-border">
                 <Award className="w-4 h-4 text-primary" /> {barber.experience}
               </div>
             </div>
@@ -98,7 +98,7 @@ export default function BarberProfilePage() {
           </div>
         </motion.div>
 
-        <div className="w-full h-[1px] bg-white/10 my-16" />
+        <div className="w-full h-[1px] bg-foreground/10 my-16" />
 
         {/* Portfolio Section */}
         <motion.div
@@ -108,11 +108,11 @@ export default function BarberProfilePage() {
         >
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h2 className="text-3xl font-headline text-white tracking-widest uppercase flex items-center gap-3">
+              <h2 className="text-3xl font-headline text-foreground tracking-widest uppercase flex items-center gap-3">
                 <Scissors className="w-8 h-8 text-primary" />
                 Portafolio
               </h2>
-              <p className="text-white/60 font-light mt-2">Descubre los últimos trabajos y estilos.</p>
+              <p className="text-foreground/60 font-light mt-2">Descubre los últimos trabajos y estilos.</p>
             </div>
           </div>
 
@@ -124,7 +124,7 @@ export default function BarberProfilePage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="group relative h-80 rounded-2xl overflow-hidden cursor-pointer border border-white/10 hover:border-primary/50 transition-colors"
+                className="group relative h-80 rounded-2xl overflow-hidden cursor-pointer border border-border hover:border-primary/50 transition-colors"
                 onClick={() => setSelectedMedia(item)}
               >
                 <Image 
@@ -133,17 +133,17 @@ export default function BarberProfilePage() {
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
                 
                 {/* Video Indicator */}
                 {item.type === 'video' && (
-                  <div className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
-                    <Play className="w-4 h-4 text-white ml-1" />
+                  <div className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center border border-border">
+                    <Play className="w-4 h-4 text-foreground ml-1" />
                   </div>
                 )}
 
                 <div className="absolute bottom-0 inset-x-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="text-white font-light text-sm line-clamp-2">
+                  <p className="text-foreground font-light text-sm line-clamp-2">
                     {item.description}
                   </p>
                 </div>
@@ -165,7 +165,7 @@ export default function BarberProfilePage() {
             onClick={() => setSelectedMedia(null)}
           >
             <button 
-              className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors z-50"
+              className="absolute top-6 right-6 w-12 h-12 bg-foreground/10 hover:bg-white/20 rounded-full flex items-center justify-center text-foreground transition-colors z-50"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedMedia(null);
@@ -178,7 +178,7 @@ export default function BarberProfilePage() {
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
-              className="relative w-full max-w-4xl max-h-[80vh] aspect-[4/5] md:aspect-video rounded-3xl overflow-hidden bg-black border border-white/10"
+              className="relative w-full max-w-4xl max-h-[80vh] aspect-[4/5] md:aspect-video rounded-3xl overflow-hidden bg-foreground/5 border border-border"
               onClick={(e) => e.stopPropagation()}
             >
                <Image 
@@ -192,13 +192,13 @@ export default function BarberProfilePage() {
                 {selectedMedia.type === 'video' && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                      <div className="w-20 h-20 bg-primary/80 backdrop-blur-md rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(var(--primary),0.5)]">
-                        <Play className="w-8 h-8 text-white ml-2" />
+                        <Play className="w-8 h-8 text-foreground ml-2" />
                      </div>
                   </div>
                 )}
 
-                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 to-transparent p-8">
-                  <p className="text-white text-lg font-light max-w-2xl">
+                <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-background/90 to-transparent p-8">
+                  <p className="text-foreground text-lg font-light max-w-2xl">
                     {selectedMedia.description}
                   </p>
                 </div>

@@ -7,7 +7,7 @@ const FuturisticToggle = ({ active, onToggle }: { active: boolean; onToggle: () 
   <button 
     onClick={onToggle}
     className={`relative w-16 h-8 rounded-full transition-all duration-500 ease-out border outline-none ${
-      active ? 'bg-amber-500/20 border-amber-500/50' : 'bg-black/40 border-white/10 hover:border-white/20'
+      active ? 'bg-amber-500/20 border-amber-500/50' : 'bg-black/40 border-border hover:border-border'
     }`}
   >
     <motion.div 
@@ -28,19 +28,19 @@ const FuturisticInput = ({ label, defaultValue, type = "text", ...props }: any) 
 
   return (
     <div className="space-y-3">
-      <label className="text-[10px] md:text-xs font-headline tracking-[0.2em] text-white/40 uppercase">{label}</label>
+      <label className="text-[10px] md:text-xs font-headline tracking-[0.2em] text-foreground/40 uppercase">{label}</label>
       <div className="relative group">
         <input 
           type={actualType}
           defaultValue={defaultValue}
-          className="w-full bg-black/20 border border-white/5 text-white/90 h-14 rounded-2xl focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 backdrop-blur-xl px-5 transition-all outline-none font-light placeholder:text-white/20 text-sm md:text-base"
+          className="w-full bg-black/20 border border-border text-foreground/90 h-14 rounded-2xl focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 backdrop-blur-xl px-5 transition-all outline-none font-light placeholder:text-foreground/20 text-sm md:text-base"
           {...props}
         />
         {isPassword && (
           <button 
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/70 transition-colors"
           >
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
@@ -54,7 +54,7 @@ export default function SaaSGlobalSettingsPage() {
   const [maintenanceMode, setMaintenanceMode] = useState(false);
   
   return (
-    <div className="min-h-screen bg-[#050505] selection:bg-amber-500/30">
+    <div className="min-h-screen bg-background selection:bg-amber-500/30">
       <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-12 pb-32 space-y-16">
         
         {/* Header Hero */}
@@ -69,10 +69,10 @@ export default function SaaSGlobalSettingsPage() {
                  <div className="h-[2px] w-12 bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
                  <span className="text-amber-500 font-headline tracking-[0.4em] text-[10px] md:text-xs uppercase font-semibold">Configuración Root</span>
               </div>
-              <h1 className="text-5xl md:text-7xl font-headline text-white tracking-widest uppercase font-light">
+              <h1 className="text-5xl md:text-7xl font-headline text-foreground tracking-widest uppercase font-light">
                 Ajustes <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-amber-600">Globales</span>
               </h1>
-              <p className="text-white/40 font-light tracking-wide max-w-2xl text-sm md:text-base leading-relaxed">
+              <p className="text-foreground/40 font-light tracking-wide max-w-2xl text-sm md:text-base leading-relaxed">
                 Panel de control maestro. Configura los parámetros críticos que rigen la experiencia y operación de todos los inquilinos conectados a la infraestructura global.
               </p>
           </motion.div>
@@ -100,8 +100,8 @@ export default function SaaSGlobalSettingsPage() {
                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
                className="lg:col-span-8 relative group"
             >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent rounded-[40px] pointer-events-none" />
-                <div className="h-full bg-black/40 backdrop-blur-3xl border border-white/5 hover:border-white/10 transition-colors duration-500 rounded-[40px] p-8 md:p-12 overflow-hidden relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.02] to-transparent rounded-[40px] pointer-events-none" />
+                <div className="h-full bg-black/40 backdrop-blur-3xl border border-border hover:border-border transition-colors duration-500 rounded-[40px] p-8 md:p-12 overflow-hidden relative">
                     {/* Glowing Orb */}
                     <div className="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-amber-500/10 transition-colors duration-700" />
                     
@@ -110,8 +110,8 @@ export default function SaaSGlobalSettingsPage() {
                           <Globe className="w-6 h-6 text-amber-400" />
                         </div>
                         <div>
-                          <h2 className="text-white text-lg md:text-xl font-headline tracking-[0.15em] uppercase">Plataforma & Marca Blanca</h2>
-                          <p className="text-white/30 text-xs md:text-sm tracking-wide mt-1">Identidad global y localización</p>
+                          <h2 className="text-foreground text-lg md:text-xl font-headline tracking-[0.15em] uppercase">Plataforma & Marca Blanca</h2>
+                          <p className="text-foreground/30 text-xs md:text-sm tracking-wide mt-1">Identidad global y localización</p>
                         </div>
                     </div>
 
@@ -121,15 +121,15 @@ export default function SaaSGlobalSettingsPage() {
                         <FuturisticInput label="Email de Soporte Global" defaultValue="support@barberparadise.com" type="email" />
                         
                         <div className="space-y-3">
-                            <label className="text-[10px] md:text-xs font-headline tracking-[0.2em] text-white/40 uppercase">Moneda Base Global</label>
+                            <label className="text-[10px] md:text-xs font-headline tracking-[0.2em] text-foreground/40 uppercase">Moneda Base Global</label>
                             <div className="relative">
-                              <select className="w-full bg-black/20 border border-white/5 text-white/90 h-14 rounded-2xl focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 backdrop-blur-xl px-5 transition-all outline-none font-light text-sm md:text-base appearance-none cursor-pointer">
-                                <option value="USD" className="bg-neutral-900 text-white">Dólar Estadounidense (USD)</option>
-                                <option value="COP" className="bg-neutral-900 text-white">Peso Colombiano (COP)</option>
-                                <option value="EUR" className="bg-neutral-900 text-white">Euro (EUR)</option>
+                              <select className="w-full bg-black/20 border border-border text-foreground/90 h-14 rounded-2xl focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/20 backdrop-blur-xl px-5 transition-all outline-none font-light text-sm md:text-base appearance-none cursor-pointer">
+                                <option value="USD" className="bg-neutral-900 text-foreground">Dólar Estadounidense (USD)</option>
+                                <option value="COP" className="bg-neutral-900 text-foreground">Peso Colombiano (COP)</option>
+                                <option value="EUR" className="bg-neutral-900 text-foreground">Euro (EUR)</option>
                               </select>
                               <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <svg className="w-4 h-4 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                <svg className="w-4 h-4 text-foreground/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                               </div>
                             </div>
                         </div>
@@ -152,12 +152,12 @@ export default function SaaSGlobalSettingsPage() {
                             <div className="p-3 bg-amber-500/10 rounded-2xl border border-amber-500/20 text-amber-500">
                                 <ShieldAlert className="w-6 h-6" />
                             </div>
-                            <h3 className="text-white text-sm md:text-base font-headline tracking-[0.1em] uppercase">Mantenimiento</h3>
+                            <h3 className="text-foreground text-sm md:text-base font-headline tracking-[0.1em] uppercase">Mantenimiento</h3>
                         </div>
                         <FuturisticToggle active={maintenanceMode} onToggle={() => setMaintenanceMode(!maintenanceMode)} />
                     </div>
                     <div className="relative z-10">
-                        <p className="text-white/40 text-sm font-light leading-relaxed">
+                        <p className="text-foreground/40 text-sm font-light leading-relaxed">
                             Cierra el acceso a la plataforma para todos los inquilinos. Solo los administradores root podrán acceder.
                         </p>
                         {maintenanceMode && (
@@ -174,17 +174,17 @@ export default function SaaSGlobalSettingsPage() {
                 </div>
 
                 {/* Cache Card */}
-                <div className="flex-1 bg-black/40 backdrop-blur-3xl border border-white/5 hover:border-white/10 transition-colors duration-500 rounded-[40px] p-8 flex flex-col justify-between">
+                <div className="flex-1 bg-black/40 backdrop-blur-3xl border border-border hover:border-border transition-colors duration-500 rounded-[40px] p-8 flex flex-col justify-between">
                     <div>
                         <div className="flex items-center gap-4 mb-4">
-                            <Server className="w-5 h-5 text-white/50" />
-                            <h3 className="text-white text-sm md:text-base font-headline tracking-[0.1em] uppercase">Purgar Caché</h3>
+                            <Server className="w-5 h-5 text-foreground/50" />
+                            <h3 className="text-foreground text-sm md:text-base font-headline tracking-[0.1em] uppercase">Purgar Caché</h3>
                         </div>
-                        <p className="text-white/40 text-xs md:text-sm font-light">
+                        <p className="text-foreground/40 text-xs md:text-sm font-light">
                             Limpia la memoria Redis para refrescar los datos globales de todos los Tenants de forma forzosa.
                         </p>
                     </div>
-                    <button className="mt-8 w-full py-4 rounded-2xl border border-white/10 text-white/60 text-xs font-headline tracking-[0.2em] uppercase hover:bg-white/5 hover:text-white transition-all duration-300">
+                    <button className="mt-8 w-full py-4 rounded-2xl border border-border text-foreground/60 text-xs font-headline tracking-[0.2em] uppercase hover:bg-foreground/5 hover:text-foreground transition-all duration-300">
                         Ejecutar Purga
                     </button>
                 </div>
@@ -197,14 +197,14 @@ export default function SaaSGlobalSettingsPage() {
                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                className="lg:col-span-12"
             >
-                <div className="bg-black/40 backdrop-blur-3xl border border-white/5 hover:border-white/10 transition-colors duration-500 rounded-[40px] p-8 md:p-12">
+                <div className="bg-black/40 backdrop-blur-3xl border border-border hover:border-border transition-colors duration-500 rounded-[40px] p-8 md:p-12">
                     <div className="flex items-center gap-4 mb-10">
-                        <div className="p-3 bg-white/5 border border-white/10 rounded-2xl">
-                          <Key className="w-6 h-6 text-white/70" />
+                        <div className="p-3 bg-foreground/5 border border-border rounded-2xl">
+                          <Key className="w-6 h-6 text-foreground/70" />
                         </div>
                         <div>
-                          <h2 className="text-white text-lg md:text-xl font-headline tracking-[0.15em] uppercase">Integraciones Maestras</h2>
-                          <p className="text-white/30 text-xs md:text-sm tracking-wide mt-1">Credenciales de proveedores de infraestructura</p>
+                          <h2 className="text-foreground text-lg md:text-xl font-headline tracking-[0.15em] uppercase">Integraciones Maestras</h2>
+                          <p className="text-foreground/30 text-xs md:text-sm tracking-wide mt-1">Credenciales de proveedores de infraestructura</p>
                         </div>
                     </div>
 
@@ -220,7 +220,7 @@ export default function SaaSGlobalSettingsPage() {
                               defaultValue="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
                               type="password" 
                             />
-                            <button className="absolute right-16 top-[42px] p-2 text-white/30 hover:text-amber-400 hover:rotate-180 transition-all duration-500">
+                            <button className="absolute right-16 top-[42px] p-2 text-foreground/30 hover:text-amber-400 hover:rotate-180 transition-all duration-500">
                                 <RefreshCcw className="w-4 h-4" />
                             </button>
                         </div>

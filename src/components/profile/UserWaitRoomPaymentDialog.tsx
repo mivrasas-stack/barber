@@ -49,13 +49,13 @@ export function UserWaitRoomPaymentDialog({ isOpen, onOpenChange, onConfirm }: P
       if (step === 2 && !open) return;
       onOpenChange(open);
     }}>
-      <DialogContent className="sm:max-w-[450px] bg-background border-black/10 dark:border-white/10 p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[450px] bg-background border-black/10 dark:border-border p-0 overflow-hidden">
         {step === 1 ? (
           <div className="p-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
             <div className="relative z-10">
               <DialogHeader className="mb-6">
-                <DialogTitle className="text-2xl font-headline tracking-widest text-gray-900 dark:text-white">MÉTODO DE PAGO</DialogTitle>
+                <DialogTitle className="text-2xl font-headline tracking-widest text-gray-900 dark:text-foreground">MÉTODO DE PAGO</DialogTitle>
                 <DialogDescription className="text-muted-foreground font-light text-sm">
                   ¿Cómo prefieres pagar tu orden en el Lounge?
                 </DialogDescription>
@@ -64,9 +64,9 @@ export function UserWaitRoomPaymentDialog({ isOpen, onOpenChange, onConfirm }: P
               <div className="py-6">
                   <RadioGroup defaultValue={paymentMethods[0]} className="space-y-4">
                       {paymentMethods.map(method => (
-                          <div key={method} className="flex items-center space-x-4 border border-black/10 dark:border-white/10 p-4 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer group">
-                              <RadioGroupItem value={method} id={`r-wait-${method}`} className="border-black/20 dark:border-white/20 text-primary" />
-                              <Label htmlFor={`r-wait-${method}`} className="text-gray-900 dark:text-white font-light tracking-wide w-full cursor-pointer group-hover:text-primary transition-colors">
+                          <div key={method} className="flex items-center space-x-4 border border-black/10 dark:border-border p-4 hover:bg-black/5 dark:hover:bg-foreground/5 transition-colors cursor-pointer group">
+                              <RadioGroupItem value={method} id={`r-wait-${method}`} className="border-black/20 dark:border-border text-primary" />
+                              <Label htmlFor={`r-wait-${method}`} className="text-gray-900 dark:text-foreground font-light tracking-wide w-full cursor-pointer group-hover:text-primary transition-colors">
                                 {method}
                               </Label>
                           </div>
@@ -95,12 +95,12 @@ export function UserWaitRoomPaymentDialog({ isOpen, onOpenChange, onConfirm }: P
                     <CheckCircle2 className="w-8 h-8 text-primary" />
                 </div>
                 
-                <h3 className="text-2xl font-headline tracking-widest uppercase text-gray-900 dark:text-white mb-2">Orden Registrada</h3>
+                <h3 className="text-2xl font-headline tracking-widest uppercase text-gray-900 dark:text-foreground mb-2">Orden Registrada</h3>
                 <p className="text-muted-foreground font-light text-sm mb-10 max-w-[280px]">
                   Por favor, presenta el siguiente código al barista o en caja para recibir tu orden.
                 </p>
 
-                <div className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 w-full py-8 mb-10">
+                <div className="bg-black/5 dark:bg-foreground/5 border border-black/10 dark:border-border w-full py-8 mb-10">
                   <span className="text-6xl font-headline tracking-[0.2em] text-primary drop-shadow-[0_0_15px_rgba(200,155,60,0.4)]">
                     {paymentCode}
                   </span>

@@ -76,25 +76,25 @@ export default function SavedObjectsPage() {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 24 }
+      transition: { type: "spring" as const, stiffness: 300, damping: 24 }
     },
     exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#0a0a0a] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))] text-zinc-100 p-4 md:p-8 rounded-xl border border-white/5">
+    <div className="min-h-[calc(100vh-4rem)] bg-background bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))] text-zinc-100 p-4 md:p-8 rounded-xl border border-border">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header Glassmorphism */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]"
+          className="relative overflow-hidden rounded-3xl border border-border bg-foreground/5 p-6 md:p-8 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent pointer-events-none" />
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-light tracking-tight text-white mb-2">Objetos Guardados</h1>
+              <h1 className="text-3xl font-light tracking-tight text-foreground mb-2">Objetos Guardados</h1>
               <p className="text-zinc-400 font-light">Gestiona los artículos dejados por los clientes en el salón.</p>
             </div>
             <Button 
@@ -129,13 +129,13 @@ export default function SavedObjectsPage() {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="group relative rounded-3xl border border-white/5 bg-white/[0.02] p-6 backdrop-blur-md transition-all hover:bg-white/[0.04] hover:border-white/10 hover:shadow-[0_8px_32px_0_rgba(255,255,255,0.05)] hover:-translate-y-1"
+                className="group relative rounded-3xl border border-border bg-foreground/5 p-6 backdrop-blur-md transition-all hover:bg-foreground/[0.04] hover:border-border hover:shadow-[0_8px_32px_0_rgba(255,255,255,0.05)] hover:-translate-y-1"
               >
                 {/* Actions Menu */}
                 <div className="absolute top-4 right-4 z-20">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full text-zinc-400 hover:text-white hover:bg-white/10">
+                      <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full text-zinc-400 hover:text-foreground hover:bg-foreground/10">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -143,7 +143,7 @@ export default function SavedObjectsPage() {
                       <DropdownMenuItem 
                           onClick={() => handleMarkAsReturned(item.id)}
                           disabled={item.status === 'Devuelto'}
-                          className="hover:bg-zinc-800 hover:text-white cursor-pointer rounded-lg"
+                          className="hover:bg-zinc-800 hover:text-foreground cursor-pointer rounded-lg"
                       >
                           <CheckCircle2 className="h-4 w-4 mr-2" />
                           Marcar como Devuelto
@@ -182,15 +182,15 @@ export default function SavedObjectsPage() {
                       <Package className="h-4 w-4" />
                       <span className="text-[10px] uppercase tracking-widest font-semibold">Objeto</span>
                     </div>
-                    <h3 className="text-xl font-medium text-white truncate" title={item.objectName}>
+                    <h3 className="text-xl font-medium text-foreground truncate" title={item.objectName}>
                       {item.objectName}
                     </h3>
                   </div>
 
                   {/* Secondary Info: Customer & Dates */}
-                  <div className="p-4 rounded-2xl bg-black/40 border border-white/5 space-y-3">
+                  <div className="p-4 rounded-2xl bg-black/40 border border-border space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                      <div className="h-8 w-8 rounded-full bg-foreground/10 flex items-center justify-center flex-shrink-0">
                         <User className="h-4 w-4 text-zinc-300" />
                       </div>
                       <div className="overflow-hidden">
@@ -199,7 +199,7 @@ export default function SavedObjectsPage() {
                       </div>
                     </div>
 
-                    <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                    <div className="h-px w-full bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
 
                     <div className="grid grid-cols-2 gap-2">
                       <div>
@@ -225,7 +225,7 @@ export default function SavedObjectsPage() {
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-white/5 border border-white/10 mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+            <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-foreground/5 border border-border mb-6 shadow-[0_0_30px_rgba(255,255,255,0.05)]">
               <Package className="h-8 w-8 text-zinc-500" />
             </div>
             <h3 className="text-xl text-zinc-300 font-medium mb-2">No hay objetos guardados</h3>

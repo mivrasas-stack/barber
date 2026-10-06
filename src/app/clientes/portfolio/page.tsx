@@ -110,14 +110,14 @@ export default function PortfolioPage() {
                     src={item.imageUrl}
                   />
                   {/* Luxury overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                 </div>
 
                 <div className="absolute inset-0 flex flex-col justify-between p-6 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
                   <div className="flex justify-end w-full">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="secondary" className="h-9 w-9 rounded-full bg-black/50 hover:bg-amber-500 hover:text-black backdrop-blur-md border border-white/10 transition-colors shadow-lg">
+                        <Button aria-haspopup="true" size="icon" variant="secondary" className="h-9 w-9 rounded-full bg-black/50 hover:bg-amber-500 hover:text-black backdrop-blur-md border border-border transition-colors shadow-lg">
                           <MoreHorizontal className="h-4 w-4" />
                           <span className="sr-only">Menú</span>
                         </Button>
@@ -138,7 +138,7 @@ export default function PortfolioPage() {
                     <span className="inline-flex items-center px-3 py-1 rounded-full bg-black/50 border border-amber-500/30 text-amber-500 text-xs font-semibold tracking-widest uppercase backdrop-blur-md shadow-lg">
                       {item.category}
                     </span>
-                    <h3 className="text-xl md:text-2xl lg:text-3xl font-light text-white tracking-wide drop-shadow-lg">
+                    <h3 className="text-xl md:text-2xl lg:text-3xl font-light text-foreground tracking-wide drop-shadow-lg">
                       {item.description}
                     </h3>
                   </div>

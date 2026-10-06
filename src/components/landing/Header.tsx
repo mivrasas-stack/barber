@@ -49,7 +49,7 @@ export default function Header() {
           href="/"
           className={cn(
             "text-3xl font-bold font-headline tracking-widest hover:text-primary transition-colors",
-            scrolled ? "text-foreground" : "text-white"
+            scrolled ? "text-foreground" : "text-foreground"
           )}
         >
           BARBER PARADISE
@@ -63,7 +63,7 @@ export default function Header() {
               href={link.href}
               className={cn(
                 "hover:text-primary transition-colors relative group",
-                scrolled ? "text-muted-foreground hover:text-foreground" : "text-white/70 hover:text-white"
+                scrolled ? "text-muted-foreground hover:text-foreground" : "text-foreground/70 hover:text-foreground"
               )}
             >
               {link.label}
@@ -93,8 +93,8 @@ export default function Header() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "hover:bg-white/10",
-                  scrolled ? "text-foreground hover:bg-foreground/10" : "text-white"
+                  "hover:bg-foreground/10",
+                  scrolled ? "text-foreground hover:bg-foreground/10" : "text-foreground"
                 )}
               >
                 <Menu className="h-6 w-6" />

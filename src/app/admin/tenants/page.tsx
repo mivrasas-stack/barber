@@ -175,7 +175,7 @@ export default function TenantsPage() {
   );
 
   return (
-    <div className="w-full min-h-screen bg-[#050505] selection:bg-amber-500/30">
+    <div className="w-full min-h-screen bg-background selection:bg-amber-500/30">
       <div className="max-w-[1600px] mx-auto space-y-16 px-6 sm:px-8 lg:px-12 py-12 pb-32">
         
         {/* Header Section */}
@@ -191,9 +191,9 @@ export default function TenantsPage() {
                  <div className="h-[2px] w-12 bg-gradient-to-r from-amber-500 to-transparent" />
                  <span className="text-amber-500 font-headline tracking-[0.4em] text-[10px] uppercase font-bold">Gestión de Inquilinos</span>
               </div>
-              <h1 className="text-5xl md:text-7xl font-headline tracking-tight text-white uppercase leading-none">
+              <h1 className="text-5xl md:text-7xl font-headline tracking-tight text-foreground uppercase leading-none">
                 Franquicias
-                <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-white/40 via-white/20 to-transparent text-3xl md:text-5xl tracking-widest">
+                <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-foreground/40 via-foreground/20 to-transparent text-3xl md:text-5xl tracking-widest">
                   (Tenants)
                 </span>
               </h1>
@@ -206,15 +206,15 @@ export default function TenantsPage() {
             className="flex flex-col sm:flex-row gap-4 items-center"
           >
             <div className="relative w-full sm:w-80 group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-amber-500 transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 group-focus-within:text-amber-500 transition-colors" />
                 <Input 
                     placeholder="Buscar inquilino..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-white/[0.02] border-white/5 text-white pl-12 h-14 rounded-2xl focus:border-amber-500/40 focus:ring-amber-500/10 backdrop-blur-md shadow-2xl transition-all"
+                    className="w-full bg-foreground/5 border-border text-foreground pl-12 h-14 rounded-2xl focus:border-amber-500/40 focus:ring-amber-500/10 backdrop-blur-md shadow-2xl transition-all"
                 />
             </div>
-            <button className="flex items-center gap-3 px-8 h-14 rounded-2xl bg-white/[0.02] border border-white/5 text-white/60 hover:text-amber-400 hover:border-amber-500/30 backdrop-blur-md transition-all w-full sm:w-auto justify-center group shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+            <button className="flex items-center gap-3 px-8 h-14 rounded-2xl bg-foreground/5 border border-border text-foreground/60 hover:text-amber-400 hover:border-amber-500/30 backdrop-blur-md transition-all w-full sm:w-auto justify-center group shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
                 <Filter className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 <span className="text-xs font-headline tracking-widest uppercase">Filtros</span>
             </button>
@@ -238,7 +238,7 @@ export default function TenantsPage() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 20 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className={`${colSpanClass} ${heightClass} group relative rounded-[2.5rem] bg-black/40 backdrop-blur-3xl border border-white/5 hover:border-amber-500/30 transition-all duration-500 overflow-hidden flex flex-col shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)]`}
+                  className={`${colSpanClass} ${heightClass} group relative rounded-[2.5rem] bg-black/40 backdrop-blur-3xl border border-border hover:border-amber-500/30 transition-all duration-500 overflow-hidden flex flex-col shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)]`}
                 >
                   {/* Subtle Glow Effect on Hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -246,14 +246,14 @@ export default function TenantsPage() {
                   {/* Card Header */}
                   <div className="p-8 pb-6 flex justify-between items-start z-10 relative">
                     <div className="flex gap-5">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-b from-white/10 to-white/5 border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-500">
-                        <Building2 className={`w-7 h-7 ${tenant.status === 'Active' ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]' : 'text-white/20'}`} />
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-b from-foreground/10 to-foreground/5 border border-border flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-500">
+                        <Building2 className={`w-7 h-7 ${tenant.status === 'Active' ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]' : 'text-foreground/20'}`} />
                       </div>
                       <div className="pt-1">
-                        <h3 className="text-2xl font-headline tracking-wide text-white group-hover:text-amber-400 transition-colors">{tenant.name}</h3>
+                        <h3 className="text-2xl font-headline tracking-wide text-foreground group-hover:text-amber-400 transition-colors">{tenant.name}</h3>
                         <div className="flex items-center gap-2 mt-2">
                           <div className={`w-2 h-2 rounded-full ${tenant.status === 'Active' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]'}`} />
-                          <span className="text-[10px] font-headline text-white/50 uppercase tracking-widest">
+                          <span className="text-[10px] font-headline text-foreground/50 uppercase tracking-widest">
                             {tenant.status === 'Active' ? 'Operativo' : 'Suspendido'}
                           </span>
                         </div>
@@ -262,27 +262,27 @@ export default function TenantsPage() {
                     
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="text-white/30 hover:text-white bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 transition-all w-10 h-10 rounded-full flex items-center justify-center">
+                            <button className="text-foreground/30 hover:text-foreground bg-foreground/5 hover:bg-foreground/10 border border-border hover:border-border transition-all w-10 h-10 rounded-full flex items-center justify-center">
                                 <MoreHorizontal className="w-5 h-5" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56 bg-black/90 backdrop-blur-xl border border-white/10 text-white shadow-2xl shadow-black/80 rounded-2xl p-2 z-50">
+                        <DropdownMenuContent align="end" className="w-56 bg-black/90 backdrop-blur-xl border border-border text-foreground shadow-2xl shadow-black/80 rounded-2xl p-2 z-50">
                             <DropdownMenuLabel className="text-[10px] uppercase tracking-[0.2em] text-amber-500/70 font-headline px-2 py-1.5">Administrar</DropdownMenuLabel>
-                            <DropdownMenuSeparator className="bg-white/5 my-1" />
+                            <DropdownMenuSeparator className="bg-foreground/5 my-1" />
                             
                             <DropdownMenuItem 
                               onClick={() => setDialogState({ type: 'details', tenant })}
-                              className="flex items-center gap-3 cursor-pointer hover:bg-white/10 focus:bg-white/10 text-xs tracking-wide py-2.5 px-3 rounded-xl transition-all"
+                              className="flex items-center gap-3 cursor-pointer hover:bg-foreground/10 focus:bg-foreground/10 text-xs tracking-wide py-2.5 px-3 rounded-xl transition-all"
                             >
-                                <Eye className="w-4 h-4 text-white/70" />
+                                <Eye className="w-4 h-4 text-foreground/70" />
                                 <span>Ver Información</span>
                             </DropdownMenuItem>
                             
                             <DropdownMenuItem 
                               onClick={() => setDialogState({ type: 'edit', tenant })}
-                              className="flex items-center gap-3 cursor-pointer hover:bg-white/10 focus:bg-white/10 text-xs tracking-wide py-2.5 px-3 rounded-xl transition-all"
+                              className="flex items-center gap-3 cursor-pointer hover:bg-foreground/10 focus:bg-foreground/10 text-xs tracking-wide py-2.5 px-3 rounded-xl transition-all"
                             >
-                                <Edit className="w-4 h-4 text-white/70" />
+                                <Edit className="w-4 h-4 text-foreground/70" />
                                 <span>Modificar Datos</span>
                             </DropdownMenuItem>
                             
@@ -294,7 +294,7 @@ export default function TenantsPage() {
                                 <span>Reporte Financiero</span>
                             </DropdownMenuItem>
                             
-                            <DropdownMenuSeparator className="bg-white/5 my-1" />
+                            <DropdownMenuSeparator className="bg-foreground/5 my-1" />
                             
                             {tenant.status === 'Active' ? (
                               <DropdownMenuItem 
@@ -329,23 +329,23 @@ export default function TenantsPage() {
                   <div className="flex-1 px-8 py-2 relative z-10">
                     <div className="grid grid-cols-2 gap-y-6 gap-x-4">
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-white/30">
+                        <div className="flex items-center gap-1.5 text-foreground/30">
                           <User className="w-3.5 h-3.5" />
                           <span className="text-[10px] font-headline uppercase tracking-widest">Propietario</span>
                         </div>
-                        <p className="text-sm text-white/80 font-light truncate pr-4">{tenant.owner}</p>
+                        <p className="text-sm text-foreground/80 font-light truncate pr-4">{tenant.owner}</p>
                       </div>
                       
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-white/30">
+                        <div className="flex items-center gap-1.5 text-foreground/30">
                           <MapPin className="w-3.5 h-3.5" />
                           <span className="text-[10px] font-headline uppercase tracking-widest">Ubicación</span>
                         </div>
-                        <p className="text-sm text-white/80 font-light truncate pr-4">{tenant.location}</p>
+                        <p className="text-sm text-foreground/80 font-light truncate pr-4">{tenant.location}</p>
                       </div>
 
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-white/30">
+                        <div className="flex items-center gap-1.5 text-foreground/30">
                           <CreditCard className="w-3.5 h-3.5" />
                           <span className="text-[10px] font-headline uppercase tracking-widest">Plan de Uso</span>
                         </div>
@@ -357,11 +357,11 @@ export default function TenantsPage() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-white/30">
+                        <div className="flex items-center gap-1.5 text-foreground/30">
                           <Calendar className="w-3.5 h-3.5" />
                           <span className="text-[10px] font-headline uppercase tracking-widest">Suscripción</span>
                         </div>
-                        <p className="text-sm text-white/60 font-mono tracking-wider">{tenant.date}</p>
+                        <p className="text-sm text-foreground/60 font-mono tracking-wider">{tenant.date}</p>
                       </div>
                     </div>
                   </div>
@@ -370,7 +370,7 @@ export default function TenantsPage() {
                   <div className="mt-auto p-4 relative z-10">
                     <button 
                       onClick={() => setDialogState({ type: 'details', tenant })}
-                      className="w-full flex items-center justify-between px-6 py-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-amber-500/20 text-white/60 hover:text-amber-400 transition-all duration-300 group/btn"
+                      className="w-full flex items-center justify-between px-6 py-4 rounded-2xl bg-foreground/5 border border-border hover:bg-foreground/[0.05] hover:border-amber-500/20 text-foreground/60 hover:text-amber-400 transition-all duration-300 group/btn"
                     >
                       <span className="text-xs font-headline uppercase tracking-widest">Ver Detalles Completos</span>
                       <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -393,15 +393,15 @@ export default function TenantsPage() {
         open={dialogState.type !== null} 
         onOpenChange={(isOpen) => !isOpen && setDialogState({ type: null, tenant: null })}
       >
-        <DialogContent className="bg-[#050505] border border-white/10 text-white sm:max-w-xl rounded-[2rem] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+        <DialogContent className="bg-background border border-border text-foreground sm:max-w-xl rounded-[2rem] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)]">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-600 to-amber-400" />
           
           <div className="p-8 sm:p-10">
             <DialogHeader className="mb-8">
-              <DialogTitle className="text-2xl font-headline tracking-widest text-white uppercase flex items-center gap-3">
+              <DialogTitle className="text-2xl font-headline tracking-widest text-foreground uppercase flex items-center gap-3">
                 {dialogState.type === 'details' ? 'Detalles de la Franquicia' : 'Modificar Datos'}
               </DialogTitle>
-              <DialogDescription className="text-white/40 font-light mt-2">
+              <DialogDescription className="text-foreground/40 font-light mt-2">
                 {dialogState.type === 'details' 
                   ? 'Ficha técnica e información administrativa del inquilino.' 
                   : 'Actualiza la información básica del negocio en la plataforma.'}
@@ -410,12 +410,12 @@ export default function TenantsPage() {
 
             {dialogState.tenant && dialogState.type === 'details' && (
               <div className="space-y-8">
-                <div className="flex items-center gap-6 pb-6 border-b border-white/5">
-                  <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <div className="flex items-center gap-6 pb-6 border-b border-border">
+                  <div className="w-20 h-20 rounded-2xl bg-foreground/5 border border-border flex items-center justify-center">
                     <Building2 className="w-10 h-10 text-amber-500" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-headline text-white">{dialogState.tenant.name}</h2>
+                    <h2 className="text-2xl font-headline text-foreground">{dialogState.tenant.name}</h2>
                     <span className="inline-block mt-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-headline uppercase tracking-widest">
                       {dialogState.tenant.plan}
                     </span>
@@ -424,25 +424,25 @@ export default function TenantsPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                   <div className="space-y-2">
-                    <p className="text-[10px] text-white/30 uppercase font-headline tracking-[0.2em]">Propietario / Titular</p>
-                    <p className="font-light text-lg text-white/90">{dialogState.tenant.owner}</p>
+                    <p className="text-[10px] text-foreground/30 uppercase font-headline tracking-[0.2em]">Propietario / Titular</p>
+                    <p className="font-light text-lg text-foreground/90">{dialogState.tenant.owner}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] text-white/30 uppercase font-headline tracking-[0.2em]">Sede Principal</p>
-                    <p className="font-light text-lg text-white/90">{dialogState.tenant.location}</p>
+                    <p className="text-[10px] text-foreground/30 uppercase font-headline tracking-[0.2em]">Sede Principal</p>
+                    <p className="font-light text-lg text-foreground/90">{dialogState.tenant.location}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] text-white/30 uppercase font-headline tracking-[0.2em]">Estado del Sistema</p>
+                    <p className="text-[10px] text-foreground/30 uppercase font-headline tracking-[0.2em]">Estado del Sistema</p>
                     <div className="flex items-center gap-2 mt-1">
                       <div className={`w-2.5 h-2.5 rounded-full ${dialogState.tenant.status === 'Active' ? 'bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.6)]' : 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.6)]'}`} />
-                      <span className="font-light text-lg text-white/90">
+                      <span className="font-light text-lg text-foreground/90">
                         {dialogState.tenant.status === 'Active' ? 'Operativo' : 'Suspendido'}
                       </span>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-[10px] text-white/30 uppercase font-headline tracking-[0.2em]">Fecha de Registro</p>
-                    <p className="font-mono text-lg text-white/70">{dialogState.tenant.date}</p>
+                    <p className="text-[10px] text-foreground/30 uppercase font-headline tracking-[0.2em]">Fecha de Registro</p>
+                    <p className="font-mono text-lg text-foreground/70">{dialogState.tenant.date}</p>
                   </div>
                 </div>
               </div>
@@ -454,21 +454,21 @@ export default function TenantsPage() {
                   <label className="text-[10px] uppercase font-headline tracking-[0.2em] text-amber-500 ml-1">Nombre Comercial</label>
                   <Input 
                     defaultValue={dialogState.tenant.name} 
-                    className="h-14 bg-white/[0.02] border-white/10 text-white rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 text-lg px-4" 
+                    className="h-14 bg-foreground/5 border-border text-foreground rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 text-lg px-4" 
                   />
                 </div>
                 <div className="space-y-3 relative group">
-                  <label className="text-[10px] uppercase font-headline tracking-[0.2em] text-white/40 ml-1 group-focus-within:text-amber-500 transition-colors">Titular de Franquicia</label>
+                  <label className="text-[10px] uppercase font-headline tracking-[0.2em] text-foreground/40 ml-1 group-focus-within:text-amber-500 transition-colors">Titular de Franquicia</label>
                   <Input 
                     defaultValue={dialogState.tenant.owner} 
-                    className="h-14 bg-white/[0.02] border-white/10 text-white rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 text-lg px-4" 
+                    className="h-14 bg-foreground/5 border-border text-foreground rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 text-lg px-4" 
                   />
                 </div>
                 <div className="space-y-3 relative group">
-                  <label className="text-[10px] uppercase font-headline tracking-[0.2em] text-white/40 ml-1 group-focus-within:text-amber-500 transition-colors">Ciudad y Región</label>
+                  <label className="text-[10px] uppercase font-headline tracking-[0.2em] text-foreground/40 ml-1 group-focus-within:text-amber-500 transition-colors">Ciudad y Región</label>
                   <Input 
                     defaultValue={dialogState.tenant.location} 
-                    className="h-14 bg-white/[0.02] border-white/10 text-white rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 text-lg px-4" 
+                    className="h-14 bg-foreground/5 border-border text-foreground rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 text-lg px-4" 
                   />
                 </div>
               </div>
@@ -478,7 +478,7 @@ export default function TenantsPage() {
               <Button 
                 variant="outline" 
                 onClick={() => setDialogState({ type: null, tenant: null })}
-                className="h-12 px-8 rounded-xl border-white/10 bg-transparent hover:bg-white/5 text-white/60 hover:text-white uppercase text-[10px] tracking-[0.2em] font-headline"
+                className="h-12 px-8 rounded-xl border-border bg-transparent hover:bg-foreground/5 text-foreground/60 hover:text-foreground uppercase text-[10px] tracking-[0.2em] font-headline"
               >
                 Cerrar
               </Button>

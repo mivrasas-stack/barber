@@ -14,9 +14,9 @@ const premiumButtonVariants = cva(
           "bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 text-black font-semibold shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:shadow-[0_0_30px_rgba(245,158,11,0.4)] hover:scale-[1.02] border border-amber-300/40",
         outline:
           "border border-amber-500/30 text-amber-500 bg-transparent hover:bg-amber-500/10 hover:border-amber-500/80 hover:shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:scale-[1.02]",
-        ghost: "hover:bg-white/5 hover:text-amber-400 text-white/60 hover:scale-[1.02]",
+        ghost: "hover:bg-foreground/5 hover:text-amber-400 text-foreground/60 hover:scale-[1.02]",
         link: "text-amber-500 underline-offset-4 hover:underline",
-        glass: "bg-white/5 backdrop-blur-xl border border-white/10 text-white hover:bg-white/10 hover:border-white/20 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:scale-[1.02]"
+        glass: "bg-foreground/5 backdrop-blur-xl border border-border text-foreground hover:bg-foreground/10 hover:border-border hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:scale-[1.02]"
       },
       size: {
         default: "h-12 px-8 py-2",

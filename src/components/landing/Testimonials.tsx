@@ -51,7 +51,7 @@ export default function Testimonials() {
 
               {/* Comment */}
               <blockquote className="text-lg leading-relaxed text-foreground/80 font-light mb-10 flex-grow relative z-10">
-                "{testimonial.comment}"
+                &ldquo;{testimonial.comment}&rdquo;
               </blockquote>
 
               {/* Footer */}

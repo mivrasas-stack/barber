@@ -28,10 +28,10 @@ export default function BarberPortfolio() {
         <div className="absolute -top-20 -left-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
         
         <div className="relative z-10">
-            <h1 className="text-4xl md:text-5xl font-headline text-white tracking-widest uppercase flex items-center gap-4">
+            <h1 className="text-4xl md:text-5xl font-headline text-foreground tracking-widest uppercase flex items-center gap-4">
                Mi Portafolio
             </h1>
-            <p className="text-white/60 font-light mt-2 tracking-wide text-lg max-w-xl">
+            <p className="text-foreground/60 font-light mt-2 tracking-wide text-lg max-w-xl">
                Sube fotos y videos de tus mejores cortes. Los clientes verán esta galería en tu perfil público.
             </p>
         </div>
@@ -45,13 +45,13 @@ export default function BarberPortfolio() {
             <motion.button 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="h-[380px] rounded-2xl border-2 border-dashed border-white/20 bg-white/[0.01] hover:bg-white/[0.03] hover:border-primary/50 transition-colors flex flex-col items-center justify-center gap-4 text-white/40 hover:text-primary group"
+              className="h-[380px] rounded-2xl border-2 border-dashed border-border bg-white/[0.01] hover:bg-white/[0.03] hover:border-primary/50 transition-colors flex flex-col items-center justify-center gap-4 text-foreground/40 hover:text-primary group"
             >
-                <div className="w-20 h-20 rounded-full bg-white/5 group-hover:bg-primary/20 flex items-center justify-center transition-colors shadow-lg">
+                <div className="w-20 h-20 rounded-full bg-foreground/5 group-hover:bg-primary/20 flex items-center justify-center transition-colors shadow-lg">
                     <UploadCloud className="w-10 h-10 group-hover:text-primary" />
                 </div>
-                <span className="font-headline tracking-widest uppercase text-base text-white/60 group-hover:text-primary transition-colors">Subir Nuevo Trabajo</span>
-                <span className="text-xs text-white/40 font-light px-8 text-center">Agrega fotos o videos cortos para impresionar a tus clientes.</span>
+                <span className="font-headline tracking-widest uppercase text-base text-foreground/60 group-hover:text-primary transition-colors">Subir Nuevo Trabajo</span>
+                <span className="text-xs text-foreground/40 font-light px-8 text-center">Agrega fotos o videos cortos para impresionar a tus clientes.</span>
             </motion.button>
           </UploadWorkDialog>
 
@@ -63,7 +63,7 @@ export default function BarberPortfolio() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
               >
-                <Card className="bg-white/[0.02] border-white/10 hover:border-primary/30 transition-all duration-500 group overflow-hidden rounded-2xl h-[380px] flex flex-col">
+                <Card className="bg-foreground/5 border-border hover:border-primary/30 transition-all duration-500 group overflow-hidden rounded-2xl h-[380px] flex flex-col">
                     <CardContent className="p-0 relative flex-1 flex flex-col">
                         
                         {/* Media Section */}
@@ -74,34 +74,34 @@ export default function BarberPortfolio() {
                               fill 
                               className="object-cover group-hover:scale-110 transition-transform duration-700" 
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
                             
                             {/* Video Indicator */}
                             {item.type === 'video' && (
-                              <div className="absolute top-4 left-4 w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20">
-                                <Play className="w-4 h-4 text-white ml-1" />
+                              <div className="absolute top-4 left-4 w-10 h-10 bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center border border-border">
+                                <Play className="w-4 h-4 text-foreground ml-1" />
                               </div>
                             )}
                             
                             {/* Actions (Edit / Delete) */}
                             <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-x-4 group-hover:translate-x-0">
-                               <button className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-primary/50 transition-all border border-white/10">
+                               <button className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-primary/50 transition-all border border-border">
                                   <Edit3 className="w-4 h-4" />
                                </button>
-                               <button className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-red-500/80 transition-all border border-white/10">
+                               <button className="w-10 h-10 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-foreground/80 hover:text-foreground hover:bg-red-500/80 transition-all border border-border">
                                   <Trash2 className="w-4 h-4" />
                                </button>
                             </div>
                             
                             {/* Category Badge */}
-                            <div className="absolute bottom-4 left-4 bg-primary/80 backdrop-blur-md border border-primary/30 text-white px-3 py-1 rounded-full text-[10px] font-headline tracking-widest uppercase shadow-[0_0_15px_rgba(var(--primary),0.5)]">
+                            <div className="absolute bottom-4 left-4 bg-primary/80 backdrop-blur-md border border-primary/30 text-foreground px-3 py-1 rounded-full text-[10px] font-headline tracking-widest uppercase shadow-[0_0_15px_rgba(var(--primary),0.5)]">
                                 {item.category}
                             </div>
                         </div>
 
                         {/* Details Section */}
-                        <div className="p-5 bg-black/40 border-t border-white/5 h-[100px]">
-                            <p className="text-sm font-light text-white/80 line-clamp-3">
+                        <div className="p-5 bg-black/40 border-t border-border h-[100px]">
+                            <p className="text-sm font-light text-foreground/80 line-clamp-3">
                                 {item.description}
                             </p>
                         </div>

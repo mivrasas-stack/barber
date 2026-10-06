@@ -22,7 +22,7 @@ export function ThemeToggle({ scrolled = true }: ThemeToggleProps) {
         "relative transition-colors",
         scrolled
           ? "text-foreground hover:bg-foreground/10 hover:text-foreground"
-          : "text-white hover:bg-white/10 hover:text-white"
+          : "text-foreground hover:bg-foreground/10 hover:text-foreground"
       )}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >

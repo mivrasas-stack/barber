@@ -44,7 +44,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
+  show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } },
   exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
 };
 
@@ -177,7 +177,7 @@ export default function WaitingRoomPage() {
         </TabsList>
 
         <TabsContent value="orders" className="mt-0">
-          <div className="bg-zinc-950 rounded-[2rem] p-8 md:p-12 relative overflow-hidden border border-white/5 shadow-2xl">
+          <div className="bg-zinc-950 rounded-[2rem] p-8 md:p-12 relative overflow-hidden border border-border shadow-2xl">
             {/* Subtle animated background gradient */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-zinc-800/20 via-zinc-950 to-zinc-950 pointer-events-none" />
             <div className="absolute top-0 left-0 w-full h-full bg-[url('/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
@@ -185,8 +185,8 @@ export default function WaitingRoomPage() {
             <div className="relative z-10">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
                 <div>
-                  <h2 className="text-4xl md:text-5xl font-light tracking-tight text-white/90">
-                    Lounge <span className="font-bold text-white">Monitor</span>
+                  <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground/90">
+                    Lounge <span className="font-bold text-foreground">Monitor</span>
                   </h2>
                   <p className="text-zinc-500 mt-2 font-mono text-sm uppercase tracking-widest">
                     Live Status Updates
@@ -199,7 +199,7 @@ export default function WaitingRoomPage() {
                   <Input
                     type="search"
                     placeholder="Buscar cliente o código..."
-                    className="w-full bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pl-12 h-14 rounded-full focus-visible:ring-white/20 focus-visible:border-white/20 text-lg transition-all"
+                    className="w-full bg-foreground/5 border-border text-foreground placeholder:text-zinc-500 pl-12 h-14 rounded-full focus-visible:ring-white/20 focus-visible:border-border text-lg transition-all"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -221,7 +221,7 @@ export default function WaitingRoomPage() {
                       animate="show"
                       exit="exit"
                       layout
-                      className="relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 backdrop-blur-3xl p-6 shadow-xl group hover:bg-white/10 transition-colors duration-500"
+                      className="relative overflow-hidden rounded-3xl bg-foreground/5 border border-border backdrop-blur-3xl p-6 shadow-xl group hover:bg-foreground/10 transition-colors duration-500"
                     >
                       {/* Pulsing light indicator */}
                       <div className={`absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl opacity-20 animate-[pulse_4s_cubic-bezier(0.4,0,0.6,1)_infinite] ${order.status === 'Confirmado' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
@@ -229,7 +229,7 @@ export default function WaitingRoomPage() {
                       {/* Card Content */}
                       <div className="flex justify-between items-start mb-6">
                         <div>
-                          <h3 className="text-2xl font-semibold text-white mb-1 tracking-tight truncate max-w-[180px]">
+                          <h3 className="text-2xl font-semibold text-foreground mb-1 tracking-tight truncate max-w-[180px]">
                             {order.customerName}
                           </h3>
                           <div className="flex items-center gap-2">
@@ -251,14 +251,14 @@ export default function WaitingRoomPage() {
                         </Badge>
                       </div>
 
-                      <div className="space-y-4 mt-8 pt-6 border-t border-white/5">
+                      <div className="space-y-4 mt-8 pt-6 border-t border-border">
                         <div className="flex justify-between items-center">
                           <span className="text-zinc-500 text-sm font-medium">Total</span>
-                          <span className="text-white font-medium text-lg tracking-tight">COP {order.total.toLocaleString('es-CO')}</span>
+                          <span className="text-foreground font-medium text-lg tracking-tight">COP {order.total.toLocaleString('es-CO')}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-zinc-500 text-sm font-medium">Método</span>
-                          <span className="text-zinc-300 text-sm font-medium bg-white/5 px-2.5 py-1 rounded-lg">{order.paymentMethod}</span>
+                          <span className="text-zinc-300 text-sm font-medium bg-foreground/5 px-2.5 py-1 rounded-lg">{order.paymentMethod}</span>
                         </div>
                       </div>
 
@@ -266,14 +266,14 @@ export default function WaitingRoomPage() {
                       <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full backdrop-blur-md">
+                            <Button size="icon" variant="ghost" className="h-10 w-10 text-zinc-400 hover:text-foreground hover:bg-foreground/10 rounded-full backdrop-blur-md">
                               <MoreHorizontal className="h-5 w-5" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="bg-zinc-900 border-zinc-800 text-zinc-300 rounded-xl shadow-2xl">
                               <DropdownMenuLabel className="text-zinc-500">Acciones</DropdownMenuLabel>
-                              <DropdownMenuItem onClick={() => confirmOrder(order.id)} disabled={order.status === 'Confirmado'} className="focus:bg-zinc-800 focus:text-white cursor-pointer">Marcar como Confirmado</DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleViewDetails(order)} className="focus:bg-zinc-800 focus:text-white cursor-pointer">Ver Detalles</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => confirmOrder(order.id)} disabled={order.status === 'Confirmado'} className="focus:bg-zinc-800 focus:text-foreground cursor-pointer">Marcar como Confirmado</DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleViewDetails(order)} className="focus:bg-zinc-800 focus:text-foreground cursor-pointer">Ver Detalles</DropdownMenuItem>
                               <DropdownMenuItem className="text-red-400 focus:bg-red-950 focus:text-red-300 cursor-pointer" onClick={() => deleteOrder(order.id)} disabled={order.status === 'Confirmado'}>Eliminar</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>

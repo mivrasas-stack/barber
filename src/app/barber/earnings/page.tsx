@@ -28,11 +28,11 @@ export default function EarningsPage() {
         <p className="text-emerald-500 font-headline tracking-[0.2em] uppercase text-xs sm:text-sm mb-4">Balance Diario</p>
         <div className="relative inline-block mx-auto">
           <div className="absolute -inset-4 bg-emerald-500/20 blur-[50px] rounded-full" />
-          <h2 className="text-6xl md:text-8xl font-headline text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/50 tracking-tight relative z-10 drop-shadow-[0_0_30px_rgba(16,185,129,0.3)]">
+          <h2 className="text-6xl md:text-8xl font-headline text-transparent bg-clip-text bg-gradient-to-b from-foreground via-foreground to-foreground/50 tracking-tight relative z-10 drop-shadow-[0_0_30px_rgba(16,185,129,0.3)]">
             $1.250k
           </h2>
         </div>
-        <p className="text-white/40 font-light tracking-wide mt-6 text-sm md:text-base flex items-center justify-center gap-2">
+        <p className="text-foreground/40 font-light tracking-wide mt-6 text-sm md:text-base flex items-center justify-center gap-2">
           <TrendingUp className="w-4 h-4 text-emerald-400" />
           <span className="text-emerald-400 font-medium">+15%</span> vs. ayer
         </p>
@@ -46,7 +46,7 @@ export default function EarningsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.15 }}
             key={i} 
-            className="group relative overflow-hidden rounded-[32px] bg-[#0F0F0F] border border-white/5 hover:border-emerald-500/30 transition-all duration-500 p-8 flex flex-col items-center text-center backdrop-blur-xl hover:bg-[#151515] shadow-2xl"
+            className="group relative overflow-hidden rounded-[32px] bg-card border border-border hover:border-emerald-500/30 transition-all duration-500 p-8 flex flex-col items-center text-center backdrop-blur-xl hover:bg-foreground/5 shadow-2xl"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/0 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
@@ -55,8 +55,8 @@ export default function EarningsPage() {
             </div>
             
             <div className="relative z-10 space-y-2">
-              <p className="text-xs text-white/40 tracking-[0.2em] uppercase font-light">{stat.label}</p>
-              <h3 className="text-3xl font-headline text-white group-hover:text-emerald-100 transition-colors">{stat.value}</h3>
+              <p className="text-xs text-foreground/40 tracking-[0.2em] uppercase font-light">{stat.label}</p>
+              <h3 className="text-3xl font-headline text-foreground group-hover:text-emerald-100 transition-colors">{stat.value}</h3>
             </div>
           </motion.div>
         ))}
@@ -65,11 +65,11 @@ export default function EarningsPage() {
       {/* Recent Activity - Receipt Style */}
       <div className="relative z-10 max-w-4xl mx-auto w-full">
         <div className="flex items-center justify-between mb-8">
-          <h3 className="text-xl font-headline tracking-widest text-white uppercase flex items-center gap-3">
+          <h3 className="text-xl font-headline tracking-widest text-foreground uppercase flex items-center gap-3">
             <ArrowUpRight className="w-5 h-5 text-emerald-500" />
             Transacciones Recientes
           </h3>
-          <button className="text-[10px] text-white/40 hover:text-white uppercase tracking-[0.2em] transition-colors border-b border-white/10 hover:border-white pb-1">Ver Historial</button>
+          <button className="text-[10px] text-foreground/40 hover:text-foreground uppercase tracking-[0.2em] transition-colors border-b border-border hover:border-foreground pb-1">Ver Historial</button>
         </div>
 
         <div className="space-y-4">
@@ -79,20 +79,20 @@ export default function EarningsPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 + 0.3 }}
               key={tx.id} 
-              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-6 px-2 border-b border-white/5 hover:border-emerald-500/30 transition-all duration-300 relative"
+              className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-6 px-2 border-b border-border hover:border-emerald-500/30 transition-all duration-300 relative"
             >
               <div className="absolute left-0 w-1 h-full bg-emerald-500 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center rounded-r-md" />
 
               <div className="flex items-center gap-6 pl-4 sm:pl-6">
-                <span className="text-white/20 font-mono text-sm tracking-widest w-16">{tx.time}</span>
+                <span className="text-foreground/20 font-mono text-sm tracking-widest w-16">{tx.time}</span>
                 <div>
-                  <h4 className="text-white font-headline tracking-widest text-base group-hover:text-emerald-100 transition-colors">{tx.type}</h4>
-                  <p className="text-xs text-white/40 font-light mt-1 tracking-wide">Ref: <span className="text-white/60">{tx.client}</span></p>
+                  <h4 className="text-foreground font-headline tracking-widest text-base group-hover:text-emerald-100 transition-colors">{tx.type}</h4>
+                  <p className="text-xs text-foreground/40 font-light mt-1 tracking-wide">Ref: <span className="text-foreground/60">{tx.client}</span></p>
                 </div>
               </div>
               
               <div className="text-left sm:text-right w-full sm:w-auto pl-[88px] sm:pl-0 pr-4">
-                <p className="text-xl font-mono text-white tracking-widest group-hover:text-emerald-400 transition-colors">{tx.amount}</p>
+                <p className="text-xl font-mono text-foreground tracking-widest group-hover:text-emerald-400 transition-colors">{tx.amount}</p>
                 <div className="flex items-center sm:justify-end gap-1.5 mt-1 text-emerald-500/70 text-[10px] font-headline uppercase tracking-widest">
                   <Wallet className="w-3 h-3" /> Propina incl. {tx.tip}
                 </div>

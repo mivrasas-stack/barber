@@ -66,14 +66,14 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
 };
 
 export default function ProfilePage() {
   const progressPercentage = (userProfile.rank.points / userProfile.rank.nextTierPoints) * 100;
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white/90 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground/90 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       {/* Background Glows */}
       <div className="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
       
@@ -90,21 +90,21 @@ export default function ProfilePage() {
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full blur opacity-30" />
               <Avatar className="w-24 h-24 border-2 border-amber-500/50 shadow-2xl relative">
                 <AvatarImage src={userProfile.avatar} />
-                <AvatarFallback className="bg-[#111] text-2xl"><UserCircle className="w-12 h-12 text-white/20" /></AvatarFallback>
+                <AvatarFallback className="bg-[#111] text-2xl"><UserCircle className="w-12 h-12 text-foreground/20" /></AvatarFallback>
               </Avatar>
               <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-amber-400 to-amber-600 p-1.5 rounded-full border-2 border-[#0A0A0A]">
                 <Crown className="w-4 h-4 text-black" />
               </div>
             </div>
             <div>
-              <h1 className="text-3xl font-headline tracking-widest uppercase text-white mb-1">{userProfile.name}</h1>
-              <p className="text-white/50 text-sm tracking-wide mb-2">{userProfile.email} • {userProfile.phone}</p>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-white/70">
+              <h1 className="text-3xl font-headline tracking-widest uppercase text-foreground mb-1">{userProfile.name}</h1>
+              <p className="text-foreground/50 text-sm tracking-wide mb-2">{userProfile.email} • {userProfile.phone}</p>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 border border-border text-xs text-foreground/70">
                 <Shield className="w-3 h-3 text-amber-500" /> Miembro desde {userProfile.joined}
               </div>
             </div>
           </div>
-          <Button variant="outline" className="rounded-full border-white/10 bg-white/5 hover:bg-white/10 text-white gap-2">
+          <Button variant="outline" className="rounded-full border-border bg-foreground/5 hover:bg-foreground/10 text-foreground gap-2">
             <Edit3 className="w-4 h-4" /> Editar Perfil
           </Button>
         </motion.div>
@@ -122,12 +122,12 @@ export default function ProfilePage() {
             <div className="flex justify-between items-start mb-8 relative z-10">
               <div>
                 <p className="text-[10px] font-headline tracking-[0.2em] text-amber-500/70 uppercase mb-2">Rango Actual</p>
-                <h2 className="text-4xl font-headline tracking-widest uppercase text-white drop-shadow-[0_0_15px_rgba(245,158,11,0.3)] flex items-center gap-3">
+                <h2 className="text-4xl font-headline tracking-widest uppercase text-foreground drop-shadow-[0_0_15px_rgba(245,158,11,0.3)] flex items-center gap-3">
                   {userProfile.rank.current} <Trophy className="w-8 h-8 text-amber-400" />
                 </h2>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-headline tracking-[0.2em] text-white/40 uppercase mb-2">Puntos Totales</p>
+                <p className="text-[10px] font-headline tracking-[0.2em] text-foreground/40 uppercase mb-2">Puntos Totales</p>
                 <p className="text-3xl font-bold font-sans tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
                   {userProfile.rank.points.toLocaleString()}
                 </p>
@@ -136,10 +136,10 @@ export default function ProfilePage() {
 
             <div className="space-y-4 relative z-10">
               <div className="flex justify-between text-xs font-medium tracking-wider">
-                <span className="text-white/60">{userProfile.rank.current}</span>
+                <span className="text-foreground/60">{userProfile.rank.current}</span>
                 <span className="text-amber-500/80">{userProfile.rank.next}</span>
               </div>
-              <div className="relative h-4 w-full bg-black/50 rounded-full overflow-hidden border border-white/5">
+              <div className="relative h-4 w-full bg-black/50 rounded-full overflow-hidden border border-border">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${progressPercentage}%` }}
@@ -148,7 +148,7 @@ export default function ProfilePage() {
                 />
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImEiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBsNDAtNDBIMzBMMCAzMHpNNDAgMGgtMTBMMCAzMHYxMGgzMEw0MCAxMHoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYSkiLz48L3N2Zz4=')] opacity-20 mix-blend-overlay" />
               </div>
-              <p className="text-right text-[10px] tracking-widest text-white/40 uppercase">
+              <p className="text-right text-[10px] tracking-widest text-foreground/40 uppercase">
                 Faltan {(userProfile.rank.nextTierPoints - userProfile.rank.points).toLocaleString()} pts para subir
               </p>
             </div>
@@ -156,35 +156,35 @@ export default function ProfilePage() {
 
           {/* Quick Stats */}
           <motion.div variants={itemVariants} className="grid grid-rows-3 gap-4">
-            <div className="bg-[#0F0F0F] border border-white/5 rounded-[2rem] p-5 flex items-center justify-between hover:border-white/10 transition-colors">
+            <div className="bg-card border border-border rounded-[2rem] p-5 flex items-center justify-between hover:border-border transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
                   <Scissors className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-[10px] tracking-widest uppercase text-white/40">Cortes Totales</p>
+                  <p className="text-[10px] tracking-widest uppercase text-foreground/40">Cortes Totales</p>
                   <p className="text-xl font-bold">{userProfile.stats.totalCortes}</p>
                 </div>
               </div>
             </div>
-            <div className="bg-[#0F0F0F] border border-white/5 rounded-[2rem] p-5 flex items-center justify-between hover:border-white/10 transition-colors">
+            <div className="bg-card border border-border rounded-[2rem] p-5 flex items-center justify-between hover:border-border transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
                   <Zap className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-[10px] tracking-widest uppercase text-white/40">Racha de visitas</p>
+                  <p className="text-[10px] tracking-widest uppercase text-foreground/40">Racha de visitas</p>
                   <p className="text-xl font-bold">{userProfile.stats.diasRacha} 🔥</p>
                 </div>
               </div>
             </div>
-            <div className="bg-[#0F0F0F] border border-white/5 rounded-[2rem] p-5 flex items-center justify-between hover:border-white/10 transition-colors">
+            <div className="bg-card border border-border rounded-[2rem] p-5 flex items-center justify-between hover:border-border transition-colors">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center">
                   <Medal className="w-5 h-5 text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-[10px] tracking-widest uppercase text-white/40">Total Gastado</p>
+                  <p className="text-[10px] tracking-widest uppercase text-foreground/40">Total Gastado</p>
                   <p className="text-xl font-bold text-amber-500">${userProfile.stats.totalGastado}</p>
                 </div>
               </div>
@@ -192,10 +192,10 @@ export default function ProfilePage() {
           </motion.div>
 
           {/* Achievements (Logros) */}
-          <motion.div variants={itemVariants} className="md:col-span-3 bg-[#0F0F0F] border border-white/5 rounded-[2rem] p-8">
+          <motion.div variants={itemVariants} className="md:col-span-3 bg-card border border-border rounded-[2rem] p-8">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-headline tracking-widest uppercase text-white">Insignias & Logros</h3>
-              <Button variant="ghost" className="text-white/40 hover:text-amber-400 hover:bg-amber-500/10 text-xs tracking-widest uppercase rounded-full">
+              <h3 className="text-xl font-headline tracking-widest uppercase text-foreground">Insignias & Logros</h3>
+              <Button variant="ghost" className="text-foreground/40 hover:text-amber-400 hover:bg-amber-500/10 text-xs tracking-widest uppercase rounded-full">
                 Ver Todos <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </div>
@@ -206,15 +206,15 @@ export default function ProfilePage() {
                   key={ach.id} 
                   className={`p-5 rounded-2xl border transition-all duration-300 ${
                     ach.unlocked 
-                      ? 'border-white/10 bg-white/[0.02] hover:border-white/20' 
-                      : 'border-white/5 bg-black/20 opacity-50 grayscale'
+                      ? 'border-border bg-foreground/5 hover:border-border' 
+                      : 'border-border bg-black/20 opacity-50 grayscale'
                   }`}
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${ach.unlocked ? ach.bg : 'bg-white/5'}`}>
-                    <ach.icon className={`w-6 h-6 ${ach.unlocked ? ach.color : 'text-white/20'}`} />
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${ach.unlocked ? ach.bg : 'bg-foreground/5'}`}>
+                    <ach.icon className={`w-6 h-6 ${ach.unlocked ? ach.color : 'text-foreground/20'}`} />
                   </div>
-                  <h4 className="text-sm font-bold text-white mb-1 tracking-wide">{ach.title}</h4>
-                  <p className="text-xs text-white/40 leading-relaxed">{ach.desc}</p>
+                  <h4 className="text-sm font-bold text-foreground mb-1 tracking-wide">{ach.title}</h4>
+                  <p className="text-xs text-foreground/40 leading-relaxed">{ach.desc}</p>
                 </div>
               ))}
             </div>

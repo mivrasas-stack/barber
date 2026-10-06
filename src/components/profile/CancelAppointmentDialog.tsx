@@ -24,7 +24,7 @@ export function CancelAppointmentDialog({ onConfirm }: CancelAppointmentDialogPr
         <Button 
           variant="outline" 
           size="sm" 
-          className="bg-transparent border-white/20 text-muted-foreground hover:bg-white/10 hover:text-white transition-colors"
+          className="bg-transparent border-border text-muted-foreground hover:bg-foreground/10 hover:text-foreground transition-colors"
         >
           Cancelar
         </Button>

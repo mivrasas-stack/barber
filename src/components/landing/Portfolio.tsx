@@ -40,7 +40,7 @@ export default function Portfolio() {
                 <p className="text-primary font-medium text-sm tracking-widest uppercase translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
                   Estilo
                 </p>
-                <h3 className="text-white text-2xl font-headline translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <h3 className="text-foreground text-2xl font-headline translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                   {item.description || "Corte Clásico"}
                 </h3>
               </div>

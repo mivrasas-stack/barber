@@ -66,7 +66,7 @@ export default function AdminLayout({
     <div className="dark bg-background min-h-screen text-foreground selection:bg-primary/30">
         <SidebarProvider>
         {!isRoot && (
-        <Sidebar className="border-r border-white/10 bg-black/50 backdrop-blur-xl">
+        <Sidebar className="border-r border-border bg-black/50 backdrop-blur-xl">
             <SidebarHeader className="pt-6 pb-4 px-4">
             <div className="flex flex-col gap-6">
                 <Link href="/barber/admin" className="flex items-center gap-3 group">
@@ -74,24 +74,24 @@ export default function AdminLayout({
                         <Scissors className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-xl font-bold tracking-widest text-white font-headline uppercase leading-none">Barber</span>
+                        <span className="text-xl font-bold tracking-widest text-foreground font-headline uppercase leading-none">Barber</span>
                         <span className="text-sm font-light tracking-[0.2em] text-primary uppercase leading-none mt-1">Paradise</span>
                     </div>
                 </Link>
                 
                 {/* Multi-Location Selector */}
                 <div className="space-y-2">
-                    <p className="text-[10px] font-headline tracking-widest text-white/40 uppercase pl-1">Sede Activa</p>
+                    <p className="text-[10px] font-headline tracking-widest text-foreground/40 uppercase pl-1">Sede Activa</p>
                     <Select defaultValue={dummyLocations[0].id}>
-                        <SelectTrigger className="w-full bg-white/5 border-white/10 text-white h-12 rounded-xl focus:ring-primary/50">
+                        <SelectTrigger className="w-full bg-foreground/5 border-border text-foreground h-12 rounded-xl focus:ring-primary/50">
                             <div className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4 text-primary" />
                                 <SelectValue placeholder="Selecciona una sede" />
                             </div>
                         </SelectTrigger>
-                        <SelectContent className="bg-background border-white/10 text-white">
+                        <SelectContent className="bg-background border-border text-foreground">
                             {dummyLocations.map(loc => (
-                                <SelectItem key={loc.id} value={loc.id} className="focus:bg-white/10 focus:text-white cursor-pointer">
+                                <SelectItem key={loc.id} value={loc.id} className="focus:bg-foreground/10 focus:text-foreground cursor-pointer">
                                     {loc.name}
                                 </SelectItem>
                             ))}
@@ -110,7 +110,7 @@ export default function AdminLayout({
                         asChild
                         isActive={isActive}
                         tooltip={item.label}
-                        className={`h-12 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary/10 text-primary hover:bg-primary/20' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                        className={`h-12 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary/10 text-primary hover:bg-primary/20' : 'text-foreground/60 hover:text-foreground hover:bg-foreground/5'}`}
                     >
                         <Link href={item.href} className="flex items-center gap-3">
                         <item.icon className={`h-5 w-5 ${isActive ? 'text-primary' : ''}`} />
@@ -123,7 +123,7 @@ export default function AdminLayout({
             </SidebarMenu>
             </SidebarContent>
             <SidebarFooter className="p-4">
-                <SidebarMenuButton tooltip="Cerrar Sesión" asChild className="h-12 rounded-xl text-white/60 hover:text-white hover:bg-destructive/20 transition-all">
+                <SidebarMenuButton tooltip="Cerrar Sesión" asChild className="h-12 rounded-xl text-foreground/60 hover:text-foreground hover:bg-destructive/20 transition-all">
                 <Link href="/">
                     <LogOut className="h-5 w-5" />
                     <span className="font-light tracking-wide text-sm">Cerrar Sesión</span>
@@ -134,24 +134,24 @@ export default function AdminLayout({
         )}
         
         <SidebarInset className="bg-transparent flex flex-col">
-            <header className="sticky top-0 z-30 flex h-20 items-center justify-between gap-4 border-b border-white/5 bg-background/80 backdrop-blur-xl px-6 lg:px-10">
+            <header className="sticky top-0 z-30 flex h-20 items-center justify-between gap-4 border-b border-border bg-background/80 backdrop-blur-xl px-6 lg:px-10">
                 <div className="flex items-center gap-4">
-                    {!isRoot && <SidebarTrigger className="text-white hover:text-primary transition-colors" />}
-                    {!isRoot && <div className="h-6 w-px bg-white/10 hidden md:block" />}
-                    <button onClick={() => router.push('/barber/admin')} className="text-white/60 hover:text-white transition-colors flex items-center gap-2">
+                    {!isRoot && <SidebarTrigger className="text-foreground hover:text-primary transition-colors" />}
+                    {!isRoot && <div className="h-6 w-px bg-foreground/10 hidden md:block" />}
+                    <button onClick={() => router.push('/barber/admin')} className="text-foreground/60 hover:text-foreground transition-colors flex items-center gap-2">
                         <ArrowLeft className="w-4 h-4" />
                         <span className="text-sm font-light tracking-widest uppercase hidden sm:block">Volver</span>
                     </button>
-                    <div className="h-6 w-px bg-white/10 hidden md:block" />
-                    <h2 className="hidden md:block text-sm font-light tracking-widest text-white/60 uppercase">
+                    <div className="h-6 w-px bg-foreground/10 hidden md:block" />
+                    <h2 className="hidden md:block text-sm font-light tracking-widest text-foreground/60 uppercase">
                         Portal Administrativo
                     </h2>
                 </div>
                 
                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-full py-1.5 px-4">
+                    <div className="flex items-center gap-3 bg-foreground/5 border border-border rounded-full py-1.5 px-4">
                         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                        <span className="text-xs font-light text-white tracking-wide">Sistema Operativo</span>
+                        <span className="text-xs font-light text-foreground tracking-wide">Sistema Operativo</span>
                     </div>
                 </div>
             </header>
