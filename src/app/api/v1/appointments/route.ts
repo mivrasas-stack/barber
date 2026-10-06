@@ -4,6 +4,10 @@ import { DrizzleAppointmentRepository } from "@/modules/appointments/infrastruct
 import { DrizzleIdempotencyRepository } from "@/modules/appointments/infrastructure/drizzle-idempotency.repository";
 import { DrizzleServiceRepository } from "@/modules/catalog/infrastructure/drizzle-service.repository";
 import { DrizzleStaffRepository } from "@/modules/staff/infrastructure/drizzle-staff.repository";
+import { DrizzleModuleRepository } from "@/modules/modules/infrastructure/drizzle-module.repository";
+import { DrizzleSubscriptionRepository } from "@/modules/subscriptions/infrastructure/drizzle-subscription.repository";
+import { ModuleEntitlementResolver } from "@/modules/modules/application/module-entitlement-resolver";
+import { ResolveWorkspacesUseCase } from "@/modules/tenancy/application/resolve-workspaces.usecase";
 import { CreateAppointmentUseCase } from "@/modules/appointments/application/create-appointment.usecase";
 import { AppError } from "@/shared/errors/app-error";
 
@@ -22,12 +26,18 @@ export async function POST(request: NextRequest) {
     const idempotencyRepo = new DrizzleIdempotencyRepository();
     const serviceRepo = new DrizzleServiceRepository();
     const staffRepo = new DrizzleStaffRepository();
+    const moduleRepo = new DrizzleModuleRepository();
+    const subRepo = new DrizzleSubscriptionRepository();
+    const moduleResolver = new ModuleEntitlementResolver(moduleRepo, subRepo);
 
     const useCase = new CreateAppointmentUseCase(
       appointmentRepo,
       idempotencyRepo,
       serviceRepo,
-      staffRepo
+      staffRepo,
+      undefined,
+      undefined,
+      moduleResolver
     );
 
     const result = await useCase.execute({
@@ -70,7 +80,13 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-    const session = token ? await validateSessionWithDb(token) : null;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized: Authentication required" }, { status: 401 });
+    }
+    const session = await validateSessionWithDb(token);
+    if (!session) {
+      return NextResponse.json({ error: "Session invalid or expired" }, { status: 401 });
+    }
 
     const { searchParams } = request.nextUrl;
     const tenantId = searchParams.get("tenantId");
@@ -78,6 +94,18 @@ export async function GET(request: NextRequest) {
     if (!tenantId) {
       return NextResponse.json({ error: "tenantId is required" }, { status: 400 });
     }
+
+    // Verify workspace access (platform admin or active membership/affiliation)
+    if (!session.isPlatformAdmin) {
+      const workspaceResolver = new ResolveWorkspacesUseCase();
+      await workspaceResolver.validateAccess(session.userId, tenantId);
+    }
+
+    // Verify server-side module entitlement
+    const moduleRepo = new DrizzleModuleRepository();
+    const subRepo = new DrizzleSubscriptionRepository();
+    const moduleResolver = new ModuleEntitlementResolver(moduleRepo, subRepo);
+    await moduleResolver.assertTenantModuleEnabled(tenantId, "scheduling.appointments");
 
     const locationId = searchParams.get("locationId") || undefined;
     const staffId = searchParams.get("staffId") || undefined;

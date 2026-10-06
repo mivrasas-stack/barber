@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -30,6 +30,36 @@ export default function RegisterProfessionalPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successData, setSuccessData] = useState<any | null>(null);
+  const [availablePlans, setAvailablePlans] = useState<
+    Array<{
+      code: string;
+      name: string;
+      price: string;
+      trialDays: number;
+    }>
+  >([
+    { code: "SOLO_STARTER", name: "Solo Starter", price: "$49k/m", trialDays: 14 },
+    { code: "SOLO_PRO", name: "Solo Pro (Recomendado)", price: "$89k/m", trialDays: 14 },
+    { code: "SOLO_ELITE", name: "Solo Elite", price: "$149k/m", trialDays: 14 },
+  ]);
+
+  useEffect(() => {
+    fetch("/api/v1/subscription-plans?audience=SOLO_PROFESSIONAL")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+          setAvailablePlans(
+            json.data.map((p: any) => ({
+              code: p.code,
+              name: p.code === "SOLO_PRO" ? `${p.name} (Recomendado)` : p.name,
+              price: `$${Math.round(p.priceMinor / 100000)}k/m`,
+              trialDays: p.trialDays,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -413,11 +443,7 @@ export default function RegisterProfessionalPage() {
               <div className="space-y-2 pt-2">
                 <Label>Selecciona tu Plan Inicial</Label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  {[
-                    { code: "SOLO_STARTER", name: "Solo Starter", price: "$49k/m" },
-                    { code: "SOLO_PRO", name: "Solo Pro (Recomendado)", price: "$89k/m" },
-                    { code: "SOLO_ELITE", name: "Solo Elite", price: "$149k/m" },
-                  ].map((p) => (
+                  {availablePlans.map((p) => (
                     <div
                       key={p.code}
                       onClick={() => handleChange("planCode", p.code)}
@@ -429,7 +455,9 @@ export default function RegisterProfessionalPage() {
                     >
                       <div className="text-xs font-bold text-foreground">{p.name}</div>
                       <div className="text-xs text-amber-500 font-mono mt-1">{p.price}</div>
-                      <div className="text-[10px] text-muted-foreground mt-2">14 días de prueba gratis</div>
+                      <div className="text-[10px] text-muted-foreground mt-2">
+                        {p.trialDays > 0 ? `${p.trialDays} días de prueba gratis` : "Acceso inmediato"}
+                      </div>
                     </div>
                   ))}
                 </div>

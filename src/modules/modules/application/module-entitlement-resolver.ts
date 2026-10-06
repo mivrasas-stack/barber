@@ -1,6 +1,7 @@
 import { ModuleRepository } from "../domain/module-repository.interface";
 import { SubscriptionRepository } from "@/modules/subscriptions/domain/subscription-repository.interface";
 import { EffectiveModule, Module } from "../domain/module";
+import { ForbiddenError } from "@/shared/errors/app-error";
 
 export class ModuleEntitlementResolver {
   constructor(
@@ -115,5 +116,14 @@ export class ModuleEntitlementResolver {
     const effective = await this.resolveEffectiveModules(tenantId);
     const found = effective.find((e) => e.module.code === moduleCode);
     return found ? found.isEnabled : false;
+  }
+
+  async assertTenantModuleEnabled(tenantId: string, moduleCode: string): Promise<void> {
+    const isEnabled = await this.isModuleEnabled(tenantId, moduleCode);
+    if (!isEnabled) {
+      throw new ForbiddenError(
+        `MODULE_NOT_ENTITLED: Module '${moduleCode}' is not enabled or not entitled for workspace '${tenantId}'`
+      );
+    }
   }
 }

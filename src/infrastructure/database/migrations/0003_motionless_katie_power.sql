@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "affiliations_prof_host_active_idx" ON "professional_affiliations" USING btree ("professional_workspace_tenant_id","host_tenant_id") WHERE status IN ('REQUESTED', 'INVITED', 'ACTIVE');

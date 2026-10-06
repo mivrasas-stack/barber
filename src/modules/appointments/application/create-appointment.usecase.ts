@@ -29,9 +29,12 @@ export interface CreateAppointmentInput {
   idempotencyKey?: string;
 }
 
+import { ModuleEntitlementResolver } from "@/modules/modules/application/module-entitlement-resolver";
+
 export class CreateAppointmentUseCase {
   private readonly affiliationRepo: AffiliationRepository;
   private readonly professionalRepo: DrizzleProfessionalRepository;
+  private readonly moduleResolver?: ModuleEntitlementResolver;
 
   constructor(
     private readonly appointmentRepo: AppointmentRepository,
@@ -39,10 +42,12 @@ export class CreateAppointmentUseCase {
     private readonly serviceRepo: ServiceRepository,
     private readonly staffRepo: StaffRepository,
     affiliationRepo?: AffiliationRepository,
-    professionalRepo?: DrizzleProfessionalRepository
+    professionalRepo?: DrizzleProfessionalRepository,
+    moduleResolver?: ModuleEntitlementResolver
   ) {
     this.affiliationRepo = affiliationRepo ?? new DrizzleAffiliationRepository();
     this.professionalRepo = professionalRepo ?? new DrizzleProfessionalRepository();
+    this.moduleResolver = moduleResolver;
   }
 
   async execute(input: CreateAppointmentInput): Promise<{
@@ -102,6 +107,11 @@ export class CreateAppointmentUseCase {
     }
 
     try {
+      // 1.5. Validate Server-Side Module Entitlement
+      if (this.moduleResolver) {
+        await this.moduleResolver.assertTenantModuleEnabled(input.tenantId, "scheduling.appointments");
+      }
+
       // 2. Validate Location & Cross-Tenant Affiliation (Case A vs Case B)
       const [loc] = await db
         .select()

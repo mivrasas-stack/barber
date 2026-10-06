@@ -1,4 +1,5 @@
 import { pgTable, uuid, varchar, text, integer, bigint, boolean, timestamp, uniqueIndex, index } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { users } from "./users";
 import { tenants } from "./tenants";
 import { locations } from "./locations";
@@ -77,6 +78,9 @@ export const professionalAffiliations = pgTable(
     index("affiliations_prof_tenant_idx").on(table.professionalWorkspaceTenantId),
     index("affiliations_host_tenant_idx").on(table.hostTenantId),
     index("affiliations_status_idx").on(table.status),
+    uniqueIndex("affiliations_prof_host_active_idx")
+      .on(table.professionalWorkspaceTenantId, table.hostTenantId)
+      .where(sql`status IN ('REQUESTED', 'INVITED', 'ACTIVE')`),
   ]
 );
 

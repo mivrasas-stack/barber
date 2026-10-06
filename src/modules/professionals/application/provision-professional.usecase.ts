@@ -197,42 +197,30 @@ export class ProvisionProfessionalUseCase {
         })
         .returning();
 
-      // 8. Create Subscription
+      // 8. Create Subscription (strictly sourced from subscription_plans in DB)
       const [plan] = await tx
         .select()
         .from(subscriptionPlans)
         .where(eq(subscriptionPlans.code, planCode))
         .limit(1);
 
-      let subPlanId = plan?.id;
-      let trialDays = plan?.trialDays ?? 14;
-
-      if (!subPlanId) {
-        // Fallback: create default solo plan if none exists
-        const [defaultPlan] = await tx
-          .insert(subscriptionPlans)
-          .values({
-            code: "SOLO_PRO",
-            name: "Solo Professional Pro",
-            audience: "SOLO_PROFESSIONAL",
-            trialDays: 14,
-            status: "ACTIVE",
-          })
-          .onConflictDoNothing()
-          .returning();
-
-        subPlanId = defaultPlan ? defaultPlan.id : (await tx.select().from(subscriptionPlans).limit(1))[0]?.id;
+      if (!plan) {
+        throw new NotFoundError(`Subscription plan '${planCode}' not found`);
       }
 
+      const subPlanId = plan.id;
+      const trialDays = plan.trialDays; // Sourced strictly from subscription_plans table
+
       const now = new Date();
-      const trialEndsAt = new Date(now.getTime() + trialDays * 24 * 60 * 60 * 1000);
+      const trialEndsAt = trialDays > 0 ? new Date(now.getTime() + trialDays * 24 * 60 * 60 * 1000) : null;
+      const initialStatus = trialDays > 0 ? "TRIALING" : "ACTIVE";
 
       const [subscription] = await tx
         .insert(tenantSubscriptions)
         .values({
           tenantId: tenant.id,
           planId: subPlanId,
-          status: "TRIALING",
+          status: initialStatus,
           startsAt: now,
           trialEndsAt,
         })

@@ -92,7 +92,7 @@ export class DrizzleSubscriptionRepository implements SubscriptionRepository {
         billingPeriod: input.billingPeriod ?? "MONTHLY",
         priceMinor: input.priceMinor,
         currency: input.currency ?? "COP",
-        trialDays: input.trialDays ?? 14,
+        trialDays: input.trialDays ?? 0,
       })
       .returning();
     return this.toPlanDomain(row);
@@ -111,15 +111,20 @@ export class DrizzleSubscriptionRepository implements SubscriptionRepository {
 
   async createSubscription(input: CreateTenantSubscriptionInput): Promise<TenantSubscription> {
     const now = new Date();
-    const trialDays = input.trialDays ?? 14;
-    const trialEndsAt = new Date(now.getTime() + trialDays * 24 * 60 * 60 * 1000);
+    let trialDays = input.trialDays;
+    if (trialDays === undefined) {
+      const plan = await this.findPlanById(input.planId);
+      trialDays = plan ? plan.trialDays : 0;
+    }
+    const trialEndsAt = trialDays > 0 ? new Date(now.getTime() + trialDays * 24 * 60 * 60 * 1000) : null;
+    const status = input.status ?? (trialDays > 0 ? "TRIALING" : "ACTIVE");
 
     const [row] = await db
       .insert(tenantSubscriptions)
       .values({
         tenantId: input.tenantId,
         planId: input.planId,
-        status: input.status ?? "TRIALING",
+        status,
         startsAt: now,
         trialEndsAt,
       })

@@ -73,6 +73,7 @@ export async function seedDatabase() {
     { name: "OWNER", description: "Business owner with full administrative privileges" },
     { name: "MANAGER", description: "Shop manager with operational and staff privileges" },
     { name: "EMPLOYEE", description: "Barber / stylist executing services and managing schedule" },
+    { name: "AFFILIATED_PROFESSIONAL", description: "Independent professional operating within approved host locations" },
   ];
 
   const roleMap = new Map<string, string>();
@@ -115,11 +116,16 @@ export async function seedDatabase() {
     "customers.read",
     "inventory.read",
   ];
+  const affiliatedProfessionalPerms = [
+    "locations.read",
+    "appointments.create",
+  ];
 
   const rolePermBindings: [string, string[]][] = [
     ["OWNER", ownerPerms],
     ["MANAGER", managerPerms],
     ["EMPLOYEE", employeePerms],
+    ["AFFILIATED_PROFESSIONAL", affiliatedProfessionalPerms],
   ];
 
   for (const [rName, pCodes] of rolePermBindings) {

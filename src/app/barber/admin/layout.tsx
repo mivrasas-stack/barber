@@ -50,6 +50,7 @@ const navItems = [
   { href: '/barber/admin/accounting', icon: CreditCard, label: 'Finanzas' },
   { href: '/barber/admin/products', icon: ShoppingBag, label: 'Boutique (Inv)' },
   { href: '/barber/admin/services', icon: Scissors, label: 'Servicios' },
+  { href: '/barber/admin/affiliations', icon: ShieldCheck, label: 'Afiliaciones' },
   { href: '/barber/admin/settings', icon: Settings, label: 'Configuración' },
 ];
 

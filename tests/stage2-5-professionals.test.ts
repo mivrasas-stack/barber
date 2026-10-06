@@ -17,10 +17,12 @@ import { ResolveWorkspacesUseCase } from "@/modules/tenancy/application/resolve-
 import { ModuleEntitlementResolver } from "@/modules/modules/application/module-entitlement-resolver";
 import { CreateAppointmentUseCase } from "@/modules/appointments/application/create-appointment.usecase";
 import { locations } from "@/infrastructure/database/schema/locations";
+import { memberships } from "@/infrastructure/database/schema/memberships";
+import { roles, membershipRoles } from "@/infrastructure/database/schema/roles";
 import { customerRelationships } from "@/infrastructure/database/schema/professionals";
 import { appointments } from "@/infrastructure/database/schema/appointments";
 import { ConflictError, NotFoundError, ForbiddenError, ValidationError } from "@/shared/errors/app-error";
-import { eq, and } from "drizzle-orm";
+import { eq, and, isNull } from "drizzle-orm";
 import crypto from "crypto";
 
 describe("Barber Paradise v2 - Stage 2.5: Independent Professionals, Solo Workspaces & Affiliations Tests", () => {
@@ -65,6 +67,7 @@ describe("Barber Paradise v2 - Stage 2.5: Independent Professionals, Solo Worksp
 
   let hostBTenantId: string;
   let hostBLoc1Id: string;
+  let hostBOwnerUserId: string;
 
   let customerUserId: string;
 
@@ -111,6 +114,29 @@ describe("Barber Paradise v2 - Stage 2.5: Independent Professionals, Solo Worksp
     });
     hostAOwnerUserId = hostAOwner.id;
 
+    // Grant OWNER role in Host A
+    const [membershipA] = await db
+      .insert(memberships)
+      .values({
+        tenantId: hostATenantId,
+        userId: hostAOwnerUserId,
+        status: "ACTIVE",
+      })
+      .returning();
+
+    const [ownerRole] = await db
+      .select()
+      .from(roles)
+      .where(and(eq(roles.name, "OWNER"), isNull(roles.tenantId)))
+      .limit(1);
+
+    if (ownerRole) {
+      await db.insert(membershipRoles).values({
+        membershipId: membershipA.id,
+        roleId: ownerRole.id,
+      });
+    }
+
     // 2. Create Host B Barbershop (for cross-host concurrency test)
     const hostB = await tenantRepo.create({
       name: `Host Barbershop B ${testSuffix}`,
@@ -119,6 +145,29 @@ describe("Barber Paradise v2 - Stage 2.5: Independent Professionals, Solo Worksp
       defaultTimezone: "America/Bogota",
     });
     hostBTenantId = hostB.id;
+
+    const hostBOwner = await userRepo.create({
+      email: `host.b.owner.${testSuffix}@barber.dev`,
+      name: `Owner Host B`,
+      passwordHash: "test_hash",
+    });
+    hostBOwnerUserId = hostBOwner.id;
+
+    const [membershipB] = await db
+      .insert(memberships)
+      .values({
+        tenantId: hostBTenantId,
+        userId: hostBOwnerUserId,
+        status: "ACTIVE",
+      })
+      .returning();
+
+    if (ownerRole) {
+      await db.insert(membershipRoles).values({
+        membershipId: membershipB.id,
+        roleId: ownerRole.id,
+      });
+    }
 
     const [locB1] = await db
       .insert(locations)
@@ -470,7 +519,7 @@ describe("Barber Paradise v2 - Stage 2.5: Independent Professionals, Solo Worksp
 
       await manageAffilUseCase.approveAffiliation({
         affiliationId: affilB.id,
-        approvedByUserId: carlosUserId,
+        approvedByUserId: hostBOwnerUserId,
         locationIds: [hostBLoc1Id],
       });
 
