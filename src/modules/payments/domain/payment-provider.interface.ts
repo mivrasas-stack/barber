@@ -16,8 +16,8 @@ export type ProviderPaymentStatus =
 
 export interface CreatePaymentIntentParams {
   intentId: string;
-  orderId: string;
-  orderNumber: string;
+  orderId?: string;
+  orderNumber?: string;
   amountMinor: bigint;
   currency: string;
   collectorTenantId: string;

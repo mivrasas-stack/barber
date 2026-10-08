@@ -31,6 +31,8 @@ export class DrizzlePaymentRepository implements IPaymentRepository {
     return new PaymentIntent({
       id: row.id,
       orderId: row.orderId,
+      subscriptionInvoiceId: row.subscriptionInvoiceId,
+      paymentPurpose: row.paymentPurpose as any,
       collectorTenantId: row.collectorTenantId,
       provider: row.provider as PaymentProviderType,
       amountMinor: BigInt(row.amountMinor),
@@ -156,6 +158,8 @@ export class DrizzlePaymentRepository implements IPaymentRepository {
       .insert(paymentIntents)
       .values({
         orderId: intent.orderId,
+        subscriptionInvoiceId: intent.subscriptionInvoiceId,
+        paymentPurpose: intent.paymentPurpose,
         collectorTenantId: intent.collectorTenantId,
         provider: intent.provider,
         amountMinor: intent.amountMinor,

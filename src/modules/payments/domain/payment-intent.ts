@@ -10,9 +10,13 @@ export type PaymentIntentStatus =
   | "CANCELLED"
   | "EXPIRED";
 
+export type PaymentPurpose = "ORDER_PAYMENT" | "SUBSCRIPTION_INVOICE";
+
 export interface PaymentIntentProps {
   id?: string;
-  orderId: string;
+  orderId?: string | null;
+  subscriptionInvoiceId?: string | null;
+  paymentPurpose?: PaymentPurpose;
   collectorTenantId: string;
   provider: PaymentProviderType;
   amountMinor: bigint;
@@ -32,7 +36,9 @@ export interface PaymentIntentProps {
 
 export class PaymentIntent {
   readonly id?: string;
-  readonly orderId: string;
+  readonly orderId?: string | null;
+  readonly subscriptionInvoiceId?: string | null;
+  readonly paymentPurpose: PaymentPurpose;
   readonly collectorTenantId: string;
   readonly provider: PaymentProviderType;
   readonly amountMinor: bigint;
@@ -51,7 +57,9 @@ export class PaymentIntent {
 
   constructor(props: PaymentIntentProps) {
     this.id = props.id;
-    this.orderId = props.orderId;
+    this.orderId = props.orderId ?? null;
+    this.subscriptionInvoiceId = props.subscriptionInvoiceId ?? null;
+    this.paymentPurpose = props.paymentPurpose ?? "ORDER_PAYMENT";
     this.collectorTenantId = props.collectorTenantId;
     this.provider = props.provider;
     this.amountMinor = props.amountMinor;
@@ -91,6 +99,14 @@ export class PaymentIntent {
 
   get updatedAt(): Date {
     return this._updatedAt;
+  }
+
+  get isSubscriptionPayment(): boolean {
+    return this.paymentPurpose === "SUBSCRIPTION_INVOICE";
+  }
+
+  get isOrderPayment(): boolean {
+    return this.paymentPurpose === "ORDER_PAYMENT";
   }
 
   setProviderReference(ref: string): void {

@@ -32,11 +32,15 @@ export class GetPaymentUseCase {
       throw new PaymentNotFoundError(paymentIntentId);
     }
 
-    const [order] = await db
-      .select({ orderNumber: orders.orderNumber })
-      .from(orders)
-      .where(eq(orders.id, intent.orderId))
-      .limit(1);
+    let orderNumber: string | undefined;
+    if (intent.orderId) {
+      const [order] = await db
+        .select({ orderNumber: orders.orderNumber })
+        .from(orders)
+        .where(eq(orders.id, intent.orderId))
+        .limit(1);
+      orderNumber = order?.orderNumber;
+    }
 
     const attempts = await this.paymentRepository.listAttemptsByIntentId(
       paymentIntentId
@@ -50,7 +54,7 @@ export class GetPaymentUseCase {
 
     return {
       intent,
-      orderNumber: order?.orderNumber,
+      orderNumber,
       attempts,
       refunds,
       reservations,

@@ -55,7 +55,8 @@ export class WompiPaymentProvider implements IPaymentProvider {
   async createPaymentIntent(
     params: CreatePaymentIntentParams
   ): Promise<CreatePaymentIntentResult> {
-    const reference = `${params.orderNumber}-${params.intentId.slice(0, 8)}`;
+    const refPrefix = params.orderNumber ?? "SUB";
+    const reference = `${refPrefix}-${params.intentId.slice(0, 8)}`;
     const integritySignature = this.calculateIntegritySignature(
       reference,
       params.amountMinor,

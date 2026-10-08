@@ -68,6 +68,11 @@ export class RequestRefundUseCase {
         throw new PaymentNotFoundError(input.paymentIntentId);
       }
 
+      if (!intent.orderId) {
+        throw new RefundNotAllowedError("Refunds are only supported for order payments");
+      }
+      const orderId = intent.orderId;
+
       if (intent.status !== "SUCCEEDED") {
         throw new RefundNotAllowedError(
           `Cannot refund payment in '${intent.status}' status (must be SUCCEEDED)`
@@ -104,7 +109,7 @@ export class RequestRefundUseCase {
       // 4. Create and save Refund entity
       const refund = new Refund({
         paymentIntentId: intent.id!,
-        orderId: intent.orderId,
+        orderId: orderId,
         collectorTenantId: intent.collectorTenantId,
         orderReturnId: input.orderReturnId,
         amountMinor: input.amountMinor,
@@ -123,7 +128,7 @@ export class RequestRefundUseCase {
       const [order] = await tx
         .select()
         .from(orders)
-        .where(eq(orders.id, intent.orderId))
+        .where(eq(orders.id, orderId))
         .limit(1);
 
       const accounts = await this.financeRepository.getOrCreateDefaultAccounts(
@@ -179,7 +184,7 @@ export class RequestRefundUseCase {
         entityId: savedRefund.id,
         metadata: {
           paymentIntentId: intent.id,
-          orderId: intent.orderId,
+          orderId: orderId,
           amountMinor: input.amountMinor.toString(),
           reason: input.reason,
         },
@@ -192,7 +197,7 @@ export class RequestRefundUseCase {
         payload: {
           refundId: savedRefund.id,
           paymentIntentId: intent.id,
-          orderId: intent.orderId,
+          orderId: orderId,
           amountMinor: input.amountMinor.toString(),
           currency: intent.currency,
         },
@@ -201,7 +206,7 @@ export class RequestRefundUseCase {
       return {
         id: savedRefund.id!,
         paymentIntentId: intent.id!,
-        orderId: intent.orderId,
+        orderId: orderId,
         amountMinor: savedRefund.amountMinor.toString(),
         currency: savedRefund.currency,
         status: savedRefund.status,

@@ -7,6 +7,10 @@ const paymentRepo = new DrizzlePaymentRepository();
 const processWebhookUseCase = new ProcessWebhookUseCase(paymentRepo);
 
 export async function POST(req: NextRequest) {
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Endpoint not available in production" }, { status: 404 });
+  }
+
   try {
     const rawBody = await req.text();
     const headers: Record<string, string | string[] | undefined> = {};

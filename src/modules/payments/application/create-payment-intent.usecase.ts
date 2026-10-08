@@ -68,16 +68,22 @@ export class CreatePaymentIntentUseCase {
 
       const existingIntent = await this.paymentRepository.findIntentByIdempotencyKeyHash(keyHash);
       if (existingIntent) {
-        const [existingOrder] = await db
-          .select({ orderNumber: orders.orderNumber })
-          .from(orders)
-          .where(eq(orders.id, existingIntent.orderId))
-          .limit(1);
+        let orderNumber = "N/A";
+        if (existingIntent.orderId) {
+          const [existingOrder] = await db
+            .select({ orderNumber: orders.orderNumber })
+            .from(orders)
+            .where(eq(orders.id, existingIntent.orderId))
+            .limit(1);
+          if (existingOrder) {
+            orderNumber = existingOrder.orderNumber;
+          }
+        }
 
         return {
           id: existingIntent.id!,
-          orderId: existingIntent.orderId,
-          orderNumber: existingOrder?.orderNumber ?? "N/A",
+          orderId: existingIntent.orderId ?? input.orderId,
+          orderNumber,
           collectorTenantId: existingIntent.collectorTenantId,
           provider: existingIntent.provider,
           amountMinor: existingIntent.amountMinor.toString(),

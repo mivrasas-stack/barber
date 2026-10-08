@@ -154,7 +154,8 @@ export class TestPaymentProvider implements IPaymentProvider {
   async createPaymentIntent(
     params: CreatePaymentIntentParams
   ): Promise<CreatePaymentIntentResult> {
-    const reference = `${params.orderNumber}-${params.intentId.slice(0, 8)}`;
+    const refPrefix = params.orderNumber ?? "SUB";
+    const reference = `${refPrefix}-${params.intentId.slice(0, 8)}`;
     const txId = `tx_test_${Date.now()}_${Math.random().toString(16).slice(2, 6)}`;
 
     const status: ProviderPaymentStatus =
