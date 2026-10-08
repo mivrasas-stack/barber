@@ -16,7 +16,8 @@ export type JournalEntryType =
   | "ADJUSTMENT"
   | "REVERSAL"
   | "PAYMENT"
-  | "PAYMENT_REFUND";
+  | "PAYMENT_REFUND"
+  | "SUBSCRIPTION_BILLING";
 
 export type JournalSourceType =
   | "APPOINTMENT"
@@ -26,7 +27,8 @@ export type JournalSourceType =
   | "ADJUSTMENT"
   | "REVERSAL"
   | "PAYMENT"
-  | "REFUND";
+  | "REFUND"
+  | "SUBSCRIPTION_INVOICE";
 
 export type JournalEntryStatus = "POSTED" | "REVERSED";
 
