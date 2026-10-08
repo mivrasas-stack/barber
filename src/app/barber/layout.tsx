@@ -12,7 +12,9 @@ import {
   ArrowLeft,
   Wallet,
   UserCheck,
-  Building2
+  Building2,
+  Receipt,
+  Package,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -32,6 +34,8 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { WorkspaceSwitcher } from '@/components/navigation/workspace-switcher';
 
 const navItems = [
+  { href: '/barber/pos', icon: Receipt, label: 'Caja / POS' },
+  { href: '/barber/inventory', icon: Package, label: 'Inventario' },
   { href: '/barber/appointments', icon: CalendarDays, label: 'Mi Agenda' },
   { href: '/barber/barberos', icon: Users, label: 'Barberos' },
   { href: '/barber/affiliations', icon: Building2, label: 'Afiliaciones' },

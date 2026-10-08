@@ -15,6 +15,9 @@ import {
   LogOut,
   Sparkles,
   ExternalLink,
+  ShoppingBag,
+  Package,
+  Receipt,
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -127,6 +130,30 @@ export default function ProfessionalWorkspaceLayout({
       href: "/professional/finance",
       icon: DollarSign,
       label: "Finanzas",
+    },
+    {
+      code: "pos.checkout",
+      href: "/professional/pos",
+      icon: Receipt,
+      label: "Caja / POS",
+    },
+    {
+      code: "commerce.products",
+      href: "/professional/products",
+      icon: ShoppingBag,
+      label: "Mis Productos",
+    },
+    {
+      code: "inventory.stock",
+      href: "/professional/inventory",
+      icon: Package,
+      label: "Mi Inventario",
+    },
+    {
+      code: "commerce.orders",
+      href: "/professional/orders",
+      icon: Receipt,
+      label: "Mis Ventas",
     },
   ];
 
