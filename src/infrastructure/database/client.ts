@@ -5,9 +5,9 @@ import { env } from "@/shared/config/env";
 
 const poolConfig: PoolConfig = {
   connectionString: env.DATABASE_URL,
-  max: env.NODE_ENV === "production" ? 20 : 10,
+  max: 50,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  connectionTimeoutMillis: 20000,
 };
 
 // Global singleton pattern to prevent pool exhaustion during Next.js hot reloads in development

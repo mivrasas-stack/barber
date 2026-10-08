@@ -20,6 +20,12 @@ import {
   professionalAffiliationTerms,
   customerRelationships,
 } from "./schema/professionals";
+import {
+  productCategories,
+  products,
+  productVariants,
+  inventoryPositions,
+} from "./schema/commerce";
 import { PasswordHasher } from "@/modules/identity/infrastructure/password-hasher";
 import { User } from "@/modules/identity/domain/user";
 
@@ -60,6 +66,14 @@ export async function seedDatabase() {
     { code: "settings.manage", description: "Modify general business settings" },
     { code: "roles.read", description: "View roles and assigned permissions" },
     { code: "roles.manage", description: "Modify roles and assign permissions" },
+    { code: "products.read", description: "View products, variants, and pricing" },
+    { code: "products.manage", description: "Create, update, and archive products" },
+    { code: "inventory.positions.read", description: "View inventory balances and positions" },
+    { code: "inventory.manage", description: "Receive, adjust, and transfer stock" },
+    { code: "inventory.cost.read", description: "View wholesale cost basis, valuation, and unit costs" },
+    { code: "orders.read", description: "View orders and sales receipts" },
+    { code: "orders.manage", description: "Create, edit, and cancel orders" },
+    { code: "pos.checkout", description: "Execute POS checkout and collect payments" },
   ];
 
   const permMap = new Map<string, string>();
@@ -120,6 +134,14 @@ export async function seedDatabase() {
     "finance.settlements.read",
     "finance.settlements.create",
     "settings.read",
+    "products.read",
+    "products.manage",
+    "inventory.positions.read",
+    "inventory.manage",
+    "inventory.cost.read",
+    "orders.read",
+    "orders.manage",
+    "pos.checkout",
   ];
   const employeePerms = [
     "appointments.read",
@@ -128,6 +150,10 @@ export async function seedDatabase() {
     "services.read",
     "customers.read",
     "inventory.read",
+    "products.read",
+    "orders.read",
+    "orders.manage",
+    "pos.checkout",
   ];
   const affiliatedProfessionalPerms = [
     "locations.read",
@@ -139,6 +165,11 @@ export async function seedDatabase() {
     "finance.settlements.read",
     "finance.settlements.create",
     "finance.settlements.confirm",
+    "products.read",
+    "inventory.positions.read",
+    "orders.read",
+    "orders.manage",
+    "pos.checkout",
   ];
 
   const rolePermBindings: [string, string[]][] = [
@@ -688,6 +719,10 @@ export async function seedDatabase() {
     { code: "finance.invoicing", name: "Facturación Electrónica", description: "Emisión de facturas y recibos autorizados", category: "FINANCE", status: "COMING_SOON", sortOrder: 18 },
     { code: "finance.commissions", name: "Cálculo de Comisiones", description: "Cálculo automático de porcentajes y comisiones sobre servicios", category: "FINANCE", status: "COMING_SOON", sortOrder: 19 },
     { code: "ai.assistant", name: "Asistente AI de Agenda", description: "Copiloto inteligente para agendamiento por WhatsApp y optimización", category: "AI", status: "COMING_SOON", sortOrder: 20 },
+    { code: "commerce.products", name: "Catálogo de Productos", description: "Catálogo de productos, variantes y precios", category: "COMMERCE", status: "INTERNAL", sortOrder: 21 },
+    { code: "inventory.stock", name: "Control de Inventario", description: "Control de existencias multisede, movimientos y kardex", category: "OPERATIONS", status: "INTERNAL", sortOrder: 22 },
+    { code: "pos.checkout", name: "Punto de Venta (POS)", description: "Terminal transaccional de cobro, tickets y multisede", category: "COMMERCE", status: "INTERNAL", sortOrder: 23 },
+    { code: "commerce.orders", name: "Historial de Ventas", description: "Gestión y visualización de órdenes de venta y recibos", category: "COMMERCE", status: "INTERNAL", sortOrder: 24 },
   ];
 
   const modMap = new Map<string, string>();
@@ -719,6 +754,9 @@ export async function seedDatabase() {
     { module: "finance.ledger", dependsOn: "finance.overview" },
     { module: "finance.invoicing", dependsOn: "finance.overview" },
     { module: "finance.commissions", dependsOn: "finance.overview" },
+    { module: "pos.checkout", dependsOn: "commerce.products" },
+    { module: "inventory.stock", dependsOn: "commerce.products" },
+    { module: "commerce.orders", dependsOn: "pos.checkout" },
   ];
 
   for (const d of dependencies) {
@@ -757,13 +795,92 @@ export async function seedDatabase() {
       "finance.ledger",
     ];
 
-    for (const code of soloProModules) {
+    const commerceModuleCodes = [
+      "commerce.products",
+      "inventory.stock",
+      "pos.checkout",
+      "commerce.orders",
+    ];
+
+    for (const code of [...soloProModules, ...commerceModuleCodes]) {
       const modId = modMap.get(code);
       if (modId) {
         await db
           .insert(planModules)
           .values({
             planId: soloProPlanId,
+            moduleId: modId,
+          })
+          .onConflictDoNothing();
+      }
+    }
+  }
+
+  const businessBasicPlanId = planMap.get("BUSINESS_BASIC");
+  if (businessBasicPlanId) {
+    const businessBasicModules = [
+      "core.dashboard",
+      "scheduling.calendar",
+      "scheduling.appointments",
+      "scheduling.availability",
+      "catalog.services",
+      "customers.directory",
+      "customers.history",
+      "affiliations.management",
+      "finance.overview",
+      "finance.expenses",
+      "finance.settlements",
+      "finance.ledger",
+      "commerce.products",
+      "inventory.stock",
+      "pos.checkout",
+      "commerce.orders",
+    ];
+
+    for (const code of businessBasicModules) {
+      const modId = modMap.get(code);
+      if (modId) {
+        await db
+          .insert(planModules)
+          .values({
+            planId: businessBasicPlanId,
+            moduleId: modId,
+          })
+          .onConflictDoNothing();
+      }
+    }
+  }
+
+  const businessScalePlanId = planMap.get("BUSINESS_SCALE");
+  if (businessScalePlanId) {
+    const businessScaleModules = [
+      "core.dashboard",
+      "scheduling.calendar",
+      "scheduling.appointments",
+      "scheduling.availability",
+      "catalog.services",
+      "customers.directory",
+      "customers.history",
+      "affiliations.management",
+      "analytics.overview",
+      "notifications.reminders",
+      "finance.overview",
+      "finance.expenses",
+      "finance.settlements",
+      "finance.ledger",
+      "commerce.products",
+      "inventory.stock",
+      "pos.checkout",
+      "commerce.orders",
+    ];
+
+    for (const code of businessScaleModules) {
+      const modId = modMap.get(code);
+      if (modId) {
+        await db
+          .insert(planModules)
+          .values({
+            planId: businessScalePlanId,
             moduleId: modId,
           })
           .onConflictDoNothing();
@@ -1048,8 +1165,9 @@ export async function seedDatabase() {
         effectiveFrom: new Date(),
       })
       .onConflictDoNothing();
+  }
 
-    // Host Membership for Carlos
+  // Host Membership for Carlos
     let [carlosHostMembership] = await db
       .select()
       .from(memberships)
@@ -1071,6 +1189,17 @@ export async function seedDatabase() {
         })
         .returning();
       carlosHostMembership = createdHostMem;
+    }
+
+    const affiliateRoleId = roleMap.get("AFFILIATED_PROFESSIONAL");
+    if (affiliateRoleId) {
+      await db
+        .insert(membershipRoles)
+        .values({
+          membershipId: carlosHostMembership.id,
+          roleId: affiliateRoleId,
+        })
+        .onConflictDoNothing();
     }
 
     // Create Operational Staff Profile for Carlos inside Host Tenant
@@ -1130,7 +1259,6 @@ export async function seedDatabase() {
         notes: "Cliente recurrente de Carlos. Prefiere agendar en sede Zona G.",
       })
       .onConflictDoNothing();
-  }
 
   // 19. Seed Second Business Host: Gentleman Club Barbería
   console.log("🏢 Seeding Second Business Host (Gentleman Club)...");
@@ -1247,6 +1375,224 @@ export async function seedDatabase() {
         .onConflictDoNothing();
     }
   }
+
+  // 20. Seed Commerce Products & Inventory
+  console.log("🛍️ Seeding Products, Variants & Inventory Positions...");
+  let [stylingCategory] = await db
+    .insert(productCategories)
+    .values({
+      tenantId: tenant.id,
+      name: "Fijación y Estilo",
+      slug: "fijacion-y-estilo",
+      status: "ACTIVE",
+    })
+    .onConflictDoUpdate({
+      target: [productCategories.tenantId, productCategories.slug],
+      set: { name: "Fijación y Estilo" },
+    })
+    .returning();
+
+  let [beardCategory] = await db
+    .insert(productCategories)
+    .values({
+      tenantId: tenant.id,
+      name: "Cuidado de Barba",
+      slug: "cuidado-de-barba",
+      status: "ACTIVE",
+    })
+    .onConflictDoUpdate({
+      target: [productCategories.tenantId, productCategories.slug],
+      set: { name: "Cuidado de Barba" },
+    })
+    .returning();
+
+  // Host Product 1: Pomada Mate
+  let [pomadaProduct] = await db
+    .insert(products)
+    .values({
+      ownerTenantId: tenant.id,
+      categoryId: stylingCategory.id,
+      name: "Pomada Clásica Base Agua",
+      slug: "pomada-clasica-base-agua",
+      brand: "Royal Heritage",
+      status: "ACTIVE",
+      trackInventory: true,
+    })
+    .onConflictDoUpdate({
+      target: [products.ownerTenantId, products.slug],
+      set: { name: "Pomada Clásica Base Agua" },
+    })
+    .returning();
+
+  let [pomadaVariant] = await db
+    .insert(productVariants)
+    .values({
+      productId: pomadaProduct.id,
+      sku: "POM-ROYAL-100",
+      barcode: "7701234567890",
+      name: "Pomada Clásica 100g",
+      priceMinor: 4500000n,
+      costMinor: 2000000n,
+      currency: "COP",
+      status: "ACTIVE",
+      trackInventory: true,
+      reorderPoint: 5,
+    })
+    .onConflictDoUpdate({
+      target: productVariants.sku,
+      set: { priceMinor: 4500000n, costMinor: 2000000n },
+    })
+    .returning();
+
+  await db
+    .insert(inventoryPositions)
+    .values({
+      ownerTenantId: tenant.id,
+      locationId: primaryLocation.id,
+      productVariantId: pomadaVariant.id,
+      onHand: 20,
+      reserved: 0,
+    })
+    .onConflictDoUpdate({
+      target: [
+        inventoryPositions.ownerTenantId,
+        inventoryPositions.locationId,
+        inventoryPositions.productVariantId,
+      ],
+      set: { onHand: 20 },
+    });
+
+  const parqueLocation = seededLocations[1];
+  if (parqueLocation) {
+    await db
+      .insert(inventoryPositions)
+      .values({
+        ownerTenantId: tenant.id,
+        locationId: parqueLocation.id,
+        productVariantId: pomadaVariant.id,
+        onHand: 15,
+        reserved: 0,
+      })
+      .onConflictDoUpdate({
+        target: [
+          inventoryPositions.ownerTenantId,
+          inventoryPositions.locationId,
+          inventoryPositions.productVariantId,
+        ],
+        set: { onHand: 15 },
+      });
+  }
+
+  // Host Product 2: Aceite para Barba
+  let [oilProduct] = await db
+    .insert(products)
+    .values({
+      ownerTenantId: tenant.id,
+      categoryId: beardCategory.id,
+      name: "Aceite Para Barba Bergamota",
+      slug: "aceite-barba-bergamota",
+      brand: "Royal Heritage",
+      status: "ACTIVE",
+      trackInventory: true,
+    })
+    .onConflictDoUpdate({
+      target: [products.ownerTenantId, products.slug],
+      set: { name: "Aceite Para Barba Bergamota" },
+    })
+    .returning();
+
+  let [oilVariant] = await db
+    .insert(productVariants)
+    .values({
+      productId: oilProduct.id,
+      sku: "OIL-ROYAL-30",
+      barcode: "7701234567891",
+      name: "Aceite Barba 30ml",
+      priceMinor: 3500000n,
+      costMinor: 1500000n,
+      currency: "COP",
+      status: "ACTIVE",
+      trackInventory: true,
+      reorderPoint: 5,
+    })
+    .onConflictDoUpdate({
+      target: productVariants.sku,
+      set: { priceMinor: 3500000n, costMinor: 1500000n },
+    })
+    .returning();
+
+  await db
+    .insert(inventoryPositions)
+    .values({
+      ownerTenantId: tenant.id,
+      locationId: primaryLocation.id,
+      productVariantId: oilVariant.id,
+      onHand: 12,
+      reserved: 0,
+    })
+    .onConflictDoUpdate({
+      target: [
+        inventoryPositions.ownerTenantId,
+        inventoryPositions.locationId,
+        inventoryPositions.productVariantId,
+      ],
+      set: { onHand: 12 },
+    });
+
+  // Solo Professional Product (Carlos Mendoza owned)
+  let [carlosWaxProduct] = await db
+    .insert(products)
+    .values({
+      ownerTenantId: soloTenant.id,
+      name: "Cera Mate Carlos Signature",
+      slug: "cera-mate-carlos-signature",
+      brand: "Carlos Mendoza Grooming",
+      status: "ACTIVE",
+      trackInventory: true,
+    })
+    .onConflictDoUpdate({
+      target: [products.ownerTenantId, products.slug],
+      set: { name: "Cera Mate Carlos Signature" },
+    })
+    .returning();
+
+  let [carlosWaxVariant] = await db
+    .insert(productVariants)
+    .values({
+      productId: carlosWaxProduct.id,
+      sku: "WAX-CARLOS-80",
+      barcode: "7701234567892",
+      name: "Cera Mate 80g",
+      priceMinor: 4000000n,
+      costMinor: 1800000n,
+      currency: "COP",
+      status: "ACTIVE",
+      trackInventory: true,
+      reorderPoint: 3,
+    })
+    .onConflictDoUpdate({
+      target: productVariants.sku,
+      set: { priceMinor: 4000000n, costMinor: 1800000n },
+    })
+    .returning();
+
+  await db
+    .insert(inventoryPositions)
+    .values({
+      ownerTenantId: soloTenant.id,
+      locationId: primaryLocation.id,
+      productVariantId: carlosWaxVariant.id,
+      onHand: 10,
+      reserved: 0,
+    })
+    .onConflictDoUpdate({
+      target: [
+        inventoryPositions.ownerTenantId,
+        inventoryPositions.locationId,
+        inventoryPositions.productVariantId,
+      ],
+      set: { onHand: 10 },
+    });
 
   console.log("✅ Database seeding completed successfully!");
   console.log("==================================================");

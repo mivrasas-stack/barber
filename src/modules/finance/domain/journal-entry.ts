@@ -9,6 +9,7 @@ import {
 
 export type JournalEntryType =
   | "SERVICE_REVENUE"
+  | "PRODUCT_SALE"
   | "EXPENSE"
   | "SETTLEMENT"
   | "CHAIR_RENT_OBLIGATION"
@@ -17,6 +18,7 @@ export type JournalEntryType =
 
 export type JournalSourceType =
   | "APPOINTMENT"
+  | "ORDER"
   | "EXPENSE"
   | "SETTLEMENT"
   | "ADJUSTMENT"
