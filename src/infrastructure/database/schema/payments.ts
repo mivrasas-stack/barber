@@ -18,15 +18,18 @@ import { users } from "./users";
 import { orders } from "./commerce";
 import { locations } from "./locations";
 import { productVariants } from "./commerce";
+import { subscriptionInvoices } from "./subscriptions";
 
-// 1. Payment Intents (Authoritative representation of a customer payment lifecycle)
+// 1. Payment Intents (Authoritative representation of a customer or subscription payment lifecycle)
 export const paymentIntents = pgTable(
   "payment_intents",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     orderId: uuid("order_id")
-      .notNull()
       .references(() => orders.id, { onDelete: "cascade" }),
+    subscriptionInvoiceId: uuid("subscription_invoice_id")
+      .references(() => subscriptionInvoices.id, { onDelete: "cascade" }),
+    paymentPurpose: varchar("payment_purpose", { length: 32 }).notNull().default("ORDER_PAYMENT"), // ORDER_PAYMENT, SUBSCRIPTION_INVOICE
     collectorTenantId: uuid("collector_tenant_id")
       .notNull()
       .references(() => tenants.id, { onDelete: "cascade" }),
@@ -47,11 +50,13 @@ export const paymentIntents = pgTable(
   },
   (table) => [
     index("idx_payment_intents_order").on(table.orderId),
+    index("idx_payment_intents_sub_invoice").on(table.subscriptionInvoiceId),
     index("idx_payment_intents_collector_created").on(table.collectorTenantId, table.createdAt),
     index("idx_payment_intents_provider_ref").on(table.provider, table.providerReference),
     uniqueIndex("idx_payment_intents_provider_tx").on(table.provider, table.providerTransactionId),
     index("idx_payment_intents_idempotency").on(table.idempotencyKeyHash),
     index("idx_payment_intents_status").on(table.status),
+    index("idx_payment_intents_purpose").on(table.paymentPurpose),
   ]
 );
 
