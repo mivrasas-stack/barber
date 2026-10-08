@@ -74,6 +74,13 @@ export async function seedDatabase() {
     { code: "orders.read", description: "View orders and sales receipts" },
     { code: "orders.manage", description: "Create, edit, and cancel orders" },
     { code: "pos.checkout", description: "Execute POS checkout and collect payments" },
+    { code: "payments.read", description: "View payment intents, transactions, and payment status" },
+    { code: "payments.create", description: "Create payment intents and initiate provider payments" },
+    { code: "payments.reconcile", description: "Execute payment reconciliation against provider records" },
+    { code: "refunds.read", description: "View refund requests and execution records" },
+    { code: "refunds.create", description: "Request commercial refunds on captured payments" },
+    { code: "refunds.approve", description: "Authorize and approve monetary refund executions" },
+    { code: "payment_provider.settings.read", description: "View payment provider integration configuration" },
   ];
 
   const permMap = new Map<string, string>();
@@ -142,6 +149,12 @@ export async function seedDatabase() {
     "orders.read",
     "orders.manage",
     "pos.checkout",
+    "payments.read",
+    "payments.create",
+    "payments.reconcile",
+    "refunds.read",
+    "refunds.create",
+    "payment_provider.settings.read",
   ];
   const employeePerms = [
     "appointments.read",
@@ -154,6 +167,8 @@ export async function seedDatabase() {
     "orders.read",
     "orders.manage",
     "pos.checkout",
+    "payments.read",
+    "payments.create",
   ];
   const affiliatedProfessionalPerms = [
     "locations.read",
@@ -170,6 +185,10 @@ export async function seedDatabase() {
     "orders.read",
     "orders.manage",
     "pos.checkout",
+    "payments.read",
+    "payments.create",
+    "refunds.read",
+    "refunds.create",
   ];
 
   const rolePermBindings: [string, string[]][] = [
@@ -723,6 +742,9 @@ export async function seedDatabase() {
     { code: "inventory.stock", name: "Control de Inventario", description: "Control de existencias multisede, movimientos y kardex", category: "OPERATIONS", status: "INTERNAL", sortOrder: 22 },
     { code: "pos.checkout", name: "Punto de Venta (POS)", description: "Terminal transaccional de cobro, tickets y multisede", category: "COMMERCE", status: "INTERNAL", sortOrder: 23 },
     { code: "commerce.orders", name: "Historial de Ventas", description: "Gestión y visualización de órdenes de venta y recibos", category: "COMMERCE", status: "INTERNAL", sortOrder: 24 },
+    { code: "payments.core", name: "Pagos Electrónicos", description: "Gestión de cobros electrónicos, pasarela de pago y estado de transacciones", category: "COMMERCE", status: "INTERNAL", sortOrder: 25 },
+    { code: "payments.provider", name: "Integración Wompi", description: "Conexión técnica y procesamiento de cobros con Wompi", category: "COMMERCE", status: "INTERNAL", sortOrder: 26 },
+    { code: "payments.refunds", name: "Reembolsos y Devoluciones", description: "Gestión y autorización de reembolsos monetarios de pagos confirmados", category: "COMMERCE", status: "INTERNAL", sortOrder: 27 },
   ];
 
   const modMap = new Map<string, string>();
@@ -757,6 +779,9 @@ export async function seedDatabase() {
     { module: "pos.checkout", dependsOn: "commerce.products" },
     { module: "inventory.stock", dependsOn: "commerce.products" },
     { module: "commerce.orders", dependsOn: "pos.checkout" },
+    { module: "payments.core", dependsOn: "commerce.orders" },
+    { module: "payments.provider", dependsOn: "payments.core" },
+    { module: "payments.refunds", dependsOn: "payments.core" },
   ];
 
   for (const d of dependencies) {
@@ -800,6 +825,9 @@ export async function seedDatabase() {
       "inventory.stock",
       "pos.checkout",
       "commerce.orders",
+      "payments.core",
+      "payments.provider",
+      "payments.refunds",
     ];
 
     for (const code of [...soloProModules, ...commerceModuleCodes]) {
@@ -835,6 +863,9 @@ export async function seedDatabase() {
       "inventory.stock",
       "pos.checkout",
       "commerce.orders",
+      "payments.core",
+      "payments.provider",
+      "payments.refunds",
     ];
 
     for (const code of businessBasicModules) {
@@ -872,6 +903,9 @@ export async function seedDatabase() {
       "inventory.stock",
       "pos.checkout",
       "commerce.orders",
+      "payments.core",
+      "payments.provider",
+      "payments.refunds",
     ];
 
     for (const code of businessScaleModules) {

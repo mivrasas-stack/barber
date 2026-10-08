@@ -18,6 +18,7 @@ import {
   ShoppingBag,
   Package,
   Receipt,
+  CreditCard,
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -154,6 +155,12 @@ export default function ProfessionalWorkspaceLayout({
       href: "/professional/orders",
       icon: Receipt,
       label: "Mis Ventas",
+    },
+    {
+      code: "payments.core",
+      href: "/professional/payments",
+      icon: CreditCard,
+      label: "Cobros Digitales",
     },
   ];
 

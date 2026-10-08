@@ -42,7 +42,7 @@ export default function ProfessionalPOSPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerName, setCustomerName] = useState("");
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [tenderMethod, setTenderMethod] = useState<"CASH" | "EXTERNAL_CARD" | "NEQUI">("NEQUI");
+  const [tenderMethod, setTenderMethod] = useState<"CASH" | "EXTERNAL_CARD" | "NEQUI" | "WOMPI_ONLINE">("NEQUI");
   const [amountReceived, setAmountReceived] = useState<string>("");
   const [completedReceipt, setCompletedReceipt] = useState<any | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -380,6 +380,16 @@ export default function ProfessionalPOSPage() {
                     }`}
                   >
                     <CreditCard className="w-4 h-4" /> Datafono
+                  </button>
+                  <button
+                    onClick={() => setTenderMethod("WOMPI_ONLINE")}
+                    className={`col-span-3 p-2.5 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition ${
+                      tenderMethod === "WOMPI_ONLINE"
+                        ? "border-amber-500 bg-amber-500/10 text-amber-500"
+                        : "border-border bg-foreground/5 text-muted-foreground"
+                    }`}
+                  >
+                    <CreditCard className="w-4 h-4" /> Cobro en Línea (Wompi / PSE)
                   </button>
                 </div>
               </div>

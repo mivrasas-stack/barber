@@ -47,7 +47,7 @@ export default function BarberPOSPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerName, setCustomerName] = useState("");
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [tenderMethod, setTenderMethod] = useState<"CASH" | "EXTERNAL_CARD" | "NEQUI" | "BANK_TRANSFER">("CASH");
+  const [tenderMethod, setTenderMethod] = useState<"CASH" | "EXTERNAL_CARD" | "NEQUI" | "BANK_TRANSFER" | "WOMPI_ONLINE">("CASH");
   const [amountReceived, setAmountReceived] = useState<string>("");
   const [completedReceipt, setCompletedReceipt] = useState<any | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -489,6 +489,16 @@ export default function BarberPOSPage() {
                     }`}
                   >
                     <Package className="w-4 h-4" /> Transferencia
+                  </button>
+                  <button
+                    onClick={() => setTenderMethod("WOMPI_ONLINE")}
+                    className={`col-span-2 p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition ${
+                      tenderMethod === "WOMPI_ONLINE"
+                        ? "border-amber-500 bg-amber-500/10 text-amber-500"
+                        : "border-border bg-foreground/5 text-muted-foreground"
+                    }`}
+                  >
+                    <CreditCard className="w-4 h-4" /> Pasarela Digital (Wompi / PSE / Tarjeta Online)
                   </button>
                 </div>
               </div>

@@ -15,6 +15,7 @@ import {
   Building2,
   Receipt,
   Package,
+  CreditCard,
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -35,6 +36,7 @@ import { WorkspaceSwitcher } from '@/components/navigation/workspace-switcher';
 
 const navItems = [
   { href: '/barber/pos', icon: Receipt, label: 'Caja / POS' },
+  { href: '/barber/admin/payments', icon: CreditCard, label: 'Pagos Digitales' },
   { href: '/barber/inventory', icon: Package, label: 'Inventario' },
   { href: '/barber/appointments', icon: CalendarDays, label: 'Mi Agenda' },
   { href: '/barber/barberos', icon: Users, label: 'Barberos' },
