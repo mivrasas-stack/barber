@@ -43,6 +43,9 @@ next-env.d.ts
 .genkit/*
 .env*
 
+# agent local state
+.atl/
+
 # firebase
 firebase-debug.log
 firestore-debug.log

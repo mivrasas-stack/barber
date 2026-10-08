@@ -403,8 +403,7 @@ describe("Barber Paradise v2 — Stage 3A.1: Financial Core Hardening & Ledger C
   // =========================================================================
   describe("5. 50-Concurrent Appointment Completion Race Condition", () => {
     it("should allow EXACTLY 1 completion and prevent revenue duplication across 50 simultaneous attempts", async () => {
-      const now = new Date();
-      const apptStarts = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 12);
+      const apptStarts = new Date(Date.now() + 1000 * 60 * 60 * 24 * (50 + Math.floor(Math.random() * 100000)));
       const apptEnds = new Date(apptStarts.getTime() + 1000 * 60 * 30);
 
       const [raceAppt] = await db
@@ -640,10 +639,10 @@ describe("Barber Paradise v2 — Stage 3A.1: Financial Core Hardening & Ledger C
   // =========================================================================
   describe("7. Chair Rent Periodic Idempotency under 50 Concurrencies", () => {
     it("should allow EXACTLY 1 periodic obligation and prevent duplicates across 50 simultaneous attempts", async () => {
-      const randomYear = 2030 + Math.floor(Math.random() * 20);
-      const period = `${randomYear}-01`;
-      const periodStart = new Date(`${randomYear}-01-01T00:00:00Z`);
-      const periodEnd = new Date(`${randomYear}-01-31T23:59:59Z`);
+      const randomId = Math.floor(Math.random() * 10000000);
+      const period = `CR-${Date.now()}-${randomId}`;
+      const periodStart = new Date(Date.now() + 1000 * 60 * 60 * 24 * 365);
+      const periodEnd = new Date(periodStart.getTime() + 1000 * 60 * 60 * 24 * 30);
 
       // Ensure clean state for this period
       await db
