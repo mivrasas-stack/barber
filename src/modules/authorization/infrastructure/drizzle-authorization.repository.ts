@@ -1,4 +1,4 @@
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, inArray, isNull } from "drizzle-orm";
 import { db } from "@/infrastructure/database/client";
 import { users } from "@/infrastructure/database/schema/users";
 import { tenants } from "@/infrastructure/database/schema/tenants";
@@ -55,7 +55,12 @@ export class DrizzleAuthorizationRepository implements AuthorizationRepository {
           await db
             .select()
             .from(roles)
-            .where(eq(roles.name, roleName.toUpperCase()))
+            .where(
+              and(
+                eq(roles.name, roleName.toUpperCase()),
+                isNull(roles.tenantId)
+              )
+            )
             .limit(1)
         )[0];
       }
@@ -104,14 +109,20 @@ export class DrizzleAuthorizationRepository implements AuthorizationRepository {
       .where(eq(memberships.userId, userId));
 
     const membershipSummaries: UserMembershipSummary[] = [];
+    const roleIdsByMembership = new Map<string, string[]>();
 
     for (const m of membershipRows) {
       // Get roles for this membership
       const roleRows = await db
-        .select({ roleName: roles.name })
+        .select({ roleId: roles.id, roleName: roles.name })
         .from(membershipRoles)
         .innerJoin(roles, eq(membershipRoles.roleId, roles.id))
         .where(eq(membershipRoles.membershipId, m.membershipId));
+
+      roleIdsByMembership.set(
+        m.membershipId,
+        roleRows.map((r) => r.roleId)
+      );
 
       membershipSummaries.push({
         membershipId: m.membershipId,
@@ -126,6 +137,7 @@ export class DrizzleAuthorizationRepository implements AuthorizationRepository {
     // Determine active tenant
     let activeTenantId: string | null = null;
     let activeRoles: string[] = [];
+    let activeRoleIds: string[] = [];
     let activePermissions: string[] = [];
 
     if (targetTenantId) {
@@ -133,6 +145,7 @@ export class DrizzleAuthorizationRepository implements AuthorizationRepository {
       if (activeMembership && activeMembership.status === "ACTIVE") {
         activeTenantId = activeMembership.tenantId;
         activeRoles = activeMembership.roles;
+        activeRoleIds = roleIdsByMembership.get(activeMembership.membershipId) ?? [];
       }
     } else if (membershipSummaries.length > 0) {
       // Default to first active membership
@@ -140,27 +153,19 @@ export class DrizzleAuthorizationRepository implements AuthorizationRepository {
       if (firstActive) {
         activeTenantId = firstActive.tenantId;
         activeRoles = firstActive.roles;
+        activeRoleIds = roleIdsByMembership.get(firstActive.membershipId) ?? [];
       }
     }
 
     // Resolve permissions for active roles
-    if (activeRoles.length > 0) {
-      const roleRows = await db
-        .select({ id: roles.id })
-        .from(roles)
-        .where(inArray(roles.name, activeRoles));
-
-      const roleIds = roleRows.map((r) => r.id);
-
-      if (roleIds.length > 0) {
+    if (activeRoleIds.length > 0) {
         const permRows = await db
           .select({ code: permissions.code })
           .from(rolePermissions)
           .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-          .where(inArray(rolePermissions.roleId, roleIds));
+          .where(inArray(rolePermissions.roleId, activeRoleIds));
 
         activePermissions = Array.from(new Set(permRows.map((p) => p.code)));
-      }
     }
 
     return new AuthorizationContext({

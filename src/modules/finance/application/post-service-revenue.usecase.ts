@@ -16,8 +16,9 @@ import {
   CollectorParty,
   SettlementModel,
 } from "../domain/settlement-policy";
+import { orders } from "@/infrastructure/database/schema/commerce";
 import { STANDARD_ACCOUNT_CODES } from "../domain/financial-account";
-import { NotFoundError } from "@/shared/errors/app-error";
+import { NotFoundError, ConflictError } from "@/shared/errors/app-error";
 
 export interface PostServiceRevenueInput {
   appointmentId: string;
@@ -58,6 +59,19 @@ export class PostServiceRevenueUseCase {
 
     if (!appointment) {
       throw new NotFoundError("Appointment", input.appointmentId);
+    }
+
+    // Check if appointment was already financialized via POS Order (sourceType: 'ORDER')
+    const [existingCompletedOrder] = await client
+      .select()
+      .from(orders)
+      .where(and(eq(orders.appointmentId, input.appointmentId), eq(orders.status, "COMPLETED")))
+      .limit(1);
+
+    if (existingCompletedOrder) {
+      throw new ConflictError(
+        `Appointment ${input.appointmentId} was already financialized via POS Order ${existingCompletedOrder.orderNumber}`
+      );
     }
 
     // Check if already posted for host tenant
