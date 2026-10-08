@@ -43,6 +43,13 @@
       "when": 1791407684259,
       "tag": "0005_safe_gladiator",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791484762125,
+      "tag": "0006_redundant_james_howlett",
+      "breakpoints": true
     }
   ]
 }

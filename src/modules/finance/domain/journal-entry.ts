@@ -14,7 +14,9 @@ export type JournalEntryType =
   | "SETTLEMENT"
   | "CHAIR_RENT_OBLIGATION"
   | "ADJUSTMENT"
-  | "REVERSAL";
+  | "REVERSAL"
+  | "PAYMENT"
+  | "PAYMENT_REFUND";
 
 export type JournalSourceType =
   | "APPOINTMENT"
@@ -22,7 +24,9 @@ export type JournalSourceType =
   | "EXPENSE"
   | "SETTLEMENT"
   | "ADJUSTMENT"
-  | "REVERSAL";
+  | "REVERSAL"
+  | "PAYMENT"
+  | "REFUND";
 
 export type JournalEntryStatus = "POSTED" | "REVERSED";
 

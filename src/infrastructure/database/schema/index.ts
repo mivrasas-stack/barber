@@ -18,3 +18,4 @@ export * from "./modules";
 export * from "./onboarding";
 export * from "./finance";
 export * from "./commerce";
+export * from "./payments";

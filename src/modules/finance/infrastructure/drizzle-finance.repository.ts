@@ -188,6 +188,7 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
       { code: STANDARD_ACCOUNT_CODES.HOST_COMMISSION_RECEIVABLE, name: "Host Commission Receivable", type: "ASSET" },
       { code: STANDARD_ACCOUNT_CODES.HOST_CHAIR_RENT_RECEIVABLE, name: "Host Chair Rent Receivable", type: "ASSET" },
       { code: STANDARD_ACCOUNT_CODES.INVENTORY_ASSET, name: "Inventory Asset", type: "ASSET" },
+      { code: STANDARD_ACCOUNT_CODES.PAYMENT_PROVIDER_CLEARING, name: "Payment Provider Clearing", type: "ASSET" },
       { code: STANDARD_ACCOUNT_CODES.ACCOUNTS_PAYABLE, name: "Accounts Payable", type: "LIABILITY" },
       { code: STANDARD_ACCOUNT_CODES.PROFESSIONAL_COMMISSION_PAYABLE, name: "Professional Commission Payable", type: "LIABILITY" },
       { code: STANDARD_ACCOUNT_CODES.HOST_COMMISSION_PAYABLE, name: "Host Commission Payable", type: "LIABILITY" },
@@ -204,6 +205,7 @@ export class DrizzleFinanceRepository implements IFinanceRepository {
       { code: STANDARD_ACCOUNT_CODES.CHAIR_RENT_EXPENSE, name: "Chair Rent Expense", type: "EXPENSE" },
       { code: STANDARD_ACCOUNT_CODES.OPERATING_EXPENSE, name: "Operating Expense", type: "EXPENSE" },
       { code: STANDARD_ACCOUNT_CODES.COST_OF_GOODS_SOLD, name: "Cost of Goods Sold", type: "EXPENSE" },
+      { code: STANDARD_ACCOUNT_CODES.PAYMENT_PROCESSING_FEES, name: "Payment Processing Fees", type: "EXPENSE" },
     ];
 
     const toInsert = defaultDefinitions.filter((d) => !accountMap.has(d.code));

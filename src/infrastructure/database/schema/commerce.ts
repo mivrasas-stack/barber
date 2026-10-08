@@ -254,11 +254,14 @@ export const orderTenders = pgTable(
     changeDueMinor: bigint("change_due_minor", { mode: "bigint" }),
     currency: char("currency", { length: 3 }).notNull().default("COP"),
     reference: varchar("reference", { length: 100 }),
+    paymentIntentId: uuid("payment_intent_id"),
+    verificationStatus: varchar("verification_status", { length: 32 }).notNull().default("MANUAL_DECLARED"), // MANUAL_DECLARED, PROVIDER_PENDING, PROVIDER_VERIFIED
     declaredByUserId: uuid("declared_by_user_id").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
     index("order_tenders_order_idx").on(table.orderId),
+    index("order_tenders_payment_intent_idx").on(table.paymentIntentId),
   ]
 );
 
