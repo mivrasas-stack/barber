@@ -9,6 +9,7 @@ export interface SubscriptionPlanProps {
   priceMinor?: number | null;
   currency: string;
   trialDays: number;
+  version: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,5 +27,6 @@ export class SubscriptionPlan {
   get priceMinor(): number | null | undefined { return this.props.priceMinor; }
   get currency(): string { return this.props.currency; }
   get trialDays(): number { return this.props.trialDays; }
+  get version(): number { return this.props.version ?? 1; }
   get isActive(): boolean { return this.props.status === "ACTIVE"; }
 }
