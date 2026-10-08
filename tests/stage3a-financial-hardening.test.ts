@@ -152,6 +152,51 @@ describe("Barber Paradise v2 — Stage 3A.1: Financial Core Hardening & Ledger C
       .where(eq(services.tenantId, hostTenantId))
       .limit(1);
     devServiceId = srv.id;
+
+    // Ensure affiliation terms are COMMISSION (2000 bp) for these tests
+    await db
+      .update(professionalAffiliationTerms)
+      .set({
+        settlementModel: "COMMISSION",
+        commissionBasisPoints: 2000,
+        fixedRentAmountMinor: null,
+      })
+      .where(eq(professionalAffiliationTerms.affiliationId, affiliationId));
+
+    // Ensure at least one posted journal entry exists for invariant tests
+    const now = new Date();
+    const apptStarts = new Date(now.getTime() - 1000 * 60 * 60 * 24);
+    const apptEnds = new Date(apptStarts.getTime() + 1000 * 60 * 30);
+    const [initAppt] = await db
+      .insert(appointments)
+      .values({
+        tenantId: hostTenantId,
+        locationId: devLocationId,
+        staffId,
+        customerUserId: devCustomerId,
+        customerNameSnapshot: "Init Customer",
+        customerEmailSnapshot: "init@customer.dev",
+        startsAt: apptStarts,
+        endsAt: apptEnds,
+        status: "COMPLETED",
+        completedAt: new Date(),
+      })
+      .returning();
+
+    await db.insert(appointmentServices).values({
+      appointmentId: initAppt.id,
+      serviceId: devServiceId,
+      serviceNameSnapshot: "Initial Service",
+      priceMinor: 50000,
+      currency: "COP",
+      durationMinutes: 30,
+    });
+
+    await postRevenueUseCase.execute({
+      appointmentId: initAppt.id,
+      collectorParty: "COLLECTED_BY_HOST",
+      actorUserId: hostOwnerUserId,
+    });
   });
 
   // =========================================================================
