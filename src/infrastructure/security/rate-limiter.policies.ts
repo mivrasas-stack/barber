@@ -2,6 +2,13 @@ import { env } from "@/shared/config/env";
 import type { RateLimitPolicy } from "./rate-limiter.interface";
 
 export const DEFAULT_RATE_LIMIT_POLICIES: Record<string, RateLimitPolicy> = {
+  "customer.qr.register": {
+    name: "customer.qr.register",
+    capacity: 5,
+    refillRatePerSec: 0.01,
+    cost: 1,
+    failClosed: true,
+  },
   "auth.login": {
     name: "auth.login",
     capacity: 5,

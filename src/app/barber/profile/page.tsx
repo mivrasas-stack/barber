@@ -372,8 +372,8 @@ export default function ProfilePage() {
 
   // QR Code State for Owner Barber
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
-  const [shopName] = useState('The Royal Barber');
-  const [affiliateUrl, setAffiliateUrl] = useState('https://mivra-barber.app/clientes/alianza?barberId=BBR001&shop=The+Royal+Barber');
+  const [shopName, setShopName] = useState('Mi Barbería');
+  const [affiliateUrl, setAffiliateUrl] = useState('');
   const [isCopied, setIsCopied] = useState(false);
   const [showQrScanModal, setShowQrScanModal] = useState(false);
   const [clientSimulationName, setClientSimulationName] = useState('');
@@ -382,15 +382,23 @@ export default function ProfilePage() {
   const [affiliatedClientsCount, setAffiliatedClientsCount] = useState(0);
 
   useEffect(() => {
-    const updateCount = () => {
-      setAffiliatedClientsCount(getStoredCustomers().length);
-    };
-    updateCount();
-    window.addEventListener('storage', updateCount);
-    return () => window.removeEventListener('storage', updateCount);
+    let mounted = true;
+    void Promise.all([
+      fetch('/api/v1/customers/qr', { cache: 'no-store' }),
+      fetch('/api/v1/customers/intakes', { cache: 'no-store' }),
+    ]).then(async ([qrResp, listResp]) => {
+      if (!qrResp.ok || !listResp.ok) throw new Error('No se pudo cargar el QR o los clientes');
+      const [qrData, listData] = await Promise.all([qrResp.json(), listResp.json()]);
+      if (!mounted) return;
+      setShopName(qrData.data.tenantName);
+      setAffiliateUrl(qrData.data.url);
+      setAffiliatedClientsCount(listData.data.length);
+    }).catch(() => { if (mounted) setAffiliateUrl(''); });
+    return () => { mounted = false; };
   }, []);
 
   useEffect(() => {
+    if (!affiliateUrl) { setQrCodeDataUrl(''); return; }
     QRCode.toDataURL(affiliateUrl, {
       width: 320,
       margin: 2,
@@ -415,7 +423,7 @@ export default function ProfilePage() {
     if (!qrCodeDataUrl) return;
     const link = document.createElement('a');
     link.href = qrCodeDataUrl;
-    link.download = `QR-Alianza-The-Royal-Barber.png`;
+    link.download = `QR-Clientes-${shopName.replace(/[^a-z0-9-]+/gi, '-')}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -423,19 +431,9 @@ export default function ProfilePage() {
 
   const handleConfirmSimulation = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!clientSimulationName || !clientSimulationPhone) return;
-    registerCustomerViaQr({
-      name: clientSimulationName,
-      phone: clientSimulationPhone,
-    });
-    setClientSimulationSuccess(true);
-    setAffiliatedClientsCount(getStoredCustomers().length);
-    setTimeout(() => {
-      setClientSimulationSuccess(false);
-      setShowQrScanModal(false);
-      setClientSimulationName('');
-      setClientSimulationPhone('');
-    }, 2800);
+    // QR test opens the real customer onboarding; never simulate persistence.
+    if (affiliateUrl) window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
+    setShowQrScanModal(false);
   };
 
   /* Try to open file picker — if full, show upgrade modal */

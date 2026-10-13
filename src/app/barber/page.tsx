@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 export default function BarberDashboard() {
   const [shopName, setShopName] = useState("The Royal Barber"); 
   const [greeting, setGreeting] = useState("Bienvenido");
-  const [isAdmin, setIsAdmin] = useState(false); // Toggle para no mezclar la información de staff y admin
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -38,16 +37,20 @@ export default function BarberDashboard() {
 
       {/* Controles Top Right */}
       <div className="fixed top-6 right-6 lg:top-8 lg:right-10 z-50 flex items-center gap-4">
-        {/* Toggle Rol (Demo) */}
-        <motion.button
+        {/* Toggle Rol */}
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          onClick={() => setIsAdmin(!isAdmin)}
-          className={`px-4 py-2 rounded-full text-xs font-headline tracking-widest uppercase transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] ${isAdmin ? 'bg-amber-500/20 text-amber-500 border border-amber-500/50' : 'bg-foreground/5 text-foreground/60 border border-border hover:bg-foreground/10'}`}
         >
-          {isAdmin ? 'Vista: Dueño' : 'Vista: Empleado'}
-        </motion.button>
+          <Link
+            href="/business"
+            className="px-4 py-2 rounded-full text-xs font-headline tracking-widest uppercase transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] bg-foreground/5 text-foreground/60 border border-border hover:bg-foreground/10 hover:text-amber-500 flex items-center gap-2"
+            title="Cambiar a Vista Dueño / Admin"
+          >
+            Vista: Empleado
+          </Link>
+        </motion.div>
 
         {/* Botón Flotante Cerrar Sesión */}
         <motion.div
@@ -62,7 +65,7 @@ export default function BarberDashboard() {
       </div>
 
       {/* Contenido Principal */}
-      <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 py-8 md:py-12 z-10 w-full max-w-7xl mx-auto">
+      <div className="flex-1 flex flex-col px-4 sm:px-8 lg:px-12 py-8 md:py-12 z-10 w-full max-w-[1700px] mx-auto">
         
         {/* Cabecera Personalizada */}
         <motion.div
@@ -83,7 +86,7 @@ export default function BarberDashboard() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 auto-rows-[160px] md:auto-rows-[180px]"
+          className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-5 md:gap-6 auto-rows-[170px] lg:auto-rows-[195px]"
         >
           
           {/* Card Destacada: Mi Agenda */}

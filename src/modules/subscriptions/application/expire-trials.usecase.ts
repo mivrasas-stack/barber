@@ -28,6 +28,35 @@ export class ExpireTrialsUseCase {
       : await this.subscriptionRepo.listTrialsExpiring(asOf);
 
     for (const sub of candidates) {
+      // Administratively granted fixed access must end without generating
+      // a paid invoice or extending the account through the payment grace period.
+      if (sub.cancelAtPeriodEnd && sub.currentPeriodEnd && sub.currentPeriodEnd <= asOf) {
+        await this.subscriptionRepo.updateSubscription(sub.id, {
+          status: "CANCELLED",
+        });
+        await this.subscriptionRepo.recordStatusHistory({
+          subscriptionId: sub.id,
+          tenantId: sub.tenantId,
+          fromStatus: "TRIALING",
+          toStatus: "CANCELLED",
+          reason: "One-time platform administrator access grant expired",
+          source: "SYSTEM",
+        });
+        await db.insert(outboxEvents).values({
+          tenantId: sub.tenantId,
+          aggregateId: sub.id,
+          eventType: "subscription.cancelled.v1",
+          payload: {
+            subscriptionId: sub.id,
+            tenantId: sub.tenantId,
+            cancelledAt: asOf.toISOString(),
+            reason: "ADMIN_ACCESS_GRANT_EXPIRED",
+          },
+        });
+        expiredTenants.push(sub.tenantId);
+        continue;
+      }
+
       const plan = await this.subscriptionRepo.findPlanById(sub.planId);
       if (!plan) continue;
 

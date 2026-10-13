@@ -49,6 +49,11 @@ export default function AdminIndependentProfessionalsPage() {
   // Create Modal State
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createdAccess, setCreatedAccess] = useState<{
+    email: string;
+    temporaryPassword: string;
+    accessEndsAt: string | null;
+  } | null>(null);
   const [createForm, setCreateForm] = useState({
     email: "",
     name: "",
@@ -56,7 +61,7 @@ export default function AdminIndependentProfessionalsPage() {
     professionalSlug: "",
     workspaceName: "",
     planCode: "SOLO_PRO",
-    password: "DevPassword123!",
+    accessDuration: "MONTH",
   });
 
   const loadData = async () => {
@@ -89,8 +94,9 @@ export default function AdminIndependentProfessionalsPage() {
         body: JSON.stringify(createForm),
       });
       if (res.ok) {
-        setIsCreateOpen(false);
-        loadData();
+        const payload = await res.json();
+        setCreatedAccess({ ...payload.credentials, accessEndsAt: payload.accessEndsAt });
+        await loadData();
       } else {
         const err = await res.json();
         alert(err.error || "Error al crear profesional");
@@ -133,7 +139,13 @@ export default function AdminIndependentProfessionalsPage() {
           </div>
         </div>
 
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <Dialog open={isCreateOpen} onOpenChange={(open) => {
+          setIsCreateOpen(open);
+          if (!open) {
+            setCreatedAccess(null);
+            setCreateForm({ email: "", name: "", displayName: "", professionalSlug: "", workspaceName: "", planCode: "SOLO_PRO", accessDuration: "MONTH" });
+          }
+        }}>
           <DialogTrigger asChild>
             <PremiumButton size="sm">
               <Plus className="w-4 h-4 mr-1.5" />
@@ -145,10 +157,39 @@ export default function AdminIndependentProfessionalsPage() {
               <DialogHeader>
                 <DialogTitle>Provisionar Profesional Independiente</DialogTitle>
                 <DialogDescription className="text-xs">
-                  Crea atómicamente el usuario, perfil profesional, tenant SOLO y subscripción.
+                  Crea la cuenta, sus credenciales seguras y un acceso temporal al plan seleccionado.
                 </DialogDescription>
               </DialogHeader>
 
+              {createdAccess ? (
+                <div className="space-y-4 py-5 text-sm">
+                  <p className="text-emerald-500 font-semibold">Profesional creado correctamente.</p>
+                  <p className="text-xs text-muted-foreground">Copia estas credenciales ahora. La contraseña se muestra una sola vez y no se puede recuperar desde este formulario.</p>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Usuario de acceso (correo)</Label>
+                    <Input readOnly value={createdAccess.email} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Contraseña inicial generada</Label>
+                    <Input readOnly value={createdAccess.temporaryPassword} aria-label="Contraseña inicial generada" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Acceso disponible hasta</Label>
+                    <div className="rounded border border-border/60 p-2">{createdAccess.accessEndsAt ? new Date(createdAccess.accessEndsAt).toLocaleString("es-CO") : "No disponible"}</div>
+                  </div>
+                  <Button type="button" className="w-full" onClick={() => navigator.clipboard.writeText(`Usuario: ${createdAccess.email}\nContraseña: ${createdAccess.temporaryPassword}`)}>
+                    Copiar credenciales
+                  </Button>
+                  <Button type="button" variant="outline" className="w-full" onClick={() => {
+                    setIsCreateOpen(false);
+                    setCreatedAccess(null);
+                    setCreateForm({ email: "", name: "", displayName: "", professionalSlug: "", workspaceName: "", planCode: "SOLO_PRO", accessDuration: "MONTH" });
+                  }}>
+                    Cerrar
+                  </Button>
+                </div>
+              ) : (
+              <>
               <div className="space-y-3 py-3">
                 <div className="space-y-1">
                   <Label htmlFor="c-email" className="text-xs">Email</Label>
@@ -179,7 +220,7 @@ export default function AdminIndependentProfessionalsPage() {
                     value={createForm.displayName}
                     onChange={(e) => {
                       const val = e.target.value;
-                      const slug = val.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+                      const slug = val.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
                       setCreateForm({
                         ...createForm,
                         displayName: val,
@@ -212,6 +253,22 @@ export default function AdminIndependentProfessionalsPage() {
                     <option value="SOLO_ELITE">Solo Elite ($149.000 COP)</option>
                   </select>
                 </div>
+                <div className="space-y-1">
+                  <Label htmlFor="c-duration" className="text-xs">Tiempo de acceso concedido</Label>
+                  <select
+                    id="c-duration"
+                    className="w-full bg-background border border-border/60 rounded p-2 text-xs"
+                    value={createForm.accessDuration}
+                    onChange={(e) => setCreateForm({ ...createForm, accessDuration: e.target.value })}
+                    required
+                  >
+                    <option value="DAY">1 día</option>
+                    <option value="MONTH">1 mes</option>
+                    <option value="YEAR">1 año</option>
+                  </select>
+                  <p className="text-[11px] text-muted-foreground">El acceso termina al cumplir este plazo y no se cobra automáticamente al vencer.</p>
+                </div>
+                <p className="text-[11px] text-muted-foreground">El correo será el usuario de inicio de sesión. Se generará una contraseña segura automáticamente.</p>
               </div>
 
               <DialogFooter>
@@ -222,6 +279,8 @@ export default function AdminIndependentProfessionalsPage() {
                   {isSubmitting ? "Provisionando..." : "Crear Profesional"}
                 </PremiumButton>
               </DialogFooter>
+              </>
+              )}
             </form>
           </DialogContent>
         </Dialog>

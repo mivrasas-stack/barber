@@ -4,7 +4,19 @@ import { DrizzleProfessionalRepository } from "@/modules/professionals/infrastru
 import { DrizzleSubscriptionRepository } from "@/modules/subscriptions/infrastructure/drizzle-subscription.repository";
 import { DrizzleAffiliationRepository } from "@/modules/professionals/infrastructure/drizzle-affiliation.repository";
 import { ProvisionProfessionalUseCase } from "@/modules/professionals/application/provision-professional.usecase";
-import { AppError, ForbiddenError } from "@/shared/errors/app-error";
+import { AppError } from "@/shared/errors/app-error";
+import { z } from "zod";
+import { randomBytes } from "node:crypto";
+
+const adminProvisionSchema = z.object({
+  email: z.string().trim().email().max(255),
+  name: z.string().trim().min(2).max(255),
+  displayName: z.string().trim().min(2).max(255),
+  professionalSlug: z.string().trim().min(3).max(80).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  workspaceName: z.string().trim().min(2).max(255).optional(),
+  planCode: z.enum(["SOLO_STARTER", "SOLO_PRO", "SOLO_ELITE"]),
+  accessDuration: z.enum(["DAY", "MONTH", "YEAR"]),
+}).strict();
 
 export async function GET(request: NextRequest) {
   try {
@@ -59,8 +71,10 @@ export async function GET(request: NextRequest) {
     if (err instanceof AppError) {
       return NextResponse.json({ error: err.message, code: err.code }, { status: err.statusCode });
     }
-    const message = err instanceof Error ? err.message : "Internal Server Error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    if (err instanceof SyntaxError) {
+      return NextResponse.json({ error: "JSON inválido", code: "VALIDATION_ERROR" }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Internal Server Error", code: "INTERNAL_ERROR" }, { status: 500 });
   }
 }
 
@@ -73,32 +87,43 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Forbidden: Platform Admin access required" }, { status: 403 });
     }
 
-    const body = await request.json();
+    const raw = adminProvisionSchema.safeParse(await request.json());
+    if (!raw.success) {
+      return NextResponse.json({ error: "Datos del profesional inválidos", code: "VALIDATION_ERROR" }, { status: 400 });
+    }
+    const body = raw.data;
+    // The plaintext password exists only in this request and the one-time response.
+    const generatedPassword = randomBytes(24).toString("base64url");
     const useCase = new ProvisionProfessionalUseCase();
 
     const result = await useCase.execute({
-      userId: body.userId,
       email: body.email,
-      name: body.displayName,
-      password: body.password,
+      name: body.name,
+      password: generatedPassword,
       displayName: body.displayName,
       professionalSlug: body.professionalSlug,
       workspaceName: body.workspaceName,
       planCode: body.planCode,
-      bio: body.bio,
-      phonePublic: body.phonePublic,
-      instagram: body.instagram,
-      tiktok: body.tiktok,
-      yearsExperience: body.yearsExperience,
+      adminAccessDuration: body.accessDuration,
       actorUserId: session.userId,
     });
 
-    return NextResponse.json({ data: result }, { status: 201 });
+    return NextResponse.json({
+      data: result,
+      // Delivered to an authenticated platform admin once; never stored as plaintext.
+      credentials: { email: result.user.email, temporaryPassword: generatedPassword },
+      accessEndsAt: result.subscription.trialEndsAt?.toISOString() ?? null,
+    }, {
+      status: 201,
+      headers: { "Cache-Control": "no-store, max-age=0", "Pragma": "no-cache" },
+    });
   } catch (err: unknown) {
     if (err instanceof AppError) {
       return NextResponse.json({ error: err.message, code: err.code }, { status: err.statusCode });
     }
-    const message = err instanceof Error ? err.message : "Internal Server Error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    if (err instanceof SyntaxError) {
+      return NextResponse.json({ error: "JSON inválido", code: "VALIDATION_ERROR" }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Internal Server Error", code: "INTERNAL_ERROR" }, { status: 500 });
   }
 }

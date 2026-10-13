@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/infrastructure/database/client";
@@ -6,17 +6,17 @@ import { services } from "@/infrastructure/database/schema/services";
 import { requireMediaSession } from "@/modules/media/infrastructure/media-api-auth";
 import { mediaApiError } from "@/modules/media/infrastructure/media-api-error";
 import { NotFoundError, ValidationError } from "@/shared/errors/app-error";
-import { resolveTenant, schema } from "../route";
+import { resolveProfessionalTenant, serviceSchema } from "../shared";
 
 type Context = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: NextRequest, context: Context) {
   try {
     const session = await requireMediaSession(request);
-    const tenantId = await resolveTenant(session.userId, true);
+    const tenantId = await resolveProfessionalTenant(session.userId, true);
     const { id } = await context.params;
     if (!z.string().uuid().safeParse(id).success) throw new ValidationError("Invalid service ID");
-    const parsed = schema.safeParse(await request.json());
+    const parsed = serviceSchema.safeParse(await request.json());
     if (!parsed.success) throw new ValidationError("Invalid service", parsed.error.flatten());
     const [row] = await db.update(services).set({
       name: parsed.data.name, description: parsed.data.description,
@@ -34,7 +34,7 @@ export async function PATCH(request: NextRequest, context: Context) {
 export async function DELETE(request: NextRequest, context: Context) {
   try {
     const session = await requireMediaSession(request);
-    const tenantId = await resolveTenant(session.userId, true);
+    const tenantId = await resolveProfessionalTenant(session.userId, true);
     const { id } = await context.params;
     if (!z.string().uuid().safeParse(id).success) throw new ValidationError("Invalid service ID");
     const [row] = await db.update(services).set({ status: "INACTIVE", updatedAt: new Date() })

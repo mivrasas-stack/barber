@@ -1,600 +1,136 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { PremiumButton } from "@/components/ui/premium-button";
-import {
-  ShoppingBag,
-  Search,
-  Plus,
-  Minus,
-  Trash2,
-  CreditCard,
-  Banknote,
-  Smartphone,
-  CheckCircle2,
-  Scissors,
-  Package,
-  User,
-  AlertCircle,
-  Receipt,
-} from "lucide-react";
-
-interface CatalogItem {
-  id: string;
-  name: string;
-  type: "PRODUCT" | "SERVICE";
-  priceMinor: number;
-  sellerName?: string;
-  stock?: number;
-  sku?: string;
-  variantId?: string;
+import {useCallback,useEffect,useMemo,useState} from "react";
+import {Receipt,ShoppingCart,RefreshCw,CheckCircle2,AlertCircle,Plus,Minus} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+type Product={id:string;type:"SERVICE"|"PRODUCT";name:string;priceMinor:string;stock?:number|null};
+type ReceiptData={id:string;orderNumber:string;status:string;grandTotalMinor:string;changeDueMinor:string};
+type Catalog={tenantId:string;locationId:string;locationName:string;items:Product[]};
+type CartLine={item:Product;qty:number};
+function money(amount:bigint|string){
+ const minor=BigInt(amount);
+ const whole=minor/100n,dec=minor%100n;
+ return "$ "+whole.toLocaleString("es-CO")+(dec!==0n?","+dec.toString().padStart(2,"0"):"")+" COP";
 }
-
-interface CartItem extends CatalogItem {
-  quantity: number;
+function fromCop(value:string){
+ if(!/^\d+(?:[.,]\d{1,2})?$/.test(value.trim()))throw new Error("Ingresa un monto válido en COP");
+ const [whole,dec=""]=value.trim().replace(",",".").split(".");
+ return BigInt(whole)*100n+BigInt((dec+"00").slice(0,2));
 }
-
-export default function BarberPOSPage() {
-  const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<"ALL" | "SERVICES" | "PRODUCTS">("ALL");
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [customerName, setCustomerName] = useState("");
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-  const [tenderMethod, setTenderMethod] = useState<"CASH" | "EXTERNAL_CARD" | "NEQUI" | "BANK_TRANSFER" | "WOMPI_ONLINE">("CASH");
-  const [amountReceived, setAmountReceived] = useState<string>("");
-  const [completedReceipt, setCompletedReceipt] = useState<any | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  // Available catalog items (sample fallback + real items)
-  const [catalog, setCatalog] = useState<CatalogItem[]>([
-    {
-      id: "srv-corte-clasico",
-      name: "Corte Clásico Imperial",
-      type: "SERVICE",
-      priceMinor: 4500000,
-      sellerName: "The Royal Barber",
-    },
-    {
-      id: "srv-barba-toalla",
-      name: "Afeitado con Toalla Caliente",
-      type: "SERVICE",
-      priceMinor: 3500000,
-      sellerName: "The Royal Barber",
-    },
-    {
-      id: "srv-carlos-signature",
-      name: "Corte y Perfilado de Barba",
-      type: "SERVICE",
-      priceMinor: 6000000,
-      sellerName: "Carlos Mendoza (Solo)",
-    },
-    {
-      id: "prod-pomada-100",
-      name: "Pomada Clásica Base Agua 100g",
-      type: "PRODUCT",
-      priceMinor: 4500000,
-      sellerName: "The Royal Barber",
-      stock: 18,
-      sku: "POM-ROYAL-100",
-    },
-    {
-      id: "prod-aceite-barba",
-      name: "Aceite Para Barba Bergamota 30ml",
-      type: "PRODUCT",
-      priceMinor: 3500000,
-      sellerName: "The Royal Barber",
-      stock: 12,
-      sku: "OIL-ROYAL-30",
-    },
-    {
-      id: "prod-cera-carlos",
-      name: "Cera Mate Carlos Signature 80g",
-      type: "PRODUCT",
-      priceMinor: 4000000,
-      sellerName: "Carlos Mendoza Grooming",
-      stock: 9,
-      sku: "WAX-CARLOS-80",
-    },
-  ]);
-
-  const addToCart = (item: CatalogItem) => {
-    setCart((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
-      if (existing) {
-        if (item.type === "PRODUCT" && item.stock && existing.quantity >= item.stock) {
-          alert(`Stock insuficiente para ${item.name}`);
-          return prev;
-        }
-        return prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
-  };
-
-  const updateQuantity = (id: string, delta: number) => {
-    setCart((prev) =>
-      prev
-        .map((item) => {
-          if (item.id === id) {
-            const newQty = item.quantity + delta;
-            if (newQty <= 0) return null;
-            if (item.type === "PRODUCT" && item.stock && newQty > item.stock) {
-              alert(`Stock insuficiente para ${item.name}`);
-              return item;
-            }
-            return { ...item, quantity: newQty };
-          }
-          return item;
-        })
-        .filter(Boolean) as CartItem[]
-    );
-  };
-
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((i) => i.id !== id));
-  };
-
-  const clearCart = () => {
-    setCart([]);
-    setCustomerName("");
-    setErrorMessage(null);
-  };
-
-  const subtotalMinor = cart.reduce(
-    (acc, item) => acc + item.priceMinor * item.quantity,
-    0
-  );
-  const grandTotalMinor = subtotalMinor;
-
-  const filteredCatalog = catalog.filter((item) => {
-    const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory =
-      categoryFilter === "ALL" ||
-      (categoryFilter === "SERVICES" && item.type === "SERVICE") ||
-      (categoryFilter === "PRODUCTS" && item.type === "PRODUCT");
-    return matchesSearch && matchesCategory;
+export default function BarberPOSPage(){
+ const [catalog,setCatalog]=useState<Catalog|null>(null);
+ const [cart,setCart]=useState<CartLine[]>([]);
+ const [search,setSearch]=useState("");
+ const [name,setName]=useState("");
+ const [received,setReceived]=useState("");
+ const [cashConfirmed,setCashConfirmed]=useState(false);
+ const [loading,setLoading]=useState(true);
+ const [paying,setPaying]=useState(false);
+ const [error,setError]=useState("");
+ const [result,setResult]=useState<ReceiptData|null>(null);
+ const [key,setKey]=useState(()=>crypto.randomUUID());
+ const reload=useCallback(async()=>{
+  setLoading(true);setError("");
+  try{
+   const resp=await fetch("/api/v1/pos/catalog",{cache:"no-store"});
+   const data=await resp.json();
+   if(!resp.ok)throw new Error(data.error||"No tienes acceso al catálogo del POS");
+   setCatalog(data.data);
+  }catch(e){setError(e instanceof Error?e.message:"No se pudo cargar caja");}
+  finally{setLoading(false);}
+ },[]);
+ useEffect(()=>{void reload();},[reload]);
+ function change(item:Product,delta:number){
+  setResult(null);setCashConfirmed(false);setKey(crypto.randomUUID());
+  setCart(prev=>{
+   const before=prev.find(x=>x.item.id===item.id);
+   const next=(before?.qty||0)+delta;
+   const stock=item.type==="PRODUCT"?item.stock:null;
+   if(stock!==null&&stock!==undefined&&next>stock)return prev;
+   return [...prev.filter(x=>x.item.id!==item.id),...(next>0?[{item,qty:next}]:[])];
   });
-
-  const handleCheckout = async () => {
-    if (cart.length === 0) return;
-    setIsSubmitting(true);
-    setErrorMessage(null);
-
-    const received = amountReceived ? Number(amountReceived) * 100 : grandTotalMinor;
-    const change = received > grandTotalMinor ? received - grandTotalMinor : 0;
-
-    // Simulate / execute POS transaction
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setCompletedReceipt({
-        orderNumber: `ORD-${Date.now().toString(36).toUpperCase()}`,
-        items: [...cart],
-        grandTotalMinor,
-        tenderMethod,
-        amountReceivedMinor: received,
-        changeDueMinor: change,
-        customerName: customerName || "Consumidor Final",
-        completedAt: new Date(),
-      });
-      setIsCheckingOut(false);
-      clearCart();
-    }, 600);
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-4">
-        <div>
-          <h1 className="text-3xl font-headline tracking-widest text-foreground uppercase flex items-center gap-3">
-            <Receipt className="w-8 h-8 text-primary" /> Punto de Venta (POS)
-          </h1>
-          <p className="text-muted-foreground text-sm font-light mt-1">
-            Terminal transaccional multisede y multisede de cobro con inventario en tiempo real.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="px-3 py-1 bg-primary/10 border border-primary/30 text-primary rounded-full text-xs font-semibold">
-            Sede: The Royal Barber - Zona G
-          </span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Side: Catalog Selector (8 cols) */}
-        <div className="lg:col-span-7 xl:col-span-8 space-y-4">
-          {/* Search & Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
-              <Input
-                placeholder="Buscar servicio o producto..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-foreground/5 border-border h-10"
-              />
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setCategoryFilter("ALL")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-                  categoryFilter === "ALL"
-                    ? "bg-primary text-primary-foreground font-semibold"
-                    : "bg-foreground/5 hover:bg-foreground/10 text-foreground"
-                }`}
-              >
-                Todos
-              </button>
-              <button
-                onClick={() => setCategoryFilter("SERVICES")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-                  categoryFilter === "SERVICES"
-                    ? "bg-primary text-primary-foreground font-semibold"
-                    : "bg-foreground/5 hover:bg-foreground/10 text-foreground"
-                }`}
-              >
-                Servicios
-              </button>
-              <button
-                onClick={() => setCategoryFilter("PRODUCTS")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
-                  categoryFilter === "PRODUCTS"
-                    ? "bg-primary text-primary-foreground font-semibold"
-                    : "bg-foreground/5 hover:bg-foreground/10 text-foreground"
-                }`}
-              >
-                Productos
-              </button>
-            </div>
-          </div>
-
-          {/* Catalog Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-            {filteredCatalog.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => addToCart(item)}
-                className="bg-card hover:bg-foreground/5 border border-border hover:border-primary/50 transition rounded-xl p-4 cursor-pointer flex flex-col justify-between group shadow-sm"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${
-                        item.type === "SERVICE"
-                          ? "bg-blue-500/10 text-blue-400 border border-blue-500/20"
-                          : "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                      }`}
-                    >
-                      {item.type === "SERVICE" ? "Servicio" : "Producto"}
-                    </span>
-                    {item.type === "PRODUCT" && (
-                      <span className="text-[11px] text-muted-foreground">
-                        Stock: <span className="font-semibold text-foreground">{item.stock}</span>
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-medium text-foreground text-sm group-hover:text-primary transition line-clamp-2">
-                    {item.name}
-                  </h3>
-                  {item.sellerName && (
-                    <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-                      <User className="w-3 h-3" /> {item.sellerName}
-                    </p>
-                  )}
-                </div>
-                <div className="mt-4 pt-2 border-t border-border flex items-center justify-between">
-                  <span className="text-base font-bold text-foreground font-mono">
-                    ${(item.priceMinor / 100).toLocaleString("es-CO")}
-                  </span>
-                  <button className="w-7 h-7 rounded-full bg-primary/10 group-hover:bg-primary text-primary group-hover:text-primary-foreground flex items-center justify-center transition">
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Side: Cart & Checkout (4-5 cols) */}
-        <div className="lg:col-span-5 xl:col-span-4">
-          <Card className="border-border bg-card shadow-lg sticky top-6">
-            <CardHeader className="border-b border-border py-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base font-semibold flex items-center gap-2">
-                  <ShoppingBag className="w-5 h-5 text-primary" /> Ticket de Venta
-                </CardTitle>
-                {cart.length > 0 && (
-                  <button
-                    onClick={clearCart}
-                    className="text-xs text-muted-foreground hover:text-red-400 transition"
-                  >
-                    Vaciar
-                  </button>
-                )}
-              </div>
-            </CardHeader>
-
-            <CardContent className="p-4 space-y-4">
-              {/* Customer input */}
-              <div>
-                <label className="text-xs text-muted-foreground mb-1 block">
-                  Cliente (Opcional)
-                </label>
-                <Input
-                  placeholder="Nombre o teléfono del cliente..."
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  className="bg-foreground/5 border-border h-9 text-xs"
-                />
-              </div>
-
-              {/* Cart Line Items */}
-              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                {cart.length === 0 ? (
-                  <div className="text-center py-10 text-muted-foreground text-xs font-light">
-                    El ticket está vacío. Agrega servicios o productos desde el catálogo.
-                  </div>
-                ) : (
-                  cart.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between p-2 rounded-lg bg-foreground/5 border border-border text-xs"
-                    >
-                      <div className="flex-1 pr-2">
-                        <div className="font-medium text-foreground truncate">
-                          {item.name}
-                        </div>
-                        <div className="text-[10px] text-muted-foreground">
-                          ${(item.priceMinor / 100).toLocaleString("es-CO")} c/u
-                          {item.sellerName && ` • ${item.sellerName}`}
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center border border-border rounded-md bg-card">
-                          <button
-                            onClick={() => updateQuantity(item.id, -1)}
-                            className="p-1 hover:bg-foreground/10 text-muted-foreground"
-                          >
-                            <Minus className="w-3 h-3" />
-                          </button>
-                          <span className="px-2 font-mono text-xs">{item.quantity}</span>
-                          <button
-                            onClick={() => updateQuantity(item.id, 1)}
-                            className="p-1 hover:bg-foreground/10 text-muted-foreground"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-                        </div>
-                        <span className="font-mono font-bold w-16 text-right">
-                          ${((item.priceMinor * item.quantity) / 100).toLocaleString("es-CO")}
-                        </span>
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-muted-foreground hover:text-red-400 p-1"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* Totals Section */}
-              {cart.length > 0 && (
-                <div className="pt-3 border-t border-border space-y-2 text-xs">
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Subtotal</span>
-                    <span className="font-mono">
-                      ${(subtotalMinor / 100).toLocaleString("es-CO")}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-base font-bold text-foreground pt-1 border-t border-border">
-                    <span>Total a Pagar</span>
-                    <span className="font-mono text-primary">
-                      ${(grandTotalMinor / 100).toLocaleString("es-CO")}
-                    </span>
-                  </div>
-
-                  <PremiumButton
-                    onClick={() => setIsCheckingOut(true)}
-                    className="w-full mt-3 h-11 flex items-center justify-center gap-2 text-sm font-semibold"
-                  >
-                    <CreditCard className="w-4 h-4" /> Proceder al Cobro
-                  </PremiumButton>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Checkout Payment Modal */}
-      {isCheckingOut && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-card border border-border rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-6">
-            <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="font-headline tracking-widest text-lg uppercase text-foreground">
-                Cobro de Ticket
-              </h3>
-              <button
-                onClick={() => setIsCheckingOut(false)}
-                className="text-muted-foreground hover:text-foreground text-sm"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div className="text-center py-2 bg-foreground/5 rounded-xl border border-border">
-                <span className="text-xs text-muted-foreground block uppercase tracking-wider">
-                  Total Liquidado
-                </span>
-                <span className="text-3xl font-mono font-bold text-primary">
-                  ${(grandTotalMinor / 100).toLocaleString("es-CO")} COP
-                </span>
-              </div>
-
-              <div>
-                <label className="text-xs text-muted-foreground mb-2 block">
-                  Método de Pago
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => setTenderMethod("CASH")}
-                    className={`p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 transition ${
-                      tenderMethod === "CASH"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-foreground/5 text-muted-foreground"
-                    }`}
-                  >
-                    <Banknote className="w-4 h-4" /> Efectivo
-                  </button>
-                  <button
-                    onClick={() => setTenderMethod("EXTERNAL_CARD")}
-                    className={`p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 transition ${
-                      tenderMethod === "EXTERNAL_CARD"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-foreground/5 text-muted-foreground"
-                    }`}
-                  >
-                    <CreditCard className="w-4 h-4" /> Datafono / Tarjeta
-                  </button>
-                  <button
-                    onClick={() => setTenderMethod("NEQUI")}
-                    className={`p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 transition ${
-                      tenderMethod === "NEQUI"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-foreground/5 text-muted-foreground"
-                    }`}
-                  >
-                    <Smartphone className="w-4 h-4" /> Nequi / Daviplata
-                  </button>
-                  <button
-                    onClick={() => setTenderMethod("BANK_TRANSFER")}
-                    className={`p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 transition ${
-                      tenderMethod === "BANK_TRANSFER"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-foreground/5 text-muted-foreground"
-                    }`}
-                  >
-                    <Package className="w-4 h-4" /> Transferencia
-                  </button>
-                  <button
-                    onClick={() => setTenderMethod("WOMPI_ONLINE")}
-                    className={`col-span-2 p-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-2 transition ${
-                      tenderMethod === "WOMPI_ONLINE"
-                        ? "border-amber-500 bg-amber-500/10 text-amber-500"
-                        : "border-border bg-foreground/5 text-muted-foreground"
-                    }`}
-                  >
-                    <CreditCard className="w-4 h-4" /> Pasarela Digital (Wompi / PSE / Tarjeta Online)
-                  </button>
-                </div>
-              </div>
-
-              {tenderMethod === "CASH" && (
-                <div className="space-y-2">
-                  <label className="text-xs text-muted-foreground block">
-                    Monto Recibido en Efectivo
-                  </label>
-                  <Input
-                    type="number"
-                    placeholder={(grandTotalMinor / 100).toString()}
-                    value={amountReceived}
-                    onChange={(e) => setAmountReceived(e.target.value)}
-                    className="bg-foreground/5 border-border h-10 font-mono text-base"
-                  />
-                  {amountReceived && Number(amountReceived) * 100 >= grandTotalMinor && (
-                    <div className="p-2 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-xs flex justify-between">
-                      <span>Cambio a Entregar:</span>
-                      <span className="font-mono font-bold">
-                        ${(Number(amountReceived) - grandTotalMinor / 100).toLocaleString("es-CO")}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-3 pt-2">
-              <button
-                onClick={() => setIsCheckingOut(false)}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-border text-xs text-muted-foreground hover:bg-foreground/5"
-              >
-                Cancelar
-              </button>
-              <PremiumButton
-                onClick={handleCheckout}
-                disabled={isSubmitting}
-                className="flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? "Procesando..." : "Confirmar y Cobrar"}
-              </PremiumButton>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Success Receipt Modal */}
-      {completedReceipt && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-card border border-border rounded-2xl w-full max-w-sm p-6 shadow-2xl space-y-5 text-center">
-            <div className="w-12 h-12 rounded-full bg-green-500/10 text-green-400 flex items-center justify-center mx-auto border border-green-500/30">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-
-            <div>
-              <h3 className="font-headline tracking-widest text-lg uppercase text-foreground">
-                Venta Completada
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1 font-mono">
-                {completedReceipt.orderNumber}
-              </p>
-            </div>
-
-            <div className="bg-foreground/5 border border-border rounded-xl p-3 text-xs text-left space-y-1.5 font-mono">
-              <div className="flex justify-between text-muted-foreground">
-                <span>Cliente:</span>
-                <span className="text-foreground">{completedReceipt.customerName}</span>
-              </div>
-              <div className="flex justify-between text-muted-foreground">
-                <span>Método:</span>
-                <span className="text-foreground">{completedReceipt.tenderMethod}</span>
-              </div>
-              <div className="flex justify-between font-bold text-foreground pt-1 border-t border-border">
-                <span>Total Cobrado:</span>
-                <span className="text-primary">
-                  ${(completedReceipt.grandTotalMinor / 100).toLocaleString("es-CO")}
-                </span>
-              </div>
-              {completedReceipt.changeDueMinor > 0 && (
-                <div className="flex justify-between text-green-400 font-semibold">
-                  <span>Cambio devuelto:</span>
-                  <span>${(completedReceipt.changeDueMinor / 100).toLocaleString("es-CO")}</span>
-                </div>
-              )}
-            </div>
-
-            <PremiumButton
-              onClick={() => setCompletedReceipt(null)}
-              className="w-full py-2.5 text-xs font-semibold"
-            >
-              Cerrar y Nueva Venta
-            </PremiumButton>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+ }
+ const total=useMemo(()=>cart.reduce((sum,x)=>sum+BigInt(x.item.priceMinor)*BigInt(x.qty),0n),[cart]);
+ const filtered=(catalog?.items||[]).filter(x=>x.name.toLowerCase().includes(search.toLowerCase()));
+ async function checkout(){
+  if(!catalog||!cart.length||!cashConfirmed)return;
+  setPaying(true);setError("");setResult(null);
+  try{
+   const receivedMinor=received?fromCop(received):total;
+   if(receivedMinor<total)throw new Error("El efectivo recibido debe cubrir el total");
+   const response=await fetch("/api/v1/pos/sale",{
+    method:"POST",headers:{"Content-Type":"application/json","Idempotency-Key":key},
+    body:JSON.stringify({
+     checkoutKey:key,locationId:catalog.locationId,customerName:name,
+     amountReceivedMinor:receivedMinor.toString(),
+     items:cart.map(x=>({id:x.item.id,type:x.item.type,quantity:x.qty})),
+    }),
+   });
+   const payload=await response.json();
+   if(!response.ok)throw new Error(payload.error||"No se confirmó la venta");
+   if(payload.data.status!=="COMPLETED")throw new Error("La venta no quedó completada");
+   setResult(payload.data);
+   setCart([]);setReceived("");setName("");setCashConfirmed(false);setKey(crypto.randomUUID());
+   await reload();
+  }catch(e){setError(e instanceof Error?e.message:"El cobro no fue confirmado");}
+  finally{setPaying(false);}
+ }
+ return <div className="pb-20 space-y-8">
+  <header className="flex flex-wrap justify-between items-center gap-3">
+   <div><p className="text-xs text-amber-500 tracking-widest uppercase">Caja real y contabilidad</p>
+    <h1 className="font-headline text-4xl uppercase mt-2">Punto de Venta</h1>
+    <p className="text-sm text-muted-foreground mt-2">{catalog?.locationName||"Selecciona un workspace autorizado"}</p></div>
+   <Button onClick={()=>void reload()} variant="outline" disabled={loading||paying}><RefreshCw className="w-4 h-4 mr-2"/>Actualizar productos</Button>
+  </header>
+  {error&&<div role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 text-red-500 p-4 flex gap-2"><AlertCircle className="w-5 h-5"/>{error}</div>}
+  {result&&<div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-5 space-y-2">
+   <h2 className="font-semibold flex gap-2"><CheckCircle2 className="text-emerald-500"/>Venta confirmada en PostgreSQL</h2>
+   <p className="text-sm">Orden {result.orderNumber}</p>
+   <p>Total: {money(result.grandTotalMinor)} · Cambio: {money(result.changeDueMinor)}</p>
+   <Button variant="outline" onClick={()=>window.print()}><Receipt className="w-4 h-4 mr-2"/>Imprimir comprobante</Button>
+  </div>}
+  <div className="grid lg:grid-cols-5 gap-6">
+   <section className="lg:col-span-3 space-y-4">
+    <Input aria-label="Buscar en catálogo POS" placeholder="Buscar servicio o producto real" value={search} onChange={e=>setSearch(e.target.value)}/>
+    {loading?<p className="text-muted-foreground">Cargando catálogo del backend…</p>:<div className="grid sm:grid-cols-2 gap-3">
+     {filtered.map(item=>{
+      const qty=cart.find(c=>c.item.id===item.id)?.qty||0;
+      return <article key={item.type+item.id} className="rounded-xl bg-card border border-border p-4 space-y-3">
+       <div className="text-xs uppercase text-amber-500">{item.type==="PRODUCT"?"Producto":"Servicio"}</div>
+       <h3 className="font-semibold">{item.name}</h3><p>{money(item.priceMinor)}</p>
+       {item.stock!==undefined&&item.stock!==null&&<p className="text-xs text-muted-foreground">Disponible: {item.stock}</p>}
+       <div className="flex justify-end gap-2 items-center">
+        <Button variant="outline" size="sm" aria-label={"Quitar "+item.name} onClick={()=>change(item,-1)} disabled={qty===0||paying}><Minus className="w-4 h-4"/></Button>
+        <span>{qty}</span>
+        <Button size="sm" aria-label={"Agregar "+item.name} onClick={()=>change(item,1)}
+         disabled={paying||(item.stock!==undefined&&item.stock!==null&&qty>=item.stock)}><Plus className="w-4 h-4"/></Button>
+       </div>
+      </article>;
+     })}
+    </div>}
+    {!loading&&filtered.length===0&&<p className="text-muted-foreground">No hay servicios ni productos activos para esta sede.</p>}
+   </section>
+   <section className="lg:col-span-2 space-y-5 rounded-2xl border border-border bg-card/80 p-6 h-fit">
+    <h2 className="font-headline uppercase text-xl flex items-center gap-2"><ShoppingCart className="w-5 h-5"/>Carrito</h2>
+    {cart.map(x=><div className="flex justify-between text-sm gap-2" key={x.item.id}>
+     <span>{x.qty} × {x.item.name}</span><span className="whitespace-nowrap">{money(BigInt(x.item.priceMinor)*BigInt(x.qty))}</span>
+    </div>)}
+    {cart.length===0&&<p className="text-muted-foreground text-sm">Agrega productos o servicios del catálogo real.</p>}
+    <div className="border-t pt-3 text-lg font-semibold flex justify-between"><span>Total</span><span>{money(total)}</span></div>
+    <div className="space-y-1"><Label htmlFor="pos-customer">Nombre del cliente (opcional)</Label>
+     <Input id="pos-customer" maxLength={255} value={name} onChange={e=>setName(e.target.value)}/></div>
+    <div className="space-y-1"><Label htmlFor="cash-received">Efectivo recibido (COP, en blanco = total)</Label>
+     <Input id="cash-received" inputMode="decimal" placeholder={(total/100n).toString()} value={received} onChange={e=>{setReceived(e.target.value);setCashConfirmed(false);}}/></div>
+    <label className="text-xs flex items-start gap-2">
+     <input type="checkbox" checked={cashConfirmed} onChange={e=>setCashConfirmed(e.target.checked)}/>
+     Confirmo que ya recibí el efectivo físicamente. No usar para Wompi ni pagos pendientes.
+    </label>
+    <Button className="w-full h-12" disabled={paying||!cart.length||!cashConfirmed||loading} onClick={()=>void checkout()}>
+     {paying?"Confirmando con el servidor…":"Registrar cobro REAL"}
+    </Button>
+    <p className="text-xs text-muted-foreground">El recibo solo aparece si el servidor completó la orden, registró el inventario y asentó el cobro.</p>
+   </section>
+  </div>
+ </div>;
 }

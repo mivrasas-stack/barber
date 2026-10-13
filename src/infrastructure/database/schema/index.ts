@@ -21,3 +21,4 @@ export * from "./commerce";
 export * from "./payments";
 export * from "./notifications";
 export * from "./media";
+export * from "./customer-intake";

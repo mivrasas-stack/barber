@@ -559,9 +559,11 @@ describe("Stage 3B commerce authorization and privacy boundaries", () => {
     );
   });
 
-  it("keeps seeded Stage 3B modules non-public after the security suite", async () => {
+  it("preserves intentional P0 product/POS availability while keeping remaining Stage 3B modules internal", async () => {
     for (const code of STAGE_3B_MODULE_CODES) {
-      expect(originalModuleStatuses.get(code)).toBe("INTERNAL");
+      // The POS launch exposes only the entitled modules, behind tenant subscription + RBAC.
+      const expected = ["commerce.products", "pos.checkout"].includes(code) ? "AVAILABLE" : "INTERNAL";
+      expect(originalModuleStatuses.get(code)).toBe(expected);
     }
 
     const [affiliateRole] = await db

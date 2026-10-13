@@ -1,4 +1,4 @@
-import AdminInventoryPage from "@/app/barber/admin/inventory/page";
+import AdminInventoryPage from "@/app/business/inventory/page";
 
 export default function BarberInventoryRoute() {
   return <AdminInventoryPage />;
