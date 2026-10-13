@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
+import { shouldBlockUnverifiedLaunchRoute } from "@/shared/config/launch-safety";
 
 const SESSION_COOKIE_NAME = "barber_session";
 
 function getJwtSecretKey(): Uint8Array {
+  const configured = process.env.AUTH_SECRET;
+  if (process.env.NODE_ENV === "production" && (!configured || configured.length < 32)) {
+    // Fail closed when the deployment omitted its signing key.
+    throw new Error("AUTH_SECRET must be configured for production");
+  }
   const secret =
-    process.env.AUTH_SECRET || "development_secret_key_minimum_32_characters_for_jwt_session";
+    configured || "development_secret_key_minimum_32_characters_for_jwt_session";
   return new TextEncoder().encode(secret);
 }
 
@@ -77,6 +83,13 @@ export async function middleware(request: NextRequest) {
       forbiddenUrl.searchParams.set("error", "forbidden_platform_admin_required");
       return NextResponse.redirect(forbiddenUrl);
     }
+  }
+
+  // Restrict unfinished/demo pages after authenticating the visitor.
+  // Only in actual Next production mode; local development remains unchanged.
+  if (shouldBlockUnverifiedLaunchRoute(pathname, process.env.NODE_ENV === "production")) {
+    const unavailable = new URL("/feature-unavailable", request.url);
+    return NextResponse.redirect(unavailable);
   }
 
   // Attach verified user context to request headers for downstream consumers

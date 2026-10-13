@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { CalendarDays, Clock, Scissors, Heart, ShoppingBag, UserCircle, LogOut, Moon, ArrowRight, Star, Timer, Award, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
+
+import { LogoutButton } from '@/components/auth/logout-button';
 export default function ClientDashboard() {
   const [greeting, setGreeting] = useState("Bienvenido");
 
@@ -42,9 +44,9 @@ export default function ClientDashboard() {
         transition={{ duration: 0.5, delay: 0.5 }}
         className="fixed top-6 right-6 lg:top-8 lg:right-10 z-50"
       >
-        <Link href="/" className="group flex items-center justify-center w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-border hover:border-red-500/30 hover:bg-red-500/10 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]" title="Cerrar Sesión">
+        <LogoutButton className="group flex items-center justify-center w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-border hover:border-red-500/30 hover:bg-red-500/10 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]" title="Cerrar Sesión">
           <LogOut className="w-5 h-5 text-foreground/50 group-hover:text-red-400 transition-colors translate-x-[1px]" />
-        </Link>
+        </LogoutButton>
       </motion.div>
 
       {/* Contenido Principal */}

@@ -1,5 +1,6 @@
 "use client";
 import Link from 'next/link';
+import { LogoutButton } from '@/components/auth/logout-button';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   CalendarDays,
@@ -37,6 +38,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { dummyBarbers } from '@/app/clientes/data';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { WorkspaceSwitcher } from '@/components/navigation/workspace-switcher';
+import { isUnverifiedLaunchRoute } from '@/shared/config/launch-safety';
 
 const navItems = [
   { href: '/business/appointments', icon: CalendarDays, label: 'Agenda Global' },
@@ -100,7 +102,7 @@ export default function BusinessLayout({
           
           <SidebarContent className="px-6 py-2">
             <SidebarMenu className="gap-3">
-              {navItems.map((item) => {
+              {navItems.filter(item => process.env.NODE_ENV !== 'production' || !isUnverifiedLaunchRoute(item.href)).map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                 return (
                   <SidebarMenuItem key={item.href}>
@@ -124,10 +126,10 @@ export default function BusinessLayout({
           
           <SidebarFooter className="p-6">
             <SidebarMenuButton tooltip="Cerrar Sesión" asChild className="h-14 rounded-2xl text-foreground/40 hover:text-foreground hover:bg-red-500/20 hover:border-red-500/30 border border-transparent transition-all duration-500 px-6 group">
-              <Link href="/">
+              <LogoutButton>
                 <LogOut className="h-5 w-5 transition-transform duration-500 group-hover:-translate-x-1 group-hover:text-red-400" />
                 <span className="font-headline tracking-[0.2em] text-[11px] uppercase group-hover:text-red-100">Cerrar Sesión</span>
-              </Link>
+              </LogoutButton>
             </SidebarMenuButton>
           </SidebarFooter>
         </Sidebar>

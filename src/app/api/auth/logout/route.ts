@@ -8,11 +8,19 @@ export async function POST(request: NextRequest) {
     try {
       await revokeSession(token);
     } catch (err) {
-      console.error("Error revoking session:", err);
+      // Fail closed: don't report a successful revocation when storage failed.
+      console.error("Session revocation failed", err instanceof Error ? err.name : "unknown");
+      return NextResponse.json(
+        { error: "No se pudo cerrar la sesión. Inténtalo nuevamente." },
+        { status: 503, headers: { "Cache-Control": "no-store" } },
+      );
     }
   }
 
-  const response = NextResponse.json({ success: true, message: "Logged out successfully" });
+  const response = NextResponse.json(
+    { success: true, message: "Logged out successfully" },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 
   response.cookies.set({
     name: SESSION_COOKIE_NAME,
