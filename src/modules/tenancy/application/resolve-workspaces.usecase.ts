@@ -26,7 +26,7 @@ export class ResolveWorkspacesUseCase {
       })
       .from(memberships)
       .innerJoin(tenants, eq(memberships.tenantId, tenants.id))
-      .where(and(eq(memberships.userId, userId), eq(memberships.status, "ACTIVE")));
+      .where(and(eq(memberships.userId, userId), eq(memberships.status, "ACTIVE"), eq(tenants.status, "ACTIVE")));
 
     const resultsMap = new Map<string, WorkspaceContext>();
 
@@ -38,7 +38,9 @@ export class ResolveWorkspacesUseCase {
         .innerJoin(roles, eq(membershipRoles.roleId, roles.id))
         .where(eq(membershipRoles.membershipId, m.membership.id));
 
-      const primaryRole = userRoles[0]?.role.name || "MEMBER";
+      const roleNames=userRoles.map(r=>r.role.name);
+      const primaryRole = ["OWNER","MANAGER","EMPLOYEE"].find(r=>roleNames.includes(r))
+        || roleNames[0] || "MEMBER";
       const isOwner = primaryRole === "OWNER";
 
       resultsMap.set(m.tenant.id, {
@@ -70,13 +72,14 @@ export class ResolveWorkspacesUseCase {
         .where(
           and(
             eq(professionalAffiliations.professionalProfileId, profProfile.id),
-            eq(professionalAffiliations.status, "ACTIVE")
+            eq(professionalAffiliations.status, "ACTIVE"),
+            eq(tenants.status, "ACTIVE")
           )
         );
 
       for (const a of affiliations) {
         const existing = resultsMap.get(a.hostTenant.id);
-        if (existing) {
+        if (existing && !["OWNER","MANAGER","EMPLOYEE"].includes(existing.role)) {
           existing.role = "AFFILIATED_PROFESSIONAL";
           existing.relationship = "AFFILIATED_PROFESSIONAL";
           existing.affiliationId = a.affiliation.id;

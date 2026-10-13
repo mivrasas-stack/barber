@@ -32,5 +32,10 @@ export async function POST(request: NextRequest) {
     path: "/",
   });
 
+  response.cookies.set({
+    name:"barber_active_workspace",value:"",httpOnly:true,
+    secure:process.env.NODE_ENV==="production",sameSite:"lax",
+    expires:new Date(0),path:"/",
+  });
   return response;
 }

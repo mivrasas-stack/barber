@@ -4,6 +4,7 @@ import { DrizzleUserRepository } from "@/modules/identity/infrastructure/drizzle
 import { AuthenticateUserUseCase } from "@/modules/identity/application/authenticate-user.usecase";
 import { createSession, SESSION_COOKIE_NAME } from "@/infrastructure/auth/session";
 import { DrizzleAuthorizationRepository } from "@/modules/authorization/infrastructure/drizzle-authorization.repository";
+import { ResolveWorkspacesUseCase } from "@/modules/tenancy/application/resolve-workspaces.usecase";
 import { AppError } from "@/shared/errors/app-error";
 import { checkRateLimit, extractClientIp } from "@/infrastructure/security";
 
@@ -78,6 +79,16 @@ export async function POST(request: NextRequest) {
       redirectUrl: defaultRedirect,
       activeRoles: authContext?.activeRoles ?? [],
       activeTenantId: authContext?.activeTenantId ?? null,
+    });
+
+    // Persist the validated tenant selection alongside the login session.
+    // Without this, staff/QR/POS requests fail despite a successful login.
+    const authorizedWorkspaces = await new ResolveWorkspacesUseCase().execute(user.id);
+    const authorizedActiveId = authorizedWorkspaces.find(w=>w.id===authContext?.activeTenantId)?.id
+      ?? (authorizedWorkspaces.length===1?authorizedWorkspaces[0].id:null);
+    response.cookies.set("barber_active_workspace",authorizedActiveId||"",{
+      httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"lax",
+      path:"/",maxAge:authorizedActiveId?30*24*60*60:0,
     });
 
     // Set secure, HttpOnly cookie
