@@ -1,0 +1,157 @@
+# Single-host launch candidate for Contabo Ubuntu LTS + Docker Compose.
+# No container except Caddy exposes a port to the public internet.
+# Start DB/Redis -> run one-shot migration -> start app/workers/caddy.
+# Use only on staging until release gates are approved.
+name: barber-paradise
+
+x-runtime: &runtime
+  image: barber-paradise:${RELEASE_TAG:-staging-candidate}
+  env_file:
+    - path: ${BARBER_ENV_FILE:-../../.env.production}
+      required: true
+  environment:
+    NODE_ENV: production
+    DATABASE_URL: postgresql://${POSTGRES_USER:?required}:${POSTGRES_PASSWORD:?required}@postgres:5432/${POSTGRES_DB:?required}
+    REDIS_URL: redis://:${REDIS_PASSWORD:?required}@redis:6379
+    REDIS_HOST: redis
+    REDIS_PASSWORD: ${REDIS_PASSWORD:?required}
+    REDIS_PORT: "6379"
+    NEXT_PUBLIC_APP_URL: https://${APP_DOMAIN:?required}
+    REALTIME_PORT: "9003"
+    REALTIME_ALLOWED_ORIGINS: https://${APP_DOMAIN:?required}
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  restart: unless-stopped
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  networks:
+    - backend
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "5"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: ${POSTGRES_DB:?required}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - backend
+    security_opt:
+      - no-new-privileges:true
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?required}
+    command: ["sh", "-ec", "exec redis-server --appendonly yes --appendfsync everysec --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" ping 2>/dev/null | grep -q PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - backend
+    security_opt:
+      - no-new-privileges:true
+
+  web:
+    <<: *runtime
+    build:
+      context: ../..
+      dockerfile: deploy/contabo/Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: https://${APP_DOMAIN:?required}
+    command: ["node", "node_modules/next/dist/bin/next", "start", "-H", "0.0.0.0", "-p", "3000"]
+    mem_limit: 2g
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 20s
+      timeout: 8s
+      retries: 10
+      start_period: 40s
+
+  realtime:
+    <<: *runtime
+    command: ["npm", "run", "start:realtime"]
+    mem_limit: 512m
+
+  outbox:
+    <<: *runtime
+    command: ["npm", "run", "start:outbox"]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:?required}:${POSTGRES_PASSWORD:?required}@postgres:5432/${POSTGRES_DB:?required}
+      REDIS_URL: redis://:${REDIS_PASSWORD:?required}@redis:6379
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?required}
+      REDIS_PORT: "6379"
+      NEXT_PUBLIC_APP_URL: https://${APP_DOMAIN:?required}
+      REALTIME_ALLOWED_ORIGINS: https://${APP_DOMAIN:?required}
+      OUTBOX_PUBLISH_FROM: ${OUTBOX_PUBLISH_FROM:?Set explicit ISO-8601 cutover}
+    mem_limit: 512m
+
+  notifications:
+    <<: *runtime
+    command: ["npm", "run", "start:notifications"]
+    mem_limit: 512m
+
+  migrate:
+    <<: *runtime
+    profiles: ["migration"]
+    command: ["npm", "run", "db:migrate"]
+    restart: "no"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?required}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    depends_on:
+      web:
+        condition: service_healthy
+      realtime:
+        condition: service_started
+    networks:
+      - backend
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  pgdata:
+  redisdata:
+  caddydata:
+  caddyconfig:

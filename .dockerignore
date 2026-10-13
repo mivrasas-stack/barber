@@ -1,0 +1,26 @@
+# Keep local environment, backup, and development state out of deploy images.
+.git
+.gitignore
+node_modules
+.next
+coverage
+out
+build
+*.log
+*.pem
+*.p12
+*.pfx
+*.key
+.env
+.env.*
+!.env.example
+!.env.production.example
+*.dump
+*.sql.gz
+*.tar
+tmp
+.temp
+.cache
+.vercel
+.atl
+.codegraph

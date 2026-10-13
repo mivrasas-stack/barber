@@ -1,0 +1,21 @@
+# Automatic TLS once APP_DOMAIN resolves to the VPS public IP.
+{$APP_DOMAIN} {
+    encode zstd gzip
+
+    @realtime {
+        path /realtime /realtime/*
+    }
+    handle @realtime {
+        reverse_proxy realtime:9003
+    }
+
+    handle {
+        reverse_proxy web:3000
+    }
+
+    header {
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+}
