@@ -31,6 +31,8 @@ This document distinguishes tested changes from missing production evidence.
 
 ## Evidence / safe recovery
 - Local pre-P0 backup: `C:\MIVRA PROYECTS\BARBERIA\_barber_p0_safety_20261013-111545`.
+- Sanitized P0 source snapshot pushed to `backup/p0-staging-candidate-20261013`, commit `14071e88184d`, without rewriting the original branch.
+- Local development PostgreSQL custom-format backup stored in the P0 safety directory; restoration to isolated PostgreSQL 16 succeeded with users/tenants/orders/journals/QR intakes verified (exit 0); the disposable container was removed.
 - The earlier sanitized Stage5 offsite Git snapshot is under `backup/stage5-sanitized-20261013`.
 - Existing `stage5-media-cdn` HEAD preserved; no force-push, no automatic merge to production branch.
 - Migration `0013_unusual_nomad.sql` creates only QR intake table / indexes / FKs. Migrations must be validated on a disposable staging database before deployment.
