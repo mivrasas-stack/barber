@@ -35,7 +35,6 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { dummyBarbers } from '@/app/clientes/data';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { WorkspaceSwitcher } from '@/components/navigation/workspace-switcher';
 import { isUnverifiedLaunchRoute } from '@/shared/config/launch-safety';
@@ -52,14 +51,15 @@ const navItems = [
 ];
 
 export default function BusinessLayout({
-  children,
+  children, currentUserName,
 }: {
   children: React.ReactNode;
+  currentUserName: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const isRoot = pathname === '/business';
-  const owner = dummyBarbers[0]; 
+  // The workspace identity is resolved from the active PostgreSQL session on the server.
 
   if (isRoot) {
     return (
@@ -90,7 +90,7 @@ export default function BusinessLayout({
               </div>
               
               <div>
-                <h2 className="text-2xl font-headline tracking-widest uppercase text-foreground group-hover:text-amber-100 transition-colors">Barber Paradise</h2>
+                <h2 className="text-2xl font-headline tracking-widest uppercase text-foreground group-hover:text-amber-100 transition-colors">{currentUserName}</h2>
                 <div className="flex items-center justify-center gap-2 mt-2">
                   <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
                   <p className="text-[10px] font-headline tracking-[0.3em] text-amber-500 uppercase">Panel Propietario</p>
@@ -102,7 +102,7 @@ export default function BusinessLayout({
           
           <SidebarContent className="px-6 py-2">
             <SidebarMenu className="gap-3">
-              {navItems.filter(item => process.env.NODE_ENV !== 'production' || !isUnverifiedLaunchRoute(item.href)).map((item) => {
+              {navItems.filter(item => !isUnverifiedLaunchRoute(item.href)).map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                 return (
                   <SidebarMenuItem key={item.href}>

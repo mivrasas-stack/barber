@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import {isUnverifiedLaunchRoute} from '@/shared/config/launch-safety';
 import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
@@ -57,7 +58,7 @@ export default function SuperAdminLayout({
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="flex items-center gap-2 px-4 py-3 bg-black/60 backdrop-blur-3xl border border-border rounded-[32px] shadow-[0_20px_40px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.1)]"
             >
-              {DOCK_ITEMS.map((item) => {
+              {DOCK_ITEMS.filter(item=>!isUnverifiedLaunchRoute(item.href)).map((item) => {
                 const isActive = pathname === item.href;
                 return (
                   <Link key={item.href} href={item.href} className="relative group">

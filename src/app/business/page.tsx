@@ -1,8 +1,6 @@
-import DemoBusinessDashboard from "./demo-dashboard";
 import { LaunchDashboard } from "@/components/navigation/launch-dashboard";
 
 export default function BusinessHome() {
- if (process.env.NODE_ENV !== "production") return <DemoBusinessDashboard />;
  return <LaunchDashboard title="Administración de barbería"
   subtitle="Centro de operaciones conectadas al backend. Ninguna cifra de demostración se representa como resultado comercial real."
   links={[

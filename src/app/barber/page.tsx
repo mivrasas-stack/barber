@@ -1,8 +1,6 @@
-import DemoBarberDashboard from "./demo-dashboard";
 import { LaunchDashboard } from "@/components/navigation/launch-dashboard";
 
 export default function BarberHome() {
- if (process.env.NODE_ENV !== "production") return <DemoBarberDashboard />;
  return <LaunchDashboard title="Espacio profesional"
   subtitle="Accede a las funciones operativas conectadas al servidor. El contenido de demostración permanece disponible solo para pruebas locales."
   links={[

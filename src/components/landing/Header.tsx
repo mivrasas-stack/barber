@@ -11,12 +11,10 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "#home", label: "Inicio" },
-  { href: "#about", label: "Manifiesto" },
-  { href: "#ranking", label: "Top Barberías" },
-  { href: "#pricing", label: "Planes" },
-  { href: "#portfolio", label: "Galería" },
-  { href: "#products", label: "Boutique" },
+ {href:"#home",label:"Inicio"},
+ {href:"#about",label:"Nuestra visión"},
+ {href:"/directorio",label:"Directorio"},
+ {href:"/profesionales",label:"Profesionales"},
 ];
 
 export default function Header() {

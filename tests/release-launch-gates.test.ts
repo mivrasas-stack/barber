@@ -12,6 +12,8 @@ const unsafe = [
  "/barber/portfolio", "/barber/profile", "/barber/wait-room", "/barber/metrics",
  "/business/appointments", "/business/accounting", "/business/orders",
  "/business/security", "/business/roles", "/business/settings",
+ "/admin/metrics", "/admin/tenants", "/admin/subscriptions", "/admin/audit",
+ "/professional/appointments", "/professional/customers", "/professional/profile",
 ];
 const allowed = [
  "/customers", "/customers/appointments", "/customers/profile", "/barber", "/business", "/barber/pos", "/barber/customers", "/barber/barberos",
@@ -35,7 +37,7 @@ describe("Safe controlled release routes",()=>{
   for(const path of unsafe){
    expect(isUnverifiedLaunchRoute(path),path).toBe(true);
    expect(shouldBlockUnverifiedLaunchRoute(path,true),path).toBe(true);
-   expect(shouldBlockUnverifiedLaunchRoute(path,false),path).toBe(false);
+   expect(shouldBlockUnverifiedLaunchRoute(path,false),path).toBe(true);
   }
   for(const path of allowed)expect(isUnverifiedLaunchRoute(path),path).toBe(false);
   expect(isUnverifiedLaunchRoute("/barber/pos/")).toBe(false);
@@ -84,10 +86,11 @@ describe("Safe controlled release routes",()=>{
   const res=await middleware(new NextRequest("http://localhost:9002/admin",{headers:{cookie}}));
   expect(new URL(res.headers.get("location")||"http://invalid").pathname).toBe("/login");
  });
- it("retains QA access to test/demo pages in development mode",async()=>{
+ it("also blocks unfinished demo pages in development mode",async()=>{
   vi.stubEnv("NODE_ENV","development");
   const cookie="barber_session="+(await signedToken());
   const res=await middleware(new NextRequest("http://localhost:9002/barber/accounting",{headers:{cookie}}));
-  expect(res.status).toBe(200);
+  expect(res.status).toBe(307);
+  expect(new URL(res.headers.get("location")||"http://invalid").pathname).toBe("/feature-unavailable");
  });
 });

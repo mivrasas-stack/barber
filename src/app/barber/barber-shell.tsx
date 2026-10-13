@@ -31,7 +31,6 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { dummyBarbers } from '@/app/clientes/data';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { WorkspaceSwitcher } from '@/components/navigation/workspace-switcher';
 import { isUnverifiedLaunchRoute } from '@/shared/config/launch-safety';
@@ -50,14 +49,15 @@ const navItems = [
 ];
 
 export default function BarberLayout({
-  children,
+  children, currentUserName,
 }: {
   children: React.ReactNode;
+  currentUserName: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const isRoot = pathname === '/barber';
-  const me = dummyBarbers[0]; 
+  const me = {name:currentUserName};
 
   // When on root /barber, render full-screen hero dashboard
   if (isRoot) {
@@ -83,7 +83,7 @@ export default function BarberLayout({
                     <div className="relative group cursor-pointer">
                         <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-xl group-hover:bg-amber-500/40 transition-colors duration-700" />
                         <Avatar className="relative h-24 w-24 border border-border p-1 bg-foreground/5 ring-2 ring-black shadow-2xl transition-all duration-700 group-hover:scale-105 group-hover:border-amber-500/30">
-                            <AvatarImage src={me.avatarUrl} alt={me.name} className="rounded-full object-cover" />
+                            
                             <AvatarFallback className="bg-transparent text-foreground font-headline text-3xl">{me.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                     </div>
@@ -92,7 +92,7 @@ export default function BarberLayout({
                         <h2 className="text-2xl font-headline tracking-widest uppercase text-foreground group-hover:text-amber-100 transition-colors">{me.name}</h2>
                         <div className="flex items-center justify-center gap-2 mt-2">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                            <p className="text-[10px] font-headline tracking-[0.3em] text-amber-500 uppercase">Master Barber</p>
+                            <p className="text-[10px] font-headline tracking-[0.3em] text-amber-500 uppercase">Cuenta profesional</p>
                         </div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@ export default function BarberLayout({
             
             <SidebarContent className="px-6 py-2">
             <SidebarMenu className="gap-3">
-                {navItems.filter(item => process.env.NODE_ENV !== 'production' || !isUnverifiedLaunchRoute(item.href)).map((item) => {
+                {navItems.filter(item => !isUnverifiedLaunchRoute(item.href)).map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                 return (
                     <SidebarMenuItem key={item.href}>

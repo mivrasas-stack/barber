@@ -20,6 +20,24 @@ export const UNVERIFIED_LAUNCH_ROUTES = [
   "/business/roles",
   "/business/security",
   "/business/settings",
+  "/admin/audit",
+  "/admin/metrics",
+  "/admin/settings",
+  "/admin/subscriptions",
+  "/admin/tenants",
+  "/professional/affiliations",
+  "/professional/appointments",
+  "/professional/availability",
+  "/professional/billing",
+  "/professional/customers",
+  "/professional/finance",
+  "/professional/inventory",
+  "/professional/orders",
+  "/professional/payments",
+  "/professional/pos",
+  "/professional/products",
+  "/professional/profile",
+  "/professional/services",
 ] as const;
 
 export function isUnverifiedLaunchRoute(pathname: string): boolean {
@@ -28,6 +46,8 @@ export function isUnverifiedLaunchRoute(pathname: string): boolean {
   return UNVERIFIED_LAUNCH_ROUTES.some((route) => clean === route || clean.startsWith(route + "/"));
 }
 
-export function shouldBlockUnverifiedLaunchRoute(pathname: string, isProduction: boolean): boolean {
-  return isProduction && isUnverifiedLaunchRoute(pathname);
+export function shouldBlockUnverifiedLaunchRoute(pathname: string, _isProduction: boolean): boolean {
+  // Do not expose demo-only screens in development either: new accounts
+  // must never appear to own synthetic data.
+  return isUnverifiedLaunchRoute(pathname);
 }

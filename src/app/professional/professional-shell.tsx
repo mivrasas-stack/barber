@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import {isUnverifiedLaunchRoute} from "@/shared/config/launch-safety";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -187,7 +188,7 @@ export default function ProfessionalWorkspaceLayout({
 
           <SidebarContent className="px-4 py-4">
             <SidebarMenu className="gap-1.5">
-              {navItems.map((item) => {
+              {navItems.filter(item=>!isUnverifiedLaunchRoute(item.href)).map((item) => {
                 const isEnabled = effectiveModules[item.code] !== false;
                 const isActive = pathname === item.href;
 

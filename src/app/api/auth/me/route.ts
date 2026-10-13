@@ -28,5 +28,5 @@ export async function GET(request: NextRequest) {
     activeRoles: context?.activeRoles ?? [],
     activePermissions: context?.activePermissions ?? [],
     memberships: context?.memberships ?? [],
-  });
+  }, {headers:{"Cache-Control":"private, no-store"}});
 }

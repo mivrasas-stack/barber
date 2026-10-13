@@ -103,8 +103,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
-  // Restrict unfinished/demo pages after authenticating the visitor.
-  // Only in actual Next production mode; local development remains unchanged.
+  // Restrict unfinished/demo pages in ALL environments. A fresh account
+  // must never see synthetic data, whether on localhost or in production.
   if (shouldBlockUnverifiedLaunchRoute(pathname, process.env.NODE_ENV === "production")) {
     const unavailable = new URL("/feature-unavailable", request.url);
     return NextResponse.redirect(unavailable);
