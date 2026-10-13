@@ -99,6 +99,13 @@
       "when": 1791908791605,
       "tag": "0013_unusual_nomad",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1791923568362,
+      "tag": "0014_first_maggott",
+      "breakpoints": true
     }
   ]
 }

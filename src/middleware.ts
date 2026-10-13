@@ -87,9 +87,18 @@ export async function middleware(request: NextRequest) {
   }
 
   // Keep old customer URLs as legacy aliases; never expose duplicate demo portals in production.
-  if (isCustomerRoute && process.env.NODE_ENV === "production") {
-    const destination = pathname === "/clientes/appointments" ? "/customers/appointments"
-      : pathname === "/clientes/profile" ? "/customers/profile" : "/customers";
+  if (isCustomerRoute) {
+    const legacyRoutes: Record<string,string> = {
+      "/clientes": "/customers",
+      "/clientes/appointments": "/customers/appointments",
+      "/clientes/profile": "/customers/profile",
+      "/clientes/services": "/customers/services",
+      "/clientes/favoritos": "/customers/favoritos",
+      "/clientes/products": "/customers/products",
+      "/clientes/sala-espera": "/customers/sala-espera",
+      "/clientes/resenas": "/customers/resenas",
+    };
+    const destination = legacyRoutes[pathname] || "/customers";
     return NextResponse.redirect(new URL(destination, request.url));
   }
 

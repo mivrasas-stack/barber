@@ -4,6 +4,7 @@ import {Receipt,ShoppingCart,RefreshCw,CheckCircle2,AlertCircle,Plus,Minus} from
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
+import WaitingRoomCheckout from "@/components/pos/waiting-room-checkout";
 type Product={id:string;type:"SERVICE"|"PRODUCT";name:string;priceMinor:string;stock?:number|null};
 type ReceiptData={id:string;orderNumber:string;status:string;grandTotalMinor:string;changeDueMinor:string};
 type Catalog={tenantId:string;locationId:string;locationName:string;items:Product[]};
@@ -90,6 +91,7 @@ export default function BarberPOSPage(){
    <p>Total: {money(result.grandTotalMinor)} · Cambio: {money(result.changeDueMinor)}</p>
    <Button variant="outline" onClick={()=>window.print()}><Receipt className="w-4 h-4 mr-2"/>Imprimir comprobante</Button>
   </div>}
+  <WaitingRoomCheckout/>
   <div className="grid lg:grid-cols-5 gap-6">
    <section className="lg:col-span-3 space-y-4">
     <Input aria-label="Buscar en catálogo POS" placeholder="Buscar servicio o producto real" value={search} onChange={e=>setSearch(e.target.value)}/>

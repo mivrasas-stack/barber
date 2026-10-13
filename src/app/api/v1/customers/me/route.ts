@@ -15,7 +15,7 @@ export async function GET(request:NextRequest) {
   const [[user],rows,relationships]=await Promise.all([
    db.select({id:users.id,name:users.name,email:users.email}).from(users).where(eq(users.id,session.userId)).limit(1),
    db.select({id:appointments.id,tenantId:appointments.tenantId,tenantName:tenants.name,
-    locationName:locations.name,staffName:staffProfiles.displayName,
+    locationId:locations.id,locationName:locations.name,staffName:staffProfiles.displayName,
     status:appointments.status,startsAt:appointments.startsAt,endsAt:appointments.endsAt,
     timezone:appointments.timezone})
     .from(appointments).innerJoin(tenants,eq(appointments.tenantId,tenants.id))

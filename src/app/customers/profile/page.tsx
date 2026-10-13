@@ -1,2 +1,2 @@
-import CustomerPortal from "@/components/customers/customer-portal";
-export default function CustomerProfile(){return <CustomerPortal view="profile"/>;}
+import PremiumProfile from "@/components/customers/premium-profile";
+export default function CustomerProfile(){return <PremiumProfile/>;}

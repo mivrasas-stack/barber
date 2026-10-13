@@ -42,7 +42,7 @@ export default function CustomerPortal({view}:{view:"home"|"appointments"|"profi
   }catch(e){setError(e instanceof Error?e.message:"Error al consultar PostgreSQL");}
   finally{setLoading(false);}
  }
- useEffect(()=>{void load();},[]);
+ useEffect(()=>{void load();const preset=new URLSearchParams(window.location.search).get("service");if(preset)setChosen(preset);},[]);
  const selected=options.find(o=>[o.tenantId,o.locationId,o.staffId,o.serviceId].join(":")===chosen);
  const future=useMemo(()=>me?.appointments.filter(a=>new Date(a.startsAt).getTime()>=Date.now()&&
   !["CANCELLED","NO_SHOW"].includes(a.status))??[],[me]);
@@ -70,7 +70,7 @@ export default function CustomerPortal({view}:{view:"home"|"appointments"|"profi
  }
  const cards=<div className="grid md:grid-cols-2 gap-4">
   {(view==="home"?future:me?.appointments||[]).map(a=><article key={a.id}
-    className="rounded-2xl border border-border bg-card/80 p-6 space-y-3">
+    className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-white/[0.08] via-black/60 to-amber-950/20 backdrop-blur-3xl shadow-[0_20px_55px_rgba(0,0,0,0.35)] p-7 space-y-4 hover:border-amber-500/25 transition-colors">
     <div className="flex justify-between gap-2">
       <strong className="font-semibold">{a.tenantName}</strong>
       <span className="text-xs rounded-full bg-amber-500/10 text-amber-500 px-3 py-1">{a.status}</span>
@@ -82,10 +82,10 @@ export default function CustomerPortal({view}:{view:"home"|"appointments"|"profi
     <p className="text-xs text-muted-foreground">Precio registrado: {formatMoney(a.services.reduce((sum,s)=>sum+s.priceMinor,0))}</p>
   </article>)}
  </div>;
- return <main className="max-w-6xl mx-auto p-5 md:p-10 space-y-8 pb-24">
+ return <main className="max-w-6xl mx-auto p-5 md:p-10 space-y-8 pb-24 relative before:content-none before:pointer-events-none before:fixed before:top-0 before:right-0 before:w-[45vw] before:h-[45vw] before:rounded-full before:bg-amber-500/[0.06] before:blur-[140px]">
   <div className="flex flex-wrap gap-4 justify-between items-center">
    <div><p className="text-amber-500 text-xs uppercase tracking-[0.2em]">Portal oficial de clientes</p>
-    <h1 className="font-headline text-4xl uppercase mt-2">{view==="appointments"?"Mis reservas":view==="profile"?"Mi perfil":("Hola, "+(me?.user.name||"bienvenido"))}</h1>
+    <h1 className="font-headline text-4xl md:text-6xl tracking-widest uppercase mt-2 bg-clip-text text-transparent bg-gradient-to-r from-amber-100 via-amber-400 to-amber-600">{view==="appointments"?"Mis reservas":view==="profile"?"Mi perfil":("Hola, "+(me?.user.name||"bienvenido"))}</h1>
     <p className="text-muted-foreground text-sm mt-2">Datos reales de tu cuenta Barber Paradise.</p>
    </div>
    <Button variant="outline" onClick={()=>void load()} disabled={loading||saving}>
@@ -113,13 +113,15 @@ export default function CustomerPortal({view}:{view:"home"|"appointments"|"profi
     <Link className="rounded-xl bg-amber-500 text-black px-5 py-3 text-sm font-semibold" href="/customers/appointments">Agendar una cita</Link>
     <Link className="rounded-xl border border-border px-5 py-3 text-sm" href="/customers/profile">Ver mi perfil</Link>
    </div>}
-   {view==="appointments"&&<section className="rounded-2xl border border-border bg-card/70 p-6 space-y-4">
-    <h2 className="font-headline uppercase text-2xl">Reservar un servicio real</h2>
+   {view==="appointments"&&<section className="relative overflow-hidden rounded-[2.5rem] border border-amber-500/20 bg-gradient-to-br from-white/[0.08] via-black/60 to-amber-950/20 backdrop-blur-3xl shadow-[0_30px_85px_rgba(0,0,0,0.45)] p-7 md:p-11 space-y-6">
+    <div className="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-amber-500/15 blur-[85px] pointer-events-none"/>
+    <p className="relative text-amber-400 uppercase tracking-[0.25em] text-xs">Reserva exclusiva · Liquid glass</p>
+    <h2 className="relative font-headline uppercase text-3xl tracking-widest">Tu próxima experiencia</h2>
     <p className="text-sm text-muted-foreground">Solo aparecen barberías con servicios, sedes y profesionales activos y con el módulo de agenda habilitado. El horario se confirma al reservar.</p>
     {options.length===0?<p className="text-sm text-amber-500">Todavía no hay combinaciones de servicios y horarios configuradas para reservar en línea.</p>:
-     <form onSubmit={book} className="space-y-4 max-w-2xl">
+     <form onSubmit={book} className="relative space-y-6 max-w-2xl">
       <div className="space-y-1"><Label htmlFor="booking-service">Barbería, sede, barbero y servicio</Label>
-       <select id="booking-service" required className="w-full rounded-xl border border-border bg-background p-3 text-sm"
+       <select id="booking-service" required className="w-full rounded-2xl border border-white/15 bg-black/60 backdrop-blur-2xl p-4 text-sm text-white"
         value={chosen} onChange={e=>{setChosen(e.target.value);setPendingKey(null);}}>
         <option value="">Selecciona una opción activa</option>
         {options.map(o=><option key={[o.tenantId,o.locationId,o.staffId,o.serviceId].join(":")}
@@ -129,17 +131,17 @@ export default function CustomerPortal({view}:{view:"home"|"appointments"|"profi
        </select>
       </div>
       <div className="space-y-1"><Label htmlFor="booking-date">Fecha y hora (según tu dispositivo)</Label>
-       <Input id="booking-date" type="datetime-local" required value={startsAt}
+       <Input className="rounded-2xl h-12 border-white/15 bg-black/50 text-white" id="booking-date" type="datetime-local" required value={startsAt}
         onChange={e=>{setStartsAt(e.target.value);setPendingKey(null);}}/></div>
       {selected&&<p className="flex items-center gap-2 text-xs text-muted-foreground"><Clock className="w-4 h-4"/>
        Duración: {selected.durationMinutes} minutos · Zona horaria del negocio: {selected.timezone}</p>}
-      <Button type="submit" disabled={saving||!selected||!startsAt}>
+      <Button className="rounded-full bg-gradient-to-r from-amber-400 to-amber-600 text-black font-semibold h-12 px-8 hover:from-amber-300 hover:to-amber-500" type="submit" disabled={saving||!selected||!startsAt}>
        {saving?"Confirmando en el servidor…":"Confirmar reserva"}
       </Button>
      </form>}
    </section>}
    <section className="space-y-4">
-    <h2 className="font-headline uppercase text-2xl">{view==="home"?"Mis próximas reservas":"Mi historial de reservas"}</h2>
+    <h2 className="font-headline uppercase tracking-widest text-2xl">{view==="home"?"Mis próximas reservas":"Mi historial de reservas"}</h2>
     {cards}
     {!loading&&(view==="home"?future.length===0:me?.appointments.length===0)&&
      <p className="rounded-xl border border-border p-8 text-center text-muted-foreground">No encontramos reservas reales para tu cuenta.</p>}

@@ -9,6 +9,7 @@ import { LogoutButton } from '@/components/auth/logout-button';
 export default function CustomerDashboard() {
   const [greeting, setGreeting] = useState("Bienvenido");
   const [upcomingCount, setUpcomingCount] = useState<number | null>(null);
+  const [points, setPoints] = useState<number | null>(null);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -30,6 +31,13 @@ export default function CustomerDashboard() {
       }).catch(()=>{});
     return ()=>{mounted=false;};
   }, []);
+
+  useEffect(() => {
+    let mounted=true;
+    fetch("/api/v1/customers/me/loyalty",{cache:"no-store"}).then(r=>r.ok?r.json():null)
+      .then(p=>{if(mounted&&typeof p?.data?.points==="number")setPoints(p.data.points)}).catch(()=>{});
+    return ()=>{mounted=false;};
+  },[]);
 
   // Variantes de Framer Motion
   const containerVariants = {
@@ -155,8 +163,8 @@ export default function CustomerDashboard() {
                 
                 <div className="flex gap-4 relative z-10 text-right">
                    <div>
-                     <p className="text-[10px] text-foreground/30 tracking-widest uppercase">Perfil</p>
-                     <p className="text-lg font-bold text-amber-500 font-sans tracking-wide">Ver</p>
+                     <p className="text-[10px] text-foreground/30 tracking-widest uppercase">Puntos reales</p>
+                     <p className="text-lg font-bold text-amber-500 font-sans tracking-wide">{points===null?"—":points.toLocaleString("es-CO")}</p>
                    </div>
                 </div>
              </Link>

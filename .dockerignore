@@ -18,6 +18,9 @@ build
 *.dump
 *.sql.gz
 *.tar
+# Never ship local synthetic session helpers to any runtime image.
+scripts/.qa-*
+scripts/.p0-*
 tmp
 .temp
 .cache
