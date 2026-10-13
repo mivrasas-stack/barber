@@ -45,12 +45,13 @@ export async function middleware(request: NextRequest) {
   const isPlatformAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
   const isOwnerRoute = pathname === "/business" || pathname.startsWith("/business/");
   const isEmployeeRoute = pathname === "/barber" || pathname.startsWith("/barber/");
+  const isProfessionalRoute = pathname === "/professional" || pathname.startsWith("/professional/");
   const isCustomerRoute = pathname === "/clientes" || pathname.startsWith("/clientes/");
   const isOfficialCustomerRoute = pathname === "/customers" || pathname.startsWith("/customers/");
   const isPortalRoute = pathname === "/portal" || pathname.startsWith("/portal/");
 
   const isProtectedRoute =
-    isPlatformAdminRoute || isOwnerRoute || isEmployeeRoute || isCustomerRoute || isOfficialCustomerRoute || isPortalRoute;
+    isPlatformAdminRoute || isOwnerRoute || isEmployeeRoute || isProfessionalRoute || isCustomerRoute || isOfficialCustomerRoute || isPortalRoute;
 
   if (!isProtectedRoute) {
     return NextResponse.next();
@@ -127,6 +128,7 @@ export const config = {
     "/admin/:path*",
     "/business/:path*",
     "/barber/:path*",
+    "/professional/:path*",
     "/clientes/:path*",
     "/customers/:path*",
     "/portal/:path*",

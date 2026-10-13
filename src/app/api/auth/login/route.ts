@@ -59,6 +59,8 @@ export async function POST(request: NextRequest) {
     let defaultRedirect = "/customers";
     if (user.isPlatformAdmin) {
       defaultRedirect = "/admin";
+    } else if (authContext?.isSoloProfessional()) {
+      defaultRedirect = "/professional";
     } else if (authContext?.isOwner()) {
       defaultRedirect = "/business";
     } else if (authContext?.isEmployee()) {

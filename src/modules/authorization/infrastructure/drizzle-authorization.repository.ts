@@ -103,6 +103,7 @@ export class DrizzleAuthorizationRepository implements AuthorizationRepository {
         status: memberships.status,
         tenantName: tenants.name,
         tenantSlug: tenants.slug,
+        tenantType: tenants.tenantType,
       })
       .from(memberships)
       .innerJoin(tenants, eq(memberships.tenantId, tenants.id))
@@ -129,6 +130,7 @@ export class DrizzleAuthorizationRepository implements AuthorizationRepository {
         tenantId: m.tenantId,
         tenantName: m.tenantName,
         tenantSlug: m.tenantSlug,
+        tenantType: m.tenantType as "BUSINESS" | "SOLO_PROFESSIONAL",
         status: m.status,
         roles: roleRows.map((r) => r.roleName),
       });
