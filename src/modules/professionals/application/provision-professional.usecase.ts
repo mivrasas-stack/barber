@@ -18,6 +18,8 @@ import { PasswordHasher } from "@/modules/identity/infrastructure/password-hashe
 import { User } from "@/modules/identity/domain/user";
 import { ConflictError, NotFoundError, ValidationError } from "@/shared/errors/app-error";
 import { eq, and, isNull } from "drizzle-orm";
+import { AdminAccessDuration, calculateAdminAccessEnd } from "../domain/admin-access-duration";
+import { subscriptionStatusHistory } from "@/infrastructure/database/schema/subscriptions";
 
 export interface ProvisionProfessionalInput {
   userId?: string;
@@ -35,6 +37,7 @@ export interface ProvisionProfessionalInput {
   tiktok?: string;
   yearsExperience?: number;
   actorUserId?: string | null;
+  adminAccessDuration?: AdminAccessDuration;
 }
 
 export class ProvisionProfessionalUseCase {
@@ -43,6 +46,9 @@ export class ProvisionProfessionalUseCase {
     // Internal flows may supply a trusted userId after authenticating the caller.
     if (!input.userId && (!input.email || !input.password || input.password.length < 8)) {
       throw new ValidationError("A valid email and password (minimum 8 characters) are required");
+    }
+    if (input.adminAccessDuration && !input.actorUserId) {
+      throw new ValidationError("Administrative access duration requires an administrator actor");
     }
     const slug = input.professionalSlug.toLowerCase().trim();
     const wsSlug = (input.workspaceSlug || slug).toLowerCase().trim();
@@ -215,8 +221,11 @@ export class ProvisionProfessionalUseCase {
       const trialDays = plan.trialDays; // Sourced strictly from subscription_plans table
 
       const now = new Date();
-      const trialEndsAt = trialDays > 0 ? new Date(now.getTime() + trialDays * 24 * 60 * 60 * 1000) : null;
-      const initialStatus = trialDays > 0 ? "TRIALING" : "ACTIVE";
+      const adminAccessEndsAt = input.adminAccessDuration
+        ? calculateAdminAccessEnd(now, input.adminAccessDuration)
+        : null;
+      const trialEndsAt = adminAccessEndsAt ?? (trialDays > 0 ? new Date(now.getTime() + trialDays * 24 * 60 * 60 * 1000) : null);
+      const initialStatus = trialEndsAt ? "TRIALING" : "ACTIVE";
 
       const [subscription] = await tx
         .insert(tenantSubscriptions)
@@ -226,8 +235,26 @@ export class ProvisionProfessionalUseCase {
           status: initialStatus,
           startsAt: now,
           trialEndsAt,
+          ...(adminAccessEndsAt ? {
+            currentPeriodStart: now,
+            currentPeriodEnd: adminAccessEndsAt,
+            cancelAtPeriodEnd: true,
+          } : {}),
         })
         .returning();
+
+      if (adminAccessEndsAt) {
+        await tx.insert(subscriptionStatusHistory).values({
+          subscriptionId: subscription.id,
+          tenantId: tenant.id,
+          fromStatus: null,
+          toStatus: "TRIALING",
+          reason: `Platform administrator granted ${input.adminAccessDuration} access until ${adminAccessEndsAt.toISOString()}`,
+          source: "ADMIN_OVERRIDE",
+          actorUserId: input.actorUserId!,
+          metadata: { grantDuration: input.adminAccessDuration, accessEndsAt: adminAccessEndsAt.toISOString() },
+        });
+      }
 
       // 9. Audit Log
       await tx.insert(auditLogs).values({
@@ -241,6 +268,7 @@ export class ProvisionProfessionalUseCase {
           slug: profile.professionalSlug,
           workspaceId: tenant.id,
           planCode,
+          ...(adminAccessEndsAt ? { adminAccessDuration: input.adminAccessDuration, accessEndsAt: adminAccessEndsAt.toISOString() } : {}),
         },
       });
 

@@ -29,7 +29,7 @@ export class GenerateDueInvoicesUseCase {
 
     for (const sub of subscriptions) {
       // Must not be cancelled
-      if (sub.status === "CANCELLED") continue;
+      if (sub.status === "CANCELLED" || sub.cancelAtPeriodEnd) continue;
 
       const plan = await this.subscriptionRepo.findPlanById(sub.planId);
       if (!plan) continue;

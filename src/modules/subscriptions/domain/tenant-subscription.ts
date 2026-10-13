@@ -53,6 +53,11 @@ export class TenantSubscription {
   get updatedAt(): Date { return this.props.updatedAt; }
 
   get isOperational(): boolean {
+    // A scheduled cancellation is an exact end-of-access boundary even if
+    // the background billing job has not yet updated the persisted status.
+    if (this.props.cancelAtPeriodEnd && this.props.currentPeriodEnd && this.props.currentPeriodEnd <= new Date()) {
+      return false;
+    }
     return (
       this.props.status === "TRIALING" ||
       this.props.status === "ACTIVE" ||
