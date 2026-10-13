@@ -80,7 +80,9 @@ export default function PlatformUsersPage(){
  });
  const closeCreate=()=>{setShowCreate(false);setCredentials(null);setForm(initialForm());};
  const create=async(e:React.FormEvent)=>{
-  e.preventDefault();setBusy(true);setMessage("");
+  e.preventDefault();
+  if(form.kind==="PLATFORM_ADMIN"&&!confirm("¿Confirmas la creación de un nuevo administrador con acceso global? Esta operación se registrará en auditoría."))return;
+  setBusy(true);setMessage("");
   try{
    const body:Record<string,unknown>={kind:form.kind,name:form.name,email:form.email};
    if(form.kind==="CUSTOMER"&&form.tenantId)body.tenantId=form.tenantId;
