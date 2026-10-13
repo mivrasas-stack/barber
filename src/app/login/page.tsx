@@ -43,7 +43,10 @@ function LoginForm() {
         return;
       }
 
-      const redirect = searchParams.get("redirect") || data.redirectUrl || "/clientes";
+      const requested = searchParams.get("redirect");
+      const safeRedirect = requested && requested.startsWith("/") && !requested.startsWith("//") && !requested.includes("\\")
+        && !/[\u0000-\u001f]/.test(requested) ? requested : null;
+      const redirect = safeRedirect || data.redirectUrl || "/customers";
       router.push(redirect);
       router.refresh();
     } catch (err) {

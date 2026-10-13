@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     const authRepo = new DrizzleAuthorizationRepository();
     const authContext = await authRepo.getAuthorizationContext(user.id, parsed.data.tenantId);
 
-    let defaultRedirect = "/clientes";
+    let defaultRedirect = "/customers";
     if (user.isPlatformAdmin) {
       defaultRedirect = "/admin";
     } else if (authContext?.isOwner()) {

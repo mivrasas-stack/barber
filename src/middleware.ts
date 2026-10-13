@@ -46,10 +46,11 @@ export async function middleware(request: NextRequest) {
   const isOwnerRoute = pathname === "/business" || pathname.startsWith("/business/");
   const isEmployeeRoute = pathname === "/barber" || pathname.startsWith("/barber/");
   const isCustomerRoute = pathname === "/clientes" || pathname.startsWith("/clientes/");
+  const isOfficialCustomerRoute = pathname === "/customers" || pathname.startsWith("/customers/");
   const isPortalRoute = pathname === "/portal" || pathname.startsWith("/portal/");
 
   const isProtectedRoute =
-    isPlatformAdminRoute || isOwnerRoute || isEmployeeRoute || isCustomerRoute || isPortalRoute;
+    isPlatformAdminRoute || isOwnerRoute || isEmployeeRoute || isCustomerRoute || isOfficialCustomerRoute || isPortalRoute;
 
   if (!isProtectedRoute) {
     return NextResponse.next();
@@ -85,6 +86,13 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Keep old customer URLs as legacy aliases; never expose duplicate demo portals in production.
+  if (isCustomerRoute && process.env.NODE_ENV === "production") {
+    const destination = pathname === "/clientes/appointments" ? "/customers/appointments"
+      : pathname === "/clientes/profile" ? "/customers/profile" : "/customers";
+    return NextResponse.redirect(new URL(destination, request.url));
+  }
+
   // Restrict unfinished/demo pages after authenticating the visitor.
   // Only in actual Next production mode; local development remains unchanged.
   if (shouldBlockUnverifiedLaunchRoute(pathname, process.env.NODE_ENV === "production")) {
@@ -111,6 +119,7 @@ export const config = {
     "/business/:path*",
     "/barber/:path*",
     "/clientes/:path*",
+    "/customers/:path*",
     "/portal/:path*",
   ],
 };

@@ -2,6 +2,8 @@
 
 **Status: local/staging-candidate validated. PUBLIC PRODUCTION: NO-GO.**
 
+> **Later update:** The official customer portal `/customers` was implemented and tested after this release-gate report. See `docs/release/customers-portal-2026-10-13.md` for the authoritative customer routing and bookings status.
+
 ## Scope
 
 This stage responds to synthetic UI and logout/security problems discovered during P0 release preparation. The changes preserve every original dashboard in `demo-dashboard.tsx` or `demo-page.tsx` and existing layout visuals in separate client shell components. Nothing was deleted from PostgreSQL, and no public release or real payment occurred.

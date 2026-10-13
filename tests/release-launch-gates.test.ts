@@ -14,7 +14,7 @@ const unsafe = [
  "/business/security", "/business/roles", "/business/settings",
 ];
 const allowed = [
- "/barber", "/business", "/barber/pos", "/barber/customers", "/barber/barberos",
+ "/customers", "/customers/appointments", "/customers/profile", "/barber", "/business", "/barber/pos", "/barber/customers", "/barber/barberos",
  "/barber/inventory", "/barber/services", "/barber/affiliations",
  "/business/payments", "/business/products", "/business/customers",
  "/business/billing", "/business/barberos",
@@ -45,15 +45,25 @@ describe("Safe controlled release routes",()=>{
   vi.stubEnv("NODE_ENV","production");
   vi.stubEnv("AUTH_SECRET","qa-production-middleware-signing-key-1234567890");
   const cookie="barber_session="+(await signedToken());
-  for(const route of ["/clientes/appointments","/barber/accounting","/business/orders"]){
+  for(const route of ["/barber/accounting","/business/orders"]){
    const response=await middleware(new NextRequest("http://localhost:9002"+route,{headers:{cookie}}));
    expect(response.status,route).toBe(307);
    expect(new URL(response.headers.get("location")||"http://invalid").pathname,route).toBe("/feature-unavailable");
   }
-  for(const route of ["/barber/pos","/business/payments","/barber/customers"]){
+  for(const route of ["/customers","/customers/appointments","/barber/pos","/business/payments","/barber/customers"]){
    const response=await middleware(new NextRequest("http://localhost:9002"+route,{headers:{cookie}}));
    expect(response.status,route).toBe(200);
    expect(response.headers.get("location")).toBeNull();
+  }
+ });
+ it("canonicalizes authenticated legacy customer URLs in production",async()=>{
+  vi.stubEnv("NODE_ENV","production");
+  vi.stubEnv("AUTH_SECRET","qa-production-middleware-signing-key-1234567890");
+  const cookie="barber_session="+(await signedToken());
+  for(const [oldRoute,destination] of [["/clientes","/customers"],["/clientes/appointments","/customers/appointments"],["/clientes/profile","/customers/profile"]]){
+   const res=await middleware(new NextRequest("http://localhost:9002"+oldRoute,{headers:{cookie}}));
+   expect(res.status).toBe(307);
+   expect(new URL(res.headers.get("location")||"http://invalid").pathname).toBe(destination);
   }
  });
  it("still requires valid login before redirecting away from demo pages",async()=>{
