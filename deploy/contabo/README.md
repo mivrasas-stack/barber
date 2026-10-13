@@ -31,7 +31,7 @@ chmod 600 .env.production
 COMPOSE="docker compose --env-file .env.production -f deploy/contabo/compose.yaml"
 node deploy/contabo/check-env.cjs .env.production
 $COMPOSE --profile migration config --quiet
-$COMPOSE build web
+$COMPOSE --profile migration build web migrate
 $COMPOSE up -d postgres redis
 # Make a fresh offsite backup if upgrading an existing installation.
 $COMPOSE --profile migration run --rm migrate
@@ -60,5 +60,5 @@ Caddy terminates TLS automatically for `APP_DOMAIN`, proxies the site to `web:30
 - Notification worker may run with delivery disabled until an authorized provider is configured.
 - **Media processing worker is not bundled yet**: Stage5 has queue/scheduler/processor components, but no release-certified runtime entrypoint. Media production flows remain blocked pending a dedicated verified worker and object storage E2E.
 - Redis and PostgreSQL use Docker volumes on the same host; backups must leave the host.
-- The Dockerfile keeps `tsx` in the runtime image because existing worker scripts use TypeScript. Improve this (bundle worker JS) after validating all worker entrypoints.
+- The Dockerfile prunes dev dependencies in the runtime stage, retaining production `tsx` for TypeScript workers. The one-shot `migrate` service uses the builder stage for `drizzle-kit`; certify both images before deployment.
 - A green Docker config/build does **not** certify a live VPS, TLS, external Wompi webhooks, network firewalls, alerts or capacity.

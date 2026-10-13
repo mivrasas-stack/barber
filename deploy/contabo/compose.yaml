@@ -119,6 +119,14 @@ services:
 
   migrate:
     <<: *runtime
+    # One-shot migrations use the build stage with drizzle-kit.
+    image: barber-paradise-migrate:${RELEASE_TAG:-staging-candidate}
+    build:
+      context: ../..
+      dockerfile: deploy/contabo/Dockerfile
+      target: builder
+      args:
+        NEXT_PUBLIC_APP_URL: https://${APP_DOMAIN:?required}
     profiles: ["migration"]
     command: ["npm", "run", "db:migrate"]
     restart: "no"

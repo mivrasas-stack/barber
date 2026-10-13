@@ -13,11 +13,15 @@ RUN AUTH_SECRET=nonsecret-build-only-placeholder-more-than-32-characters \
     DATABASE_URL=postgresql://build:build@localhost:5432/build \
     npm run build
 
+FROM builder AS production-dependencies
+# Prune development tools, including Genkit and Tailwind, before copying into runtime.
+RUN npm prune --omit=dev --ignore-scripts --no-audit --no-fund
+
 FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=production-dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=builder --chown=node:node /app/.next ./.next
 COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/src ./src
