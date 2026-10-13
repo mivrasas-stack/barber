@@ -1,2 +1,2 @@
-import CustomerPortal from "@/components/customers/customer-portal";
-export default function CustomersHome(){return <CustomerPortal view="home"/>;}
+import CustomerDashboard from "./customer-dashboard";
+export default function CustomersHome(){return <CustomerDashboard/>;}
