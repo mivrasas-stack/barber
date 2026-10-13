@@ -19,6 +19,8 @@ import {
   User,
   Shield,
   AlertCircle,
+  Check,
+  Minus,
 } from "lucide-react";
 
 export default function RegisterProfessionalPage() {
@@ -440,7 +442,7 @@ export default function RegisterProfessionalPage() {
                 />
               </div>
 
-              <div className="space-y-2 pt-2">
+              <div className="space-y-3 pt-2">
                 <Label>Selecciona tu Plan Inicial</Label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {availablePlans.map((p) => (
@@ -460,6 +462,78 @@ export default function RegisterProfessionalPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+
+                {/* Tabla comparativa de planes */}
+                <div className="mt-4 rounded-xl border border-border/60 bg-card/40 overflow-hidden">
+                  <div className="p-3 border-b border-border/40 bg-muted/20">
+                    <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                      Comparativa de planes y características
+                    </h4>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead>
+                        <tr className="border-b border-border/40 bg-muted/10 text-[11px] text-muted-foreground">
+                          <th className="p-2.5 font-medium">Característica</th>
+                          <th className={`p-2.5 text-center font-semibold ${formData.planCode === "SOLO_STARTER" ? "text-amber-500 bg-amber-500/5" : ""}`}>
+                            Starter
+                          </th>
+                          <th className={`p-2.5 text-center font-semibold ${formData.planCode === "SOLO_PRO" ? "text-amber-500 bg-amber-500/5" : ""}`}>
+                            Pro
+                          </th>
+                          <th className={`p-2.5 text-center font-semibold ${formData.planCode === "SOLO_ELITE" ? "text-amber-500 bg-amber-500/5" : ""}`}>
+                            Elite
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/30 text-[11px]">
+                        <tr>
+                          <td className="p-2.5 text-foreground">Workspace y agenda interactiva</td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                        </tr>
+                        <tr>
+                          <td className="p-2.5 text-foreground">Sedes anfitrionas afiliadas</td>
+                          <td className="p-2.5 text-center text-muted-foreground font-mono">1 sede</td>
+                          <td className="p-2.5 text-center text-emerald-500 font-medium">Ilimitadas</td>
+                          <td className="p-2.5 text-center text-emerald-500 font-medium">Ilimitadas</td>
+                        </tr>
+                        <tr>
+                          <td className="p-2.5 text-foreground">Límite de clientes en agenda</td>
+                          <td className="p-2.5 text-center text-muted-foreground font-mono">Hasta 150</td>
+                          <td className="p-2.5 text-center text-emerald-500 font-medium">Ilimitados</td>
+                          <td className="p-2.5 text-center text-emerald-500 font-medium">Ilimitados</td>
+                        </tr>
+                        <tr>
+                          <td className="p-2.5 text-foreground">Protección anti doble-booking multisede</td>
+                          <td className="p-2.5 text-center"><Minus className="w-3.5 h-3.5 text-muted-foreground/40 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                        </tr>
+                        <tr>
+                          <td className="p-2.5 text-foreground">Métricas de rendimiento e historial completo</td>
+                          <td className="p-2.5 text-center"><Minus className="w-3.5 h-3.5 text-muted-foreground/40 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                        </tr>
+                        <tr>
+                          <td className="p-2.5 text-foreground">Web de marca personal + dominio</td>
+                          <td className="p-2.5 text-center"><Minus className="w-3.5 h-3.5 text-muted-foreground/40 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Minus className="w-3.5 h-3.5 text-muted-foreground/40 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                        </tr>
+                        <tr>
+                          <td className="p-2.5 text-foreground">Asistente AI y fidelización avanzada</td>
+                          <td className="p-2.5 text-center"><Minus className="w-3.5 h-3.5 text-muted-foreground/40 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Minus className="w-3.5 h-3.5 text-muted-foreground/40 mx-auto" /></td>
+                          <td className="p-2.5 text-center"><Check className="w-3.5 h-3.5 text-emerald-500 mx-auto" /></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

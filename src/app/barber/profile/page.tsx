@@ -277,7 +277,94 @@ function ClientAffiliationSimulationModal({
 /* ─────────────────────────────── PAGE ─────────────────────────────── */
 export default function ProfilePage() {
   const me = dummyBarbers[0];
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+
+  const uploadAvatar = async (file: File) => {
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif'].includes(file.type) || file.size === 0 || file.size > 10 * 1024 * 1024) {
+      setAvatarError('Selecciona una imagen JPG, PNG, WebP o AVIF de hasta 10 MB.');
+      return;
+    }
+    setAvatarBusy(true);
+    setAvatarError(null);
+    try {
+      const read = async (response: Response) => {
+        const body = await response.json();
+        if (!response.ok) throw new Error(body?.error || 'Error al guardar la imagen');
+        return body.data;
+      };
+      const profile = await read(await fetch('/api/v1/professionals/me/avatar', { cache: 'no-store' }));
+      const tenantId = profile.tenantId;
+      if (!tenantId) throw new Error('No se encontró el espacio profesional activo');
+      const intent = await read(await fetch('/api/v1/media/upload-intents', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tenantId, purpose: 'PROFESSIONAL_AVATAR', contentType: file.type, sizeBytes: file.size, originalFilename: file.name, visibility: 'PUBLIC' }),
+      }));
+      const uploaded = await fetch(intent.uploadUrl, { method: intent.method, headers: intent.requiredHeaders, body: file });
+      if (!uploaded.ok) throw new Error('No se pudo subir la imagen al almacenamiento');
+      await read(await fetch(`/api/v1/media/${encodeURIComponent(intent.assetId)}/complete`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tenantId, uploadIntentId: intent.uploadIntentId }),
+      }));
+      // Processing is asynchronous; only attach an asset after authorized delivery succeeds.
+      let readyUrl: string | null = null;
+      for (let attempt = 0; attempt < 20; attempt++) {
+        if (attempt > 0) await new Promise(resolve => setTimeout(resolve, 1500));
+        const response = await fetch(`/api/v1/media/${encodeURIComponent(intent.assetId)}`, { cache: 'no-store' });
+        if (response.ok) {
+          const body = await response.json();
+          if (typeof body?.data?.url === 'string') { readyUrl = body.data.url; break; }
+        } else if (response.status !== 404) {
+          throw new Error('No se pudo consultar el procesamiento de la imagen');
+        }
+      }
+      if (!readyUrl) throw new Error('La imagen aún se está procesando. Intenta nuevamente más tarde.');
+      await read(await fetch('/api/v1/professionals/me/avatar', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assetId: intent.assetId }),
+      }));
+      setAvatarUrl(readyUrl);
+    } catch (error) {
+      setAvatarError(error instanceof Error ? error.message : 'No se pudo actualizar el avatar');
+    } finally {
+      setAvatarBusy(false);
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadAvatar() {
+      try {
+        const profileResponse = await fetch('/api/v1/professionals/me/avatar', { cache: 'no-store' });
+        if (!profileResponse.ok) return;
+        const profile = await profileResponse.json();
+        const assetId = profile?.data?.assetId;
+        if (typeof assetId !== 'string') return;
+        const mediaResponse = await fetch(`/api/v1/media/${encodeURIComponent(assetId)}`, { cache: 'no-store' });
+        if (!mediaResponse.ok) return;
+        const media = await mediaResponse.json();
+        if (!cancelled && typeof media?.data?.url === 'string') {
+          setAvatarUrl(media.data.url);
+        }
+      } catch {
+        // Keep the existing fallback when media delivery is unavailable.
+      }
+    }
+    void loadAvatar();
+    return () => { cancelled = true; };
+  }, []);
   const [photos, setPhotos] = useState<{ id: string; url: string; name: string }[]>([]);
+  const [portfolioBusy, setPortfolioBusy] = useState(false);
+  const [portfolioError, setPortfolioError] = useState<string | null>(null);
+  const reloadPortfolio = useCallback(async () => {
+    const response = await fetch('/api/v1/professionals/me/portfolio', { cache: 'no-store' });
+    if (!response.ok) throw new Error('No se pudo cargar la galería');
+    const body = await response.json();
+    setPhotos(body.data);
+  }, []);
+  useEffect(() => { void reloadPortfolio().catch(() => setPortfolioError('No se pudo cargar la galería')); }, [reloadPortfolio]);
   const [isDragging, setIsDragging] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
@@ -360,23 +447,42 @@ export default function ProfilePage() {
     }
   };
 
-  const processFiles = useCallback((files: FileList | null) => {
-    if (!files) return;
+  const processFiles = async (files: FileList | null) => {
+    if (!files || portfolioBusy) return;
     if (photos.length >= MAX_PHOTOS) { setShowUpgrade(true); return; }
-    const remaining = MAX_PHOTOS - photos.length;
-    const fileArray = Array.from(files).slice(0, remaining);
-    const imageFiles = fileArray.filter(f => f.type.startsWith('image/'));
-    imageFiles.forEach((file) => {
-      const url = URL.createObjectURL(file);
-      setPhotos(prev => {
-        if (prev.length >= MAX_PHOTOS) return prev;
-        return [...prev, { id: `${Date.now()}-${Math.random()}`, url, name: file.name }];
-      });
-    });
-  }, [photos.length]);
-
+    setPortfolioBusy(true);
+    setPortfolioError(null);
+    try {
+      const read = async (response: Response) => {
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload?.error || 'Error al subir foto');
+        return payload.data;
+      };
+      const profile = await read(await fetch('/api/v1/professionals/me/avatar', { cache: 'no-store' }));
+      const tenantId = profile.tenantId;
+      for (const file of Array.from(files).slice(0, MAX_PHOTOS - photos.length)) {
+        if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif'].includes(file.type) || file.size === 0 || file.size > 20 * 1024 * 1024) {
+          throw new Error('Las fotos deben ser JPG, PNG, WebP o AVIF de hasta 20 MB');
+        }
+        const intent = await read(await fetch('/api/v1/media/upload-intents', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tenantId, purpose: 'PORTFOLIO', contentType: file.type, sizeBytes: file.size, originalFilename: file.name, visibility: 'PUBLIC' }),
+        }));
+        const uploaded = await fetch(intent.uploadUrl, { method: intent.method, headers: intent.requiredHeaders, body: file });
+        if (!uploaded.ok) throw new Error('No se pudo subir la foto al almacenamiento');
+        await read(await fetch(`/api/v1/media/${encodeURIComponent(intent.assetId)}/complete`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tenantId, uploadIntentId: intent.uploadIntentId }),
+        }));
+      }
+      // READY photos appear when the media processing worker has finished.
+      await reloadPortfolio();
+    } catch (error) {
+      setPortfolioError(error instanceof Error ? error.message : 'Error al cargar fotos');
+    } finally { setPortfolioBusy(false); }
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    processFiles(e.target.files);
+    void processFiles(e.target.files);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -384,20 +490,23 @@ export default function ProfilePage() {
     e.preventDefault();
     setIsDragging(false);
     if (photos.length >= MAX_PHOTOS) { setShowUpgrade(true); return; }
-    processFiles(e.dataTransfer.files);
+    void processFiles(e.dataTransfer.files);
   };
 
   const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setIsDragging(true); };
   const handleDragLeave = () => setIsDragging(false);
 
-  const removePhoto = (id: string) => {
-    setPhotos(prev => {
-      const photo = prev.find(p => p.id === id);
-      if (photo) URL.revokeObjectURL(photo.url);
-      return prev.filter(p => p.id !== id);
-    });
+  const removePhoto = async (id: string) => {
+    setPortfolioError(null);
+    try {
+      const response = await fetch('/api/v1/professionals/me/portfolio', {
+        method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assetId: id }),
+      });
+      if (!response.ok) throw new Error('No se pudo quitar la foto');
+      setPhotos(prev => prev.filter(photo => photo.id !== id));
+    } catch (error) { setPortfolioError(error instanceof Error ? error.message : 'Error al quitar foto'); }
   };
-
   const handleImageDragStart = (e: any, index: number) => {
     setDraggedIdx(index);
     if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
@@ -473,13 +582,16 @@ export default function ProfilePage() {
             <div className="relative group mt-4">
               <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-[40px] group-hover:bg-amber-500/40 transition-colors duration-700" />
               <Avatar className="relative h-40 w-40 border-2 border-amber-500/20 p-2 bg-black/80 shadow-2xl transition-all duration-700 group-hover:scale-105">
-                <AvatarImage src={me.avatarUrl} alt={me.name} className="rounded-full object-cover" />
+                <AvatarImage src={avatarUrl ?? me.avatarUrl} alt={me.name} className="rounded-full object-cover" />
                 <AvatarFallback className="bg-transparent text-foreground font-headline text-5xl">{me.name.charAt(0)}</AvatarFallback>
               </Avatar>
-              <button className="absolute bottom-2 right-2 w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg border-2 border-black z-10">
+              <input ref={avatarInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="hidden" aria-label="Seleccionar foto de perfil" onChange={e => { const file = e.target.files?.[0]; if (file) void uploadAvatar(file); e.target.value = ''; }} />
+              <button type="button" disabled={avatarBusy} aria-label="Cambiar foto de perfil" onClick={() => avatarInputRef.current?.click()} className="absolute bottom-2 right-2 w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg border-2 border-black z-10 disabled:opacity-50">
                 <Camera className="w-4 h-4" />
               </button>
             </div>
+            {avatarBusy && <p role="status" className="text-xs text-amber-400">Subiendo y procesando foto...</p>}
+            {avatarError && <p role="alert" className="text-xs text-red-400">{avatarError}</p>}
             <div className="mt-4 relative z-10">
               <h3 className="text-2xl font-headline tracking-widest uppercase text-foreground">{me.name}</h3>
               <p className="text-sm font-light tracking-[0.2em] text-amber-500 uppercase mt-1">Master Barber</p>
@@ -767,7 +879,10 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Counter + button */}
+            {portfolioBusy && <p role="status" className="text-xs text-amber-400">Subiendo fotos a la galería...</p>}
+          {portfolioError && <p role="alert" className="text-xs text-red-400">{portfolioError}</p>}
+          <button type="button" onClick={() => void reloadPortfolio().catch(() => setPortfolioError('No se pudo actualizar la galería'))} className="text-xs text-amber-400">Actualizar galería</button>
+          {/* Counter + button */}
             <div className="flex items-center gap-3 shrink-0">
               <div className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-colors ${isFull ? 'bg-amber-500/10 border-amber-500/30' : 'bg-foreground/5 border-border'}`}>
                 <div className="flex gap-0.5">
@@ -805,7 +920,7 @@ export default function ProfilePage() {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp,image/avif"
             multiple
             className="hidden"
             onChange={handleFileChange}

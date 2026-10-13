@@ -8,7 +8,7 @@ import { PremiumButton } from "@/components/ui/premium-button";
 type BillingCycle = "mensual" | "semestral" | "anual";
 
 export default function Pricing() {
-  const [billingCycle, setBillingCycle] = useState<BillingCycle>("anual");
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("mensual");
 
   const plans = [
     {

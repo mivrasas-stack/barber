@@ -19,3 +19,5 @@ export * from "./onboarding";
 export * from "./finance";
 export * from "./commerce";
 export * from "./payments";
+export * from "./notifications";
+export * from "./media";

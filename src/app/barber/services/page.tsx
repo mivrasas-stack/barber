@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Scissors, Clock, DollarSign, Plus } from 'lucide-react';
 import { PremiumButton } from '@/components/ui/premium-button';
 import { motion } from 'framer-motion';
@@ -8,23 +8,43 @@ import type { Service } from '@/lib/types';
 
 export default function ServicesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [services, setServices] = useState<Service[]>([
-    { id: '1', name: "Corte Clásico", description: "Corte tradicional de caballero", duration: 45, price: 20000, imageUrl: "" },
-    { id: '2', name: "Corte y Barba", description: "Corte y arreglo de barba completo", duration: 60, price: 35000, imageUrl: "" },
-    { id: '3', name: "Fade / Degradado", description: "Degradado moderno a los lados", duration: 45, price: 25000, imageUrl: "" },
-    { id: '4', name: "Alineación de Barba", description: "Perfilado y cuidado de barba", duration: 20, price: 15000, imageUrl: "" },
-    { id: '5', name: "Tinte y Corte", description: "Corte y aplicación de tinte", duration: 90, price: 60000, imageUrl: "" },
-  ]);
+  const [editing, setEditing] = useState<Service | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    let active = true;
+    void fetch('/api/v1/professionals/me/services', { cache: 'no-store' })
+      .then(async response => {
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || 'No se pudieron cargar los servicios');
+        if (active) setServices(payload.data);
+      }).catch(err => { if (active) setError(err instanceof Error ? err.message : 'Error al cargar los servicios'); });
+    return () => { active = false; };
+  }, []);
 
-  const handleSaveService = (service: Service | Omit<Service, 'id'>) => {
-    if ('id' in service && service.id) {
-      setServices(services.map(s => s.id === service.id ? service as Service : s));
-    } else {
-      setServices([...services, { ...service, id: Date.now().toString() }]);
-    }
-    setIsModalOpen(false);
+  const handleSaveService = async (service: Service | Omit<Service, 'id'>) => {
+    setBusy(true);
+    setError(null);
+    try {
+
+      const editingId = 'id' in service ? service.id : undefined;
+      const response = await fetch(editingId ? "/api/v1/professionals/me/services/" + editingId : '/api/v1/professionals/me/services', {
+        method: editingId ? 'PATCH' : 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: service.name, description: service.description,
+          duration: service.duration, price: service.price,
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'No se pudo guardar el servicio');
+      setServices(prev => editingId ? prev.map(item => item.id === editingId ? result.data : item) : [...prev, result.data]);
+      setEditing(null);
+      setIsModalOpen(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al guardar el servicio');
+    } finally { setBusy(false); }
   };
-
   return (
     <div className="flex flex-col w-full min-h-screen animate-in fade-in duration-700 relative pb-20">
       <div className="fixed top-0 left-1/3 w-[60vw] h-[60vw] bg-amber-500/5 rounded-full blur-[150px] pointer-events-none -translate-y-1/2 mix-blend-screen" />
@@ -44,13 +64,15 @@ export default function ServicesPage() {
         
         <PremiumButton 
           className="relative z-10 w-full sm:w-auto flex items-center justify-center gap-2 h-14 px-8"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => { setEditing(null); setIsModalOpen(true); }}
         >
           <Plus className="w-4 h-4" />
           <span className="tracking-widest text-[10px] sm:text-xs uppercase">Nuevo Servicio</span>
         </PremiumButton>
       </div>
 
+      {error && <p role="alert" className="text-red-400 mb-4">{error}</p>}
+      {busy && <p role="status" className="text-amber-400 mb-4">Guardando servicio...</p>}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 relative z-10">
         {services.map((service, index) => (
           <motion.div 
@@ -74,7 +96,7 @@ export default function ServicesPage() {
                     <Clock className="w-4 h-4" />
                     <span className="text-sm font-light tracking-wide">{service.duration} MIN</span>
                   </div>
-                  <button className="text-foreground/20 hover:text-foreground transition-colors p-2 -mr-2 rounded-full hover:bg-foreground/5">
+                  <button type="button" aria-label="Editar servicio" onClick={() => { setEditing(service); setIsModalOpen(true); }} className="text-foreground/20 hover:text-foreground transition-colors p-2 -mr-2 rounded-full hover:bg-foreground/5">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                   </button>
                 </div>
@@ -85,6 +107,14 @@ export default function ServicesPage() {
                 )}
               </div>
               
+              <button type="button" className="text-xs text-red-400 hover:text-red-300 text-left mt-4" onClick={async () => {
+                if (!window.confirm('¿Desactivar este servicio?')) return;
+                try {
+                  const response = await fetch(`/api/v1/professionals/me/services/${service.id}`, { method: 'DELETE' });
+                  if (!response.ok) throw new Error('No se pudo desactivar');
+                  setServices(prev => prev.filter(item => item.id !== service.id));
+                } catch (e) { setError(e instanceof Error ? e.message : 'Error al desactivar'); }
+              }}>Desactivar servicio</button>
               <div className="flex items-end justify-between mt-8 pt-6 border-t border-border group-hover:border-amber-500/10 transition-colors">
                 <div className="flex flex-col">
                   <span className="text-[10px] text-foreground/30 uppercase tracking-[0.2em] mb-1">Precio Final</span>
@@ -103,7 +133,7 @@ export default function ServicesPage() {
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
         onSaveService={handleSaveService}
-        existingService={null}
+        existingService={editing}
       />
     </div>
   );

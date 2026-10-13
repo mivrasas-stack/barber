@@ -42,9 +42,12 @@ next-env.d.ts
 
 .genkit/*
 .env*
+!.env.example
+!.env.production.example
 
 # agent local state
 .atl/
+.codegraph/
 
 # firebase
 firebase-debug.log

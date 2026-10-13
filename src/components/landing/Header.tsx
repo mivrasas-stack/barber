@@ -15,7 +15,6 @@ const navLinks = [
   { href: "#about", label: "Manifiesto" },
   { href: "#ranking", label: "Top Barberías" },
   { href: "#pricing", label: "Planes" },
-  { href: "/profesionales", label: "Para Barberos" },
   { href: "#portfolio", label: "Galería" },
   { href: "#products", label: "Boutique" },
 ];
@@ -57,13 +56,13 @@ export default function Header() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-10 text-sm font-medium tracking-widest uppercase">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs xl:text-sm font-medium tracking-wider uppercase">
           {navLinks.map((link) => (
             <Link
               key={link.label}
               href={link.href}
               className={cn(
-                "hover:text-primary transition-colors relative group",
+                "hover:text-primary transition-colors relative group whitespace-nowrap",
                 scrolled ? "text-muted-foreground hover:text-foreground" : "text-foreground/70 hover:text-foreground"
               )}
             >
@@ -74,21 +73,21 @@ export default function Header() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-3">
+        <div className="hidden lg:flex items-center space-x-3">
           {/* Theme toggle — always visible regardless of scroll state */}
           <ThemeToggle scrolled={scrolled} />
 
-          <Button asChild variant="ghost" size="sm" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground">
+          <Button asChild variant="ghost" size="sm" className="text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground whitespace-nowrap">
             <Link href="/profesionales">Soy Barbero</Link>
           </Button>
 
-          <PremiumButton asChild size="sm">
+          <PremiumButton asChild size="sm" className="whitespace-nowrap">
             <Link href="/login">Reservar</Link>
           </PremiumButton>
         </div>
 
         {/* Mobile Actions */}
-        <div className="md:hidden flex items-center space-x-2">
+        <div className="lg:hidden flex items-center space-x-2">
           <ThemeToggle scrolled={scrolled} />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -142,8 +141,15 @@ export default function Header() {
                     </motion.div>
                   ))}
                 </nav>
-                <div className="mt-auto space-y-4">
-
+                <div className="mt-auto space-y-3">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full justify-center uppercase tracking-wider text-xs"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Link href="/profesionales">Soy Barbero</Link>
+                  </Button>
                   <PremiumButton
                     asChild
                     className="w-full justify-center"

@@ -23,6 +23,7 @@ import {
   UpdateStatusTxInput,
 } from "../domain/appointment-repository.interface";
 import { ConflictError, NotFoundError } from "@/shared/errors/app-error";
+import { isAppointmentSlotConflictError } from "./appointment-db-conflicts";
 
 export class DrizzleAppointmentRepository implements AppointmentRepository {
   private toAppointmentDomain(row: AppointmentRow): Appointment {
@@ -205,17 +206,7 @@ export class DrizzleAppointmentRepository implements AppointmentRepository {
         };
       });
     } catch (error: any) {
-      const pgErr = error?.cause ?? error;
-      const errStr = `${error?.message || ""} ${error?.code || ""} ${pgErr?.message || ""} ${pgErr?.code || ""} ${pgErr?.constraint || ""}`;
-      // PostgreSQL error code 23P01 is exclusion_violation
-      if (
-        pgErr?.code === "23P01" ||
-        error?.code === "23P01" ||
-        errStr.includes("23P01") ||
-        errStr.includes("appointments_no_double_booking") ||
-        errStr.includes("exclusion constraint") ||
-        errStr.includes("exclusion_violation")
-      ) {
+      if (isAppointmentSlotConflictError(error)) {
         throw new ConflictError("APPOINTMENT_SLOT_UNAVAILABLE");
       }
       throw error;

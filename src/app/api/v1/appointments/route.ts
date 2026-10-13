@@ -10,6 +10,7 @@ import { ModuleEntitlementResolver } from "@/modules/modules/application/module-
 import { ResolveWorkspacesUseCase } from "@/modules/tenancy/application/resolve-workspaces.usecase";
 import { CreateAppointmentUseCase } from "@/modules/appointments/application/create-appointment.usecase";
 import { AppError } from "@/shared/errors/app-error";
+import { checkRateLimit, extractClientIp } from "@/infrastructure/security";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +18,15 @@ export async function POST(request: NextRequest) {
     const session = token ? await validateSessionWithDb(token) : null;
 
     const body = await request.json();
+
+    const clientIp = extractClientIp(request);
+    const actorIdentity = session?.userId ? `user_${session.userId}` : `ip_${clientIp}`;
+    const rateLimitKey = `${body.tenantId || "global"}:${actorIdentity}`;
+    const rateLimit = await checkRateLimit("appointment.create", rateLimitKey);
+    if (!rateLimit.allowed && rateLimit.response) {
+      return rateLimit.response;
+    }
+
     const idempotencyKey =
       request.headers.get("x-idempotency-key") ||
       request.headers.get("idempotency-key") ||

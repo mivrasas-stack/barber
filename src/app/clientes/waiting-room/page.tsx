@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import Image from "next/image";
-import * as XLSX from 'xlsx';
+import { downloadCsv } from '@/lib/export-csv';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -159,10 +159,7 @@ export default function WaitingRoomPage() {
       'Estado': order.status,
       'Artículos': order.items?.map(item => `${item.name} (x${item.quantity})`).join(', ') || ''
     }));
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Pedidos");
-    XLSX.writeFile(workbook, "pedidos_sala_espera.xlsx");
+    downloadCsv("pedidos_sala_espera.csv", dataToExport);
   };
 
   return (
@@ -322,12 +319,12 @@ export default function WaitingRoomPage() {
           <Card>
               <CardHeader>
                   <CardTitle>Exportar Ventas</CardTitle>
-                  <CardDescription>Descarga un archivo Excel con el historial de todos los pedidos.</CardDescription>
+                  <CardDescription>Descarga un archivo CSV compatible con Excel con el historial de los pedidos.</CardDescription>
               </CardHeader>
               <CardContent>
                   <Button className="w-full" variant="outline" onClick={handleExport}>
                       <File className="mr-2 h-4 w-4" />
-                      Exportar a Excel
+                      Exportar CSV (Excel)
                   </Button>
               </CardContent>
           </Card>

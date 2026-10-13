@@ -3,6 +3,7 @@ import { validateSessionWithDb, SESSION_COOKIE_NAME } from "@/infrastructure/aut
 import { DrizzleSubscriptionRepository } from "@/modules/subscriptions/infrastructure/drizzle-subscription.repository";
 import { RunBillingCycleUseCase } from "@/modules/subscriptions/application/run-billing-cycle.usecase";
 import { AppError } from "@/shared/errors/app-error";
+import { checkRateLimit } from "@/infrastructure/security";
 
 const subscriptionRepo = new DrizzleSubscriptionRepository();
 const runBillingUseCase = new RunBillingCycleUseCase(subscriptionRepo);
@@ -14,6 +15,12 @@ export async function POST(req: NextRequest) {
     const session = await validateSessionWithDb(token);
     if (!session || !session.isPlatformAdmin) {
       return NextResponse.json({ error: "Forbidden: Platform Admin access required" }, { status: 403 });
+    }
+
+    const rateLimitKey = `admin_${session.userId}`;
+    const rateLimit = await checkRateLimit("admin.billing.run", rateLimitKey);
+    if (!rateLimit.allowed && rateLimit.response) {
+      return rateLimit.response;
     }
 
     const body = await req.json().catch(() => ({}));

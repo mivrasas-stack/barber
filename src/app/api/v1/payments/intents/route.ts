@@ -3,6 +3,7 @@ import { authorizePaymentRequest } from "@/modules/payments/infrastructure/payme
 import { DrizzlePaymentRepository } from "@/modules/payments/infrastructure/drizzle-payment.repository";
 import { CreatePaymentIntentUseCase } from "@/modules/payments/application/create-payment-intent.usecase";
 import { AppError } from "@/shared/errors/app-error";
+import { checkRateLimit } from "@/infrastructure/security";
 
 const paymentRepo = new DrizzlePaymentRepository();
 const createPaymentIntentUseCase = new CreatePaymentIntentUseCase(paymentRepo);
@@ -13,6 +14,12 @@ export async function POST(req: NextRequest) {
       requiredModule: "payments.core",
       requiredPermission: "payments.create",
     });
+
+    const rateLimitKey = `${auth.tenantId}:${auth.userId}`;
+    const rateLimit = await checkRateLimit("payment.intent", rateLimitKey);
+    if (!rateLimit.allowed && rateLimit.response) {
+      return rateLimit.response;
+    }
 
     const body = await req.json();
 

@@ -5,6 +5,7 @@ import { DrizzleInventoryRepository } from "@/modules/inventory/infrastructure/d
 import { DrizzleFinanceRepository } from "@/modules/finance/infrastructure/drizzle-finance.repository";
 import { CompleteOrderUseCase } from "@/modules/pos/application/complete-order.usecase";
 import { AppError } from "@/shared/errors/app-error";
+import { checkRateLimit } from "@/infrastructure/security";
 
 const orderRepo = new DrizzleOrderRepository();
 const inventoryRepo = new DrizzleInventoryRepository();
@@ -16,6 +17,12 @@ export async function POST(req: NextRequest) {
       requiredModule: "pos.checkout",
       requiredPermission: "pos.checkout",
     });
+
+    const rateLimitKey = `${auth.tenantId}:${auth.userId}`;
+    const rateLimit = await checkRateLimit("pos.checkout", rateLimitKey);
+    if (!rateLimit.allowed && rateLimit.response) {
+      return rateLimit.response;
+    }
 
     const body = await req.json();
     const idempotencyKey =

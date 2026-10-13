@@ -5,6 +5,7 @@ import { AuthenticateUserUseCase } from "@/modules/identity/application/authenti
 import { createSession, SESSION_COOKIE_NAME } from "@/infrastructure/auth/session";
 import { DrizzleAuthorizationRepository } from "@/modules/authorization/infrastructure/drizzle-authorization.repository";
 import { AppError } from "@/shared/errors/app-error";
+import { checkRateLimit, extractClientIp } from "@/infrastructure/security";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -24,6 +25,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const ipAddress = extractClientIp(request);
+    const accountIdentifier = parsed.data.email.toLowerCase().trim();
+    const rateLimit = await checkRateLimit("auth.login", `${ipAddress}:${accountIdentifier}`);
+    if (!rateLimit.allowed && rateLimit.response) {
+      return rateLimit.response;
+    }
+
     const userRepo = new DrizzleUserRepository();
     const authUseCase = new AuthenticateUserUseCase(userRepo);
 
@@ -32,7 +40,6 @@ export async function POST(request: NextRequest) {
       password: parsed.data.password,
     });
 
-    const ipAddress = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
     const userAgent = request.headers.get("user-agent") || undefined;
 
     const { token, expiresAt } = await createSession(

@@ -47,3 +47,15 @@ export class ValidationError extends AppError {
     super(message);
   }
 }
+
+export class RateLimitExceededError extends AppError {
+  readonly statusCode = 429;
+  readonly code = "RATE_LIMIT_EXCEEDED";
+  constructor(
+    message = "Too many requests. Please try again later.",
+    public readonly retryAfterSeconds = 1
+  ) {
+    super(message);
+  }
+}
+

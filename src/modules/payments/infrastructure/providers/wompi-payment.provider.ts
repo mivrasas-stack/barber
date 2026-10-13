@@ -41,6 +41,19 @@ export class WompiPaymentProvider implements IPaymentProvider {
       environment: (config?.environment ?? process.env.WOMPI_ENVIRONMENT ?? "sandbox") as "sandbox" | "production",
     };
 
+    // Fail closed: never create a real checkout or process webhooks with placeholders.
+    if (process.env.NODE_ENV === "production") {
+      const secrets = [
+        this.config.publicKey, this.config.privateKey,
+        this.config.integritySecret, this.config.eventsSecret,
+      ];
+      if (secrets.some(value => !value.trim() || /placeholder|change_me|tu_clave/i.test(value))) {
+        throw new Error("WOMPI_PRODUCTION_CONFIGURATION_REQUIRED");
+      }
+    }
+    if (!["sandbox", "production"].includes(this.config.environment)) {
+      throw new Error("WOMPI_ENVIRONMENT_INVALID");
+    }
     this.baseUrl =
       this.config.environment === "production"
         ? "https://production.wompi.co/v1"

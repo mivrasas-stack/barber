@@ -140,7 +140,9 @@ describe("Stage 3C.2 Billing Concurrency & Race Condition Stress Tests (50 Concu
     const results = await Promise.all(promises);
 
     // At least 1 attempt succeeded, and all failing attempts were cleanly handled
-    const successfulAttempts = results.filter((r) => r.success && r.status === "SUCCEEDED");
+    const successfulAttempts = results.filter(
+      (r) => r.success && "status" in r && r.status === "SUCCEEDED"
+    );
     expect(successfulAttempts.length).toBeGreaterThanOrEqual(1);
 
     // Verify invoice is PAID

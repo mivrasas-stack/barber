@@ -39,6 +39,11 @@ export interface ProvisionProfessionalInput {
 
 export class ProvisionProfessionalUseCase {
   async execute(input: ProvisionProfessionalInput) {
+    // Public self-registration cannot claim an existing account by email.
+    // Internal flows may supply a trusted userId after authenticating the caller.
+    if (!input.userId && (!input.email || !input.password || input.password.length < 8)) {
+      throw new ValidationError("A valid email and password (minimum 8 characters) are required");
+    }
     const slug = input.professionalSlug.toLowerCase().trim();
     const wsSlug = (input.workspaceSlug || slug).toLowerCase().trim();
     const displayName = input.displayName.trim();
@@ -68,12 +73,10 @@ export class ProvisionProfessionalUseCase {
           .limit(1);
 
         if (existing) {
-          targetUserId = existing.id;
-          targetUserEmail = existing.email;
+          // Never provision a workspace for an existing account based solely on email.
+          throw new ConflictError("This email is already registered. Sign in to continue.");
         } else {
-          const passwordHash = await PasswordHasher.hash(
-            input.password || "DevPassword123!"
-          );
+          const passwordHash = await PasswordHasher.hash(input.password!);
           const [newUser] = await tx
             .insert(users)
             .values({
