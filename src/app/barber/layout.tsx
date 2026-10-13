@@ -36,7 +36,7 @@ import { WorkspaceSwitcher } from '@/components/navigation/workspace-switcher';
 
 const navItems = [
   { href: '/barber/pos', icon: Receipt, label: 'Caja / POS' },
-  { href: '/barber/admin/payments', icon: CreditCard, label: 'Pagos Digitales' },
+  { href: '/business/payments', icon: CreditCard, label: 'Pagos Digitales' },
   { href: '/barber/inventory', icon: Package, label: 'Inventario' },
   { href: '/barber/appointments', icon: CalendarDays, label: 'Mi Agenda' },
   { href: '/barber/barberos', icon: Users, label: 'Barberos' },
@@ -57,7 +57,7 @@ export default function BarberLayout({
   const isRoot = pathname === '/barber';
   const me = dummyBarbers[0]; 
 
-  // When on root /barber, render full-screen like AdminPortal
+  // When on root /barber, render full-screen hero dashboard
   if (isRoot) {
     return (
       <div className="bg-background min-h-screen text-foreground selection:bg-amber-500/30 overflow-x-hidden relative flex flex-col">

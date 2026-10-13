@@ -66,7 +66,7 @@ describe("Stage 5B4 Media Upload Completion & Idempotency", () => {
     return { tenant, user };
   }
 
-  function useCases(storage: InMemoryObjectStorage) {
+  function createMediaUseCases(storage: InMemoryObjectStorage) {
     const repo = new DrizzleMediaRepository();
     const auth = new DrizzleAuthorizationRepository();
     return {
@@ -77,7 +77,7 @@ describe("Stage 5B4 Media Upload Completion & Idempotency", () => {
 
   async function createAvatarUpload(storage: InMemoryObjectStorage) {
     const actor = await createActor("EMPLOYEE");
-    const cases = useCases(storage);
+    const cases = createMediaUseCases(storage);
     const created = await cases.create.execute({
       actorUserId: actor.user.id,
       tenantId: actor.tenant.id,

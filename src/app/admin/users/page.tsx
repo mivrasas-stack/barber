@@ -1,469 +1,288 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Users, Search, Filter, MoreHorizontal, UserPlus, ShieldAlert, CheckCircle2, Clock, Copy, Edit, Trash2, Key, ShieldCheck } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from '@/components/ui/button';
 
-const initialUsersData = [
-  { id: 1, name: 'Administrador Principal', email: 'admin@mivra.com', role: 'SuperAdmin', status: 'Active', lastLogin: 'Hace 2 horas' },
-  { id: 2, name: 'Soporte Técnico', email: 'support@mivra.com', role: 'Support', status: 'Active', lastLogin: 'Hace 5 horas' },
-  { id: 3, name: 'Auditor Financiero', email: 'audit@mivra.com', role: 'Admin', status: 'Inactive', lastLogin: 'Hace 3 días' },
-  { id: 4, name: 'Gestor de Franquicias', email: 'franchise@mivra.com', role: 'Admin', status: 'Active', lastLogin: 'Hace 1 hora' },
-];
+import {useEffect,useState,useCallback} from "react";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription,DialogFooter} from "@/components/ui/dialog";
+import {ShieldCheck,Search,UserPlus,RefreshCcw,Download,KeyRound,Users,CalendarClock,Settings2,LockKeyhole} from "lucide-react";
 
-function InviteUserModal() {
-  const [name, setName] = useState('');
-  const [idNumber, setIdNumber] = useState('');
-  const [phone, setPhone] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (name || idNumber) {
-      const baseName = name.split(' ')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
-      const generatedUser = idNumber ? `${baseName}${idNumber.slice(-4)}` : baseName;
-      setUsername(generatedUser || 'usuario...');
-      
-      if (idNumber.length >= 4 && name.length >= 2) {
-         setPassword(`Mivra${idNumber.slice(0, 4)}*`);
-      } else {
-         setPassword('Mivra****');
-      }
-    } else {
-      setUsername('');
-      setPassword('');
-    }
-  }, [name, idNumber]);
-
-  const handleCopy = () => {
-    const text = `Usuario: ${username}\nContraseña: ${password}`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSaveAndInvite = async () => {
-    if (!name || !idNumber || !phone) {
-      alert("Por favor, completa todos los campos (Nombre, Cédula y WhatsApp).");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // 1. Aquí iría la lógica para guardar el usuario en la base de datos
-      console.log("Guardando usuario:", { name, idNumber, phone, username, password });
-
-      // 2. Preparación para enviar WhatsApp automáticamente vía Evolution API
-      const message = `¡Hola ${name.split(' ')[0]}!\n\nHas sido invitado como personal administrativo a nuestra plataforma.\n\nTus credenciales de acceso son:\n👤 Usuario: ${username}\n🔑 Contraseña: ${password}\n\nPor favor, cambia tu contraseña al ingresar.`;
-      
-      // TODO: Configurar Evolution API aquí
-      /*
-      await fetch('URL_EVOLUTION_API/message/sendText/INSTANCE', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'TU_API_KEY'
-        },
-        body: JSON.stringify({
-          number: phone.replace(/\D/g, ''),
-          text: message
-        })
-      });
-      */
-      
-      // Simulación de tiempo de carga
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      alert("Usuario guardado. (En el futuro, aquí se enviará automáticamente por Evolution API).");
-      
-      // Limpiar formulario al terminar
-      setName('');
-      setIdNumber('');
-      setPhone('');
-    } catch (error) {
-      console.error("Error al guardar/enviar:", error);
-      alert("Hubo un error al procesar la invitación.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <motion.button 
-           initial={{ opacity: 0, scale: 0.9 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 0.5, delay: 0.2 }}
-           className="group relative flex items-center gap-2 px-6 h-12 bg-amber-500 hover:bg-amber-400 text-black font-headline tracking-widest uppercase text-sm rounded-xl transition-all overflow-hidden w-full md:w-auto justify-center shrink-0 shadow-[0_0_20px_rgba(245,158,11,0.2)] hover:shadow-[0_0_30px_rgba(245,158,11,0.4)]"
-        >
-           <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-foreground/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-           <UserPlus className="w-4 h-4" />
-           <span>Invitar Usuario</span>
-        </motion.button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-background border border-border text-foreground shadow-2xl shadow-amber-500/10 rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-headline tracking-widest uppercase text-foreground">
-            Invitar Personal Administrativo
-          </DialogTitle>
-          <DialogDescription className="text-foreground/40 font-light text-sm">
-            Ingresa los datos básicos. Las credenciales de acceso se generarán automáticamente.
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="space-y-6 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-xs uppercase tracking-widest text-foreground/60">Nombre Completo</Label>
-            <Input 
-              id="name" 
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ej. Juan Pérez" 
-              className="bg-foreground/5 border-border text-foreground focus:border-amber-500/50 focus:ring-amber-500/20"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="idNumber" className="text-xs uppercase tracking-widest text-foreground/60">Número de Cédula</Label>
-            <Input 
-              id="idNumber" 
-              value={idNumber}
-              onChange={(e) => setIdNumber(e.target.value)}
-              placeholder="Ej. 1234567890" 
-              className="bg-foreground/5 border-border text-foreground focus:border-amber-500/50 focus:ring-amber-500/20"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone" className="text-xs uppercase tracking-widest text-foreground/60">Número de WhatsApp</Label>
-            <Input 
-              id="phone" 
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="Ej. 573001234567" 
-              className="bg-foreground/5 border-border text-foreground focus:border-amber-500/50 focus:ring-amber-500/20"
-            />
-          </div>
-
-          <div className="bg-foreground/5 border border-border rounded-xl p-4 space-y-4">
-            <h4 className="text-xs font-headline tracking-widest uppercase text-amber-500">Credenciales Generadas</h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider text-foreground/40">Usuario</span>
-                <p className="text-sm font-medium text-foreground break-all">{username || '-'}</p>
-              </div>
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider text-foreground/40">Contraseña</span>
-                <p className="text-sm font-medium text-foreground">{password || '-'}</p>
-              </div>
-            </div>
-            {(username && password && username !== 'usuario...' && password !== 'Mivra****') && (
-              <button 
-                onClick={handleCopy}
-                className="w-full flex items-center justify-center gap-2 py-2 mt-2 text-xs font-headline uppercase tracking-widest rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground transition-colors"
-              >
-                {copied ? <CheckCircle2 className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
-                {copied ? <span className="text-emerald-500">Copiado</span> : 'Copiar Credenciales'}
-              </button>
-            )}
-          </div>
-        </div>
-
-        <DialogFooter className="sm:justify-between gap-3">
-          <button className="px-4 py-2 rounded-xl border border-border text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors text-xs font-headline uppercase tracking-widest">
-            Cancelar
-          </button>
-          <button 
-            onClick={handleSaveAndInvite}
-            disabled={isSubmitting}
-            className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed text-black font-headline uppercase tracking-widest text-xs transition-colors shadow-[0_0_15px_rgba(245,158,11,0.2)] flex items-center justify-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                Enviando...
-              </>
-            ) : (
-              'Guardar e Invitar'
-            )}
-          </button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+type Kind="ALL"|"PLATFORM_ADMIN"|"SOLO"|"BUSINESS"|"EMPLOYEE"|"CUSTOMER";
+type UserList={id:string;name:string;email:string;status:string;kind:Kind;isPlatformAdmin:boolean;lastLoginAt:string|null;createdAt:string;workspaces:{tenantId:string;tenantName:string;tenantType:string;membershipStatus:string;subscription?:{planCode:string;planName:string;status:string;currentPeriodEnd:string|null;trialEndsAt:string|null}}[]};
+type GrantType="DAY"|"MONTH"|"SIX_MONTHS"|"YEAR"|"CUSTOM";
+type Plan={code:string;name:string;audience:string;priceMinor:number|null;currency:string};
+type Tenant={id:string;name:string;type:string};
+type Module={code:string;name:string;enabled:boolean;source:string;reason?:string};
+type Workspace={tenantId:string;tenantName:string;tenantType:string;membershipStatus:string;roles:string[];subscription?:{id:string;status:string;planCode:string;planName:string;currentPeriodEnd:string|null;trialEndsAt:string|null;cancelAtPeriodEnd:boolean}|null;modules:Module[]};
+type UserDetail={user:{id:string;name:string;email:string;status:string;isPlatformAdmin:boolean;lastLoginAt:string|null};workspaces:Workspace[];profiles:{slug:string;displayName:string;tenantId:string|null}[];relationships:{tenantName:string}[];events:{action:string;createdAt:string}[];statuses:{toStatus:string;createdAt:string}[]};
+const kinds:Record<Kind,string>={ALL:"Todos",PLATFORM_ADMIN:"Administradores del sistema",SOLO:"Independientes",BUSINESS:"Dueños de barbería",EMPLOYEE:"Empleados",CUSTOMER:"Clientes"};
+const durations:Record<GrantType,string>={DAY:"1 día",MONTH:"1 mes",SIX_MONTHS:"6 meses",YEAR:"1 año",CUSTOM:"Fechas específicas"};
+const initialForm=()=>({kind:"CUSTOMER" as Exclude<Kind,"ALL">,name:"",email:"",displayName:"",businessName:"",slug:"",tenantId:"",planCode:"",duration:"MONTH" as GrantType,startsAt:"",endsAt:""});
+const slugify=(s:string)=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+const present=(d?:string|null)=>d?new Date(d).toLocaleString("es-CO",{dateStyle:"medium",timeStyle:"short"}):"Sin registrar";
+const errorText=(e:unknown)=>e instanceof Error?e.message:"Error inesperado";
+async function api(url:string,options?:RequestInit){
+ const response=await fetch(url,{cache:"no-store",...options,headers:{"Content-Type":"application/json",...(options?.headers||{})}});
+ const json=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(json.error||"Solicitud rechazada");
+ return json;
+}
+function grantFrom(f:{duration:GrantType;startsAt:string;endsAt:string}){
+ if(f.duration!=="CUSTOM")return {duration:f.duration};
+ if(!f.endsAt)throw new Error("Selecciona una fecha de vencimiento.");
+ return {duration:"CUSTOM",...(f.startsAt?{startsAt:new Date(f.startsAt).toISOString()}:{}),endsAt:new Date(f.endsAt).toISOString()};
 }
 
-export default function UsersPage() {
-  const [usersData, setUsersData] = useState(initialUsersData);
-  const [editingUser, setEditingUser] = useState<typeof initialUsersData[0] | null>(null);
-  const { toast } = useToast();
+export default function PlatformUsersPage(){
+ const [rows,setRows]=useState<UserList[]>([]);
+ const [total,setTotal]=useState(0);
+ const [page,setPage]=useState(1);
+ const [query,setQuery]=useState("");
+ const [kind,setKind]=useState<Kind>("ALL");
+ const [status,setStatus]=useState("ALL");
+ const [loading,setLoading]=useState(false);
+ const [busy,setBusy]=useState(false);
+ const [message,setMessage]=useState("");
+ const [plans,setPlans]=useState<Plan[]>([]);
+ const [tenants,setTenants]=useState<Tenant[]>([]);
+ const [showCreate,setShowCreate]=useState(false);
+ const [form,setForm]=useState(initialForm);
+ const [credentials,setCredentials]=useState<{email:string;temporaryPassword:string}|null>(null);
+ const [detail,setDetail]=useState<UserDetail|null>(null);
+ const [editName,setEditName]=useState("");
+ const [editEmail,setEditEmail]=useState("");
+ const [editStatus,setEditStatus]=useState("ACTIVE");
+ const [editAdmin,setEditAdmin]=useState(false);
+ const [accessPlan,setAccessPlan]=useState("");
+ const [accessDuration,setAccessDuration]=useState<GrantType>("MONTH");
+ const [accessEndsAt,setAccessEndsAt]=useState("");
+ const [accessStartsAt,setAccessStartsAt]=useState("");
+ const [workingTenant,setWorkingTenant]=useState("");
 
-  const handleStatusToggle = (userId: number) => {
-    const user = usersData.find(u => u.id === userId);
-    if (!user) return;
-    const newStatus = user.status === 'Active' ? 'Inactive' : 'Active';
-    
-    setUsersData(prev => prev.map(u => 
-      u.id === userId ? { ...u, status: newStatus } : u
-    ));
-    
-    toast({
-      title: newStatus === 'Active' ? 'Usuario Activado' : 'Usuario Desactivado',
-      description: `El estado de ${user.name} ha cambiado.`,
-    });
-  };
-
-  const handleDelete = (userId: number) => {
-    const user = usersData.find(u => u.id === userId);
-    if (user) {
-      setUsersData(prev => prev.filter(u => u.id !== userId));
-      toast({
-        title: 'Usuario Eliminado',
-        description: `${user.name} ha sido eliminado.`,
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleResetLink = (userName: string) => {
-    toast({
-      title: 'Enlace Enviado',
-      description: `Se ha enviado un enlace de recuperación a ${userName}.`,
-    });
-  };
-
-  const handleRoleChange = (newRole: string) => {
-    if (editingUser) {
-      setUsersData(prev => prev.map(u => 
-        u.id === editingUser.id ? { ...u, role: newRole } : u
-      ));
-      toast({
-        title: 'Rol Actualizado',
-        description: `El rol de ${editingUser.name} ahora es ${newRole}.`,
-      });
-      setEditingUser(null);
-    }
-  };
-
-  return (
-    <div className="w-full min-h-screen bg-background text-foreground selection:bg-amber-500/30">
-      <div className="max-w-7xl mx-auto space-y-12 px-4 sm:px-6 lg:px-8 py-8 pb-20">
-        
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-              <div className="flex items-center gap-3 mb-3">
-                 <div className="h-px w-8 bg-amber-500" />
-                 <span className="text-amber-500 font-headline tracking-[0.3em] text-xs uppercase">Control de Accesos</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-headline text-foreground tracking-widest uppercase">
-                Usuarios <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600">VIP</span>
-              </h1>
-              <p className="text-foreground/40 font-light mt-4 tracking-wide max-w-xl text-sm">
-                Administración exclusiva de personal interno. Gestiona accesos, roles y credenciales del equipo en la plataforma AdminPortal.
-              </p>
-          </motion.div>
-          
-          <InviteUserModal />
-        </div>
-
-        {/* Main Content */}
-        <div className="space-y-6">
-          {/* Controls */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-background/80 backdrop-blur-3xl p-4 rounded-2xl border border-border shadow-2xl"
-          >
-            <div className="relative w-full max-w-md">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40" />
-              <Input 
-                  placeholder="Buscar miembro VIP..." 
-                  className="w-full bg-foreground/5 border-border text-foreground pl-12 h-12 rounded-xl focus:border-amber-500/50 focus:ring-amber-500/20 transition-all placeholder:text-foreground/20"
-              />
-            </div>
-            <button className="flex items-center gap-2 px-6 h-12 rounded-xl bg-white/[0.03] border border-border text-foreground/60 hover:text-foreground hover:bg-foreground/10 transition-all w-full sm:w-auto justify-center group">
-                <Filter className="w-4 h-4 group-hover:text-amber-500 transition-colors" />
-                <span className="text-sm font-light tracking-widest uppercase">Filtros</span>
-            </button>
-          </motion.div>
-
-          {/* Dynamic VIP List */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {usersData.map((user, idx) => (
-              <motion.div
-                key={user.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 * idx, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative bg-background/80 backdrop-blur-3xl rounded-[24px] border border-border p-6 hover:border-amber-500/30 transition-all duration-500 flex flex-col justify-between h-full shadow-[0_0_0_rgba(0,0,0,0)] hover:shadow-[0_8px_30px_rgba(245,158,11,0.05)]"
-              >
-                {/* Background Glow */}
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[24px]" />
-
-                <div className="relative z-10">
-                  {/* Header: Role & Status */}
-                  <div className="flex justify-between items-start mb-6">
-                    <span className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] font-headline tracking-widest uppercase border backdrop-blur-md shadow-[0_0_15px_rgba(0,0,0,0.5)] ${
-                      user.role === 'SuperAdmin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/30 shadow-[0_0_10px_rgba(168,85,247,0.2)]' : 
-                      user.role === 'Support' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.2)]' : 
-                      user.role === 'Admin' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]' : 
-                      user.role === 'Owner' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]' : 
-                      user.role === 'Barber' ? 'bg-rose-500/10 text-rose-400 border-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.2)]' : 
-                      'bg-foreground/5 text-foreground/70 border-border'
-                    }`}>
-                        {user.role}
-                    </span>
-                    
-                    {user.status === 'Active' ? (
-                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.8)] animate-pulse" />
-                            <span className="text-[9px] font-medium text-emerald-500 uppercase tracking-widest">Activo</span>
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-500/5 border border-red-500/10">
-                            <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
-                            <span className="text-[9px] font-medium text-red-500 uppercase tracking-widest">Inactivo</span>
-                        </div>
-                    )}
-                  </div>
-
-                  {/* Profile */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="relative">
-                      <div className="w-14 h-14 rounded-full bg-[#111] border border-border flex items-center justify-center relative z-10 group-hover:border-amber-500/50 transition-colors duration-500">
-                          <Users className="w-6 h-6 text-foreground/40 group-hover:text-amber-500 transition-colors duration-500" />
-                      </div>
-                      {user.status === 'Active' && (
-                        <div className="absolute inset-0 rounded-full border border-amber-500/30 scale-110 opacity-0 group-hover:opacity-100 transition-all duration-700 animate-[spin_4s_linear_infinite]" />
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-headline tracking-wide text-foreground group-hover:text-amber-400 transition-colors duration-300">{user.name}</h3>
-                      <p className="text-xs font-light text-foreground/40 mt-1">{user.email}</p>
-                    </div>
-                  </div>
-
-                  {/* Details */}
-                  <div className="flex items-center gap-2 text-foreground/30 bg-foreground/5 rounded-xl p-3 border border-border">
-                      <Clock className="w-3.5 h-3.5" />
-                      <span className="text-[10px] font-light uppercase tracking-wider">Último acceso: <span className="text-foreground/60 ml-1">{user.lastLogin}</span></span>
-                  </div>
-                </div>
-
-                {/* Actions Footer */}
-                <div className="relative z-10 mt-6 pt-4 border-t border-border flex justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
-                  <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                          <button className="flex items-center justify-center w-8 h-8 text-foreground/40 hover:text-amber-500 transition-colors rounded-full hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20">
-                              <MoreHorizontal className="w-4 h-4" />
-                          </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48 bg-background border-border text-foreground shadow-2xl shadow-black rounded-xl p-1 backdrop-blur-3xl">
-                          <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-foreground/40 font-headline px-2 py-1.5">Acciones VIP</DropdownMenuLabel>
-                          <DropdownMenuSeparator className="bg-foreground/10" />
-                          
-                          <DropdownMenuItem 
-                            onClick={() => setEditingUser(user)}
-                            className="flex items-center gap-3 cursor-pointer hover:bg-foreground/5 focus:bg-foreground/5 text-xs font-light py-2.5 rounded-lg transition-colors tracking-wide"
-                          >
-                              <Edit className="w-3.5 h-3.5 text-blue-400" />
-                              <span>Editar Rol</span>
-                          </DropdownMenuItem>
-                          
-                          <DropdownMenuItem 
-                            onClick={() => handleResetLink(user.name)}
-                            className="flex items-center gap-3 cursor-pointer hover:bg-foreground/5 focus:bg-foreground/5 text-xs font-light py-2.5 rounded-lg transition-colors tracking-wide"
-                          >
-                              <Key className="w-3.5 h-3.5 text-purple-400" />
-                              <span>Reseteo de Clave</span>
-                          </DropdownMenuItem>
-                          
-                          <DropdownMenuSeparator className="bg-foreground/10" />
-                          
-                          {user.status === 'Active' ? (
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusToggle(user.id)}
-                              className="flex items-center gap-3 cursor-pointer hover:bg-amber-500/10 focus:bg-amber-500/10 text-amber-500 text-xs font-light py-2.5 rounded-lg transition-colors tracking-wide"
-                            >
-                                <ShieldAlert className="w-3.5 h-3.5" />
-                                <span>Revocar Acceso</span>
-                            </DropdownMenuItem>
-                          ) : (
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusToggle(user.id)}
-                              className="flex items-center gap-3 cursor-pointer hover:bg-emerald-500/10 focus:bg-emerald-500/10 text-emerald-500 text-xs font-light py-2.5 rounded-lg transition-colors tracking-wide"
-                            >
-                                <ShieldCheck className="w-3.5 h-3.5" />
-                                <span>Restaurar Acceso</span>
-                            </DropdownMenuItem>
-                          )}
-                          
-                          <DropdownMenuItem 
-                            onClick={() => handleDelete(user.id)}
-                            className="flex items-center gap-3 cursor-pointer hover:bg-rose-500/10 focus:bg-rose-500/10 text-rose-500 text-xs font-light py-2.5 rounded-lg transition-colors tracking-wide mt-1"
-                          >
-                              <Trash2 className="w-3.5 h-3.5" />
-                              <span>Eliminar Permanentemente</span>
-                          </DropdownMenuItem>
-                      </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <Dialog open={!!editingUser} onOpenChange={(open) => !open && setEditingUser(null)}>
-          <DialogContent className="sm:max-w-md bg-background border border-border text-foreground shadow-2xl shadow-amber-500/10 rounded-2xl">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-headline tracking-widest uppercase text-foreground">Editar Rol de Miembro</DialogTitle>
-              <DialogDescription className="text-foreground/40 font-light text-sm">
-                Selecciona la nueva jerarquía VIP para {editingUser?.name}.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-1 gap-3 py-4">
-              {['SuperAdmin', 'Owner', 'Barber', 'Admin', 'Support'].map(role => (
-                <button 
-                  key={role}
-                  onClick={() => handleRoleChange(role)}
-                  className={`p-4 rounded-xl border text-left flex items-center justify-between transition-colors ${editingUser?.role === role ? 'border-amber-500 bg-amber-500/10 shadow-[0_0_15px_rgba(245,158,11,0.15)]' : 'border-border bg-foreground/5 hover:bg-foreground/10'}`}
-                >
-                  <span className="font-headline tracking-widest uppercase text-sm">{role}</span>
-                  {editingUser?.role === role && <CheckCircle2 className="w-4 h-4 text-amber-500" />}
-                </button>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
+ const reload=useCallback(async()=>{
+  setLoading(true);
+  try{
+   const url=new URL("/api/v1/admin/users",location.origin);
+   url.searchParams.set("page",String(page));url.searchParams.set("pageSize","20");
+   url.searchParams.set("q",query.trim());url.searchParams.set("kind",kind);url.searchParams.set("status",status);
+   const {data}=await api(url.pathname+url.search);
+   setRows(data.items||[]);setTotal(data.total||0);setMessage("");
+  }catch(e){setMessage(errorText(e));}
+  finally{setLoading(false);}
+ },[page,query,kind,status]);
+ useEffect(()=>{const timer=setTimeout(()=>{void reload();},250);return()=>clearTimeout(timer);},[reload]);
+ useEffect(()=>{void api("/api/v1/admin/users/options").then(x=>{setPlans(x.data.plans);setTenants(x.data.workspaces);}).catch(e=>setMessage(errorText(e)));},[]);
+ const updateForm=(key:string,value:string)=>setForm(f=>{
+  const next={...f,[key]:value};
+  if(key==="kind"){next.planCode="";next.tenantId="";next.slug="";}
+  if(key==="businessName"||key==="displayName") next.slug=slugify(value);
+  return next;
+ });
+ const closeCreate=()=>{setShowCreate(false);setCredentials(null);setForm(initialForm());};
+ const create=async(e:React.FormEvent)=>{
+  e.preventDefault();setBusy(true);setMessage("");
+  try{
+   const body:Record<string,unknown>={kind:form.kind,name:form.name,email:form.email};
+   if(form.kind==="CUSTOMER"&&form.tenantId)body.tenantId=form.tenantId;
+   if(form.kind==="EMPLOYEE")body.tenantId=form.tenantId;
+   if(form.kind==="SOLO"||form.kind==="BUSINESS"){
+    body.slug=form.slug;body.planCode=form.planCode;body.grant=grantFrom(form);
+    if(form.kind==="SOLO")body.displayName=form.displayName;
+    else body.businessName=form.businessName;
+   }
+   const result=await api("/api/v1/admin/users",{method:"POST",body:JSON.stringify(body)});
+   setCredentials(result.credentials);await reload();
+  }catch(e){setMessage(errorText(e));}finally{setBusy(false);}
+ };
+ const openDetail=async(id:string)=>{
+  setBusy(true);setMessage("");
+  try{
+   const result=await api("/api/v1/admin/users/"+id);
+   const item=result.data as UserDetail;setDetail(item);
+   setEditName(item.user.name);setEditEmail(item.user.email);setEditStatus(item.user.status);setEditAdmin(item.user.isPlatformAdmin);
+   setWorkingTenant(item.workspaces[0]?.tenantId||"");
+   setAccessPlan(item.workspaces[0]?.subscription?.planCode||"");
+   setAccessDuration("MONTH");setAccessEndsAt("");setAccessStartsAt("");
+  }catch(e){setMessage(errorText(e));}finally{setBusy(false);}
+ };
+ const refreshDetail=async(id:string)=>{const result=await api("/api/v1/admin/users/"+id);setDetail(result.data as UserDetail);await reload();};
+ const run=async(fn:()=>Promise<void>)=>{setBusy(true);setMessage("");try{await fn();}catch(e){setMessage(errorText(e));}finally{setBusy(false);}};
+ const saveUser=()=>{if(!detail)return;void run(async()=>{
+   const old=detail.user;
+   if((old.isPlatformAdmin!==editAdmin||old.status!==editStatus)&&!confirm("¿Confirmas el cambio de privilegios/estado? Se registrará en auditoría."))return;
+   await api("/api/v1/admin/users/"+old.id,{method:"PATCH",body:JSON.stringify({name:editName,email:editEmail,status:editStatus,isPlatformAdmin:editAdmin})});
+   await refreshDetail(old.id);
+  });};
+ const archiveUser=()=>{if(!detail)return;void run(async()=>{
+  if(!confirm("¿Desactivar la cuenta? No se borrarán reservas, facturas ni historial."))return;
+  await api("/api/v1/admin/users/"+detail.user.id,{method:"DELETE"});
+  await refreshDetail(detail.user.id);
+ });};
+ const resetPassword=()=>{if(!detail)return;void run(async()=>{
+  if(!confirm("¿Generar otra contraseña y cerrar todas las sesiones de este usuario?"))return;
+  const result=await api("/api/v1/admin/users/"+detail.user.id+"/credentials",{method:"POST"});
+  setCredentials(result.credentials);await refreshDetail(detail.user.id);
+ });};
+ const saveAccess=()=>{if(!detail||!workingTenant)return;void run(async()=>{
+  if(!confirm("¿Aplicar el plan/período al workspace seleccionado? Los movimientos financieros históricos no se modificarán."))return;
+  const grant=grantFrom({duration:accessDuration,startsAt:accessStartsAt,endsAt:accessEndsAt});
+  await api("/api/v1/admin/users/"+detail.user.id+"/access",{method:"PATCH",body:JSON.stringify({tenantId:workingTenant,planCode:accessPlan||undefined,grant})});
+  await refreshDetail(detail.user.id);
+ });};
+ const changeModule=(m:Module,state:string)=>{if(!detail||!workingTenant)return;void run(async()=>{
+  const reason=prompt("Justificación obligatoria del cambio de módulo:","");
+  if(!reason||reason.trim().length<3)return;
+  await api("/api/v1/admin/users/"+detail.user.id+"/modules",{method:"PUT",body:JSON.stringify({tenantId:workingTenant,moduleCode:m.code,state,reason:reason.trim()})});
+  await refreshDetail(detail.user.id);
+ });};
+ const selected=detail?.workspaces.find(x=>x.tenantId===workingTenant);
+ const exportPage=()=>{
+  const esc=(s:unknown)=>{let value=String(s??"");if(/^[=+\-@\t\r]/.test(value))value="'"+value;return '"'+value.replace(/"/g,'""')+'"';};
+  const lines=[["Nombre","Email","Tipo","Estado","Último acceso"],...rows.map(x=>[x.name,x.email,kinds[x.kind],x.status,x.lastLoginAt||""])];
+  const text=lines.map(x=>x.map(esc).join(",")).join("\r\n");
+  const uri=URL.createObjectURL(new Blob(["\ufeff",text],{type:"text/csv;charset=utf-8"}));
+  const link=document.createElement("a");link.href=uri;link.download="barber-usuarios-pagina-"+page+".csv";link.click();URL.revokeObjectURL(uri);
+ };
+ return (
+ <div className="mx-auto max-w-7xl px-5 py-10 pb-36 space-y-7 text-foreground">
+  <div className="flex flex-wrap items-center justify-between gap-4">
+   <div><div className="flex items-center gap-2 text-amber-500 text-xs uppercase tracking-widest"><ShieldCheck size={17}/> Control central de identidad</div>
+    <h1 className="text-3xl font-bold mt-2">Usuarios de Barber Paradise</h1>
+    <p className="text-sm text-muted-foreground mt-1">Cuentas reales, roles, planes, permisos y vigencias auditables.</p>
+   </div>
+   <div className="flex gap-2">
+    <Button variant="outline" onClick={()=>void reload()} disabled={loading}><RefreshCcw size={15} className="mr-2"/>Actualizar</Button>
+    <Button onClick={()=>{setCredentials(null);setForm(initialForm());setShowCreate(true);}}><UserPlus size={16} className="mr-2"/>Nuevo usuario</Button>
+   </div>
+  </div>
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+   <div className="border rounded-xl p-5"><p className="text-xs text-muted-foreground">Coincidencias</p><p className="text-3xl font-semibold mt-1">{total}</p></div>
+   <div className="border rounded-xl p-5"><p className="text-xs text-muted-foreground">Tipo seleccionado</p><p className="text-lg font-semibold mt-2">{kinds[kind]}</p></div>
+   <div className="border rounded-xl p-5"><p className="text-xs text-muted-foreground">Estado consultado</p><p className="text-lg font-semibold mt-2">{status==="ALL"?"Todos":status}</p></div>
+  </div>
+  <div className="border rounded-xl p-4 space-y-3">
+   <div className="flex flex-wrap gap-3 items-center">
+    <div className="flex items-center gap-2 flex-1 min-w-60"><Search size={17}/><Input aria-label="Buscar usuarios" placeholder="Nombre o correo..." value={query} onChange={e=>{setQuery(e.target.value);setPage(1);}}/></div>
+    <select aria-label="Filtrar tipo de usuario" className="border rounded-lg bg-background px-3 h-10 max-w-full" value={kind} onChange={e=>{setKind(e.target.value as Kind);setPage(1);}}>
+     {Object.entries(kinds).map(([k,v])=><option key={k} value={k}>{v}</option>)}
+    </select>
+    <select aria-label="Filtrar estado" className="border rounded-lg bg-background px-3 h-10" value={status} onChange={e=>{setStatus(e.target.value);setPage(1);}}>
+     <option value="ALL">Todos los estados</option><option value="ACTIVE">Activos</option><option value="SUSPENDED">Suspendidos</option><option value="DISABLED">Desactivados</option>
+    </select>
+    <Button variant="outline" onClick={exportPage} disabled={!rows.length}><Download size={15} className="mr-2"/>Exportar página CSV</Button>
+   </div>
+   {message&&<div role="alert" className="rounded-lg border border-red-500/40 p-3 text-red-400 text-sm">{message}</div>}
+   <div className="overflow-x-auto">
+    <table className="w-full text-left text-sm">
+     <thead className="text-xs text-muted-foreground border-b"><tr><th className="p-3">Usuario</th><th className="p-3">Tipo</th><th className="p-3">Workspace / Plan</th><th className="p-3">Estado</th><th className="p-3">Último acceso</th><th className="p-3 text-right">Control</th></tr></thead>
+     <tbody>{rows.map(user=><tr key={user.id} className="border-b hover:bg-muted/20">
+       <td className="p-3"><div className="font-semibold">{user.name}</div><div className="text-muted-foreground text-xs">{user.email}</div></td>
+       <td className="p-3">{kinds[user.kind]||user.kind}{user.isPlatformAdmin&&<ShieldCheck size={14} className="inline ml-2 text-amber-500"/>}</td>
+       <td className="p-3 text-xs">{user.workspaces.length?user.workspaces.map(w=><div key={w.tenantId}>{w.tenantName} <span className="text-muted-foreground">· {w.subscription?.planName||"Sin plan"}</span></div>):"—"}</td>
+       <td className="p-3">{user.status}</td><td className="p-3 text-xs">{present(user.lastLoginAt)}</td>
+       <td className="p-3 text-right"><Button size="sm" variant="outline" onClick={()=>void openDetail(user.id)}>Ver / editar</Button></td>
+      </tr>)}</tbody>
+    </table>
+    {!loading&&!rows.length&&<p className="text-center p-10 text-muted-foreground">No hay usuarios para estos filtros.</p>}
+    {loading&&<p className="text-center p-5 text-muted-foreground">Consultando registros...</p>}
+   </div>
+   <div className="flex justify-between items-center text-xs text-muted-foreground"><span>Página {page} · {total} usuarios encontrados</span><div className="flex gap-2"><Button variant="outline" size="sm" disabled={page<=1} onClick={()=>setPage(x=>x-1)}>Anterior</Button><Button variant="outline" size="sm" disabled={page*20>=total} onClick={()=>setPage(x=>x+1)}>Siguiente</Button></div></div>
+  </div>
+  <Dialog open={showCreate} onOpenChange={open=>{if(!open)closeCreate();else setShowCreate(true);}}>
+   <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+    <DialogHeader><DialogTitle>Registrar usuario en la plataforma</DialogTitle><DialogDescription>Las credenciales sólo se mostrarán una vez. El registro queda auditado.</DialogDescription></DialogHeader>
+    {credentials?<div className="space-y-3 text-sm">
+      <p className="text-emerald-500 font-semibold">Cuenta creada correctamente.</p>
+      <Label>Correo de acceso</Label><Input readOnly value={credentials.email}/>
+      <Label>Contraseña generada — copia ahora</Label><Input aria-label="Contraseña generada" readOnly value={credentials.temporaryPassword}/>
+      <Button className="w-full" onClick={()=>void navigator.clipboard.writeText(`Usuario: ${credentials.email}\nContraseña: ${credentials.temporaryPassword}`)}>Copiar credenciales</Button>
+      <Button variant="outline" className="w-full" onClick={closeCreate}>Cerrar y olvidar contraseña</Button>
+     </div>:<form onSubmit={e=>void create(e)} className="space-y-3">
+      <Label htmlFor="g-kind">Tipo de usuario</Label>
+      <select id="g-kind" className="w-full h-10 rounded border bg-background px-2" value={form.kind} onChange={e=>updateForm("kind",e.target.value)}>
+       {Object.entries(kinds).filter(([k])=>k!=="ALL").map(([k,v])=><option key={k} value={k}>{v}</option>)}
+      </select>
+      <Label htmlFor="g-name">Nombre completo</Label><Input id="g-name" value={form.name} onChange={e=>updateForm("name",e.target.value)} required minLength={2}/>
+      <Label htmlFor="g-email">Correo (usuario de acceso)</Label><Input id="g-email" type="email" value={form.email} onChange={e=>updateForm("email",e.target.value)} required/>
+      {(form.kind==="CUSTOMER"||form.kind==="EMPLOYEE")&&<>
+       <Label htmlFor="g-tenant">Barbería {form.kind==="CUSTOMER"?"(opcional)":"(obligatoria)"}</Label>
+       <select id="g-tenant" className="w-full h-10 border rounded bg-background" value={form.tenantId} onChange={e=>updateForm("tenantId",e.target.value)} required={form.kind==="EMPLOYEE"}>
+        <option value="">{form.kind==="EMPLOYEE"?"Seleccionar barbería":"Sin vincular a barbería"}</option>
+        {tenants.filter(t=>t.type==="BUSINESS").map(t=><option value={t.id} key={t.id}>{t.name}</option>)}
+       </select>
+      </>}
+      {form.kind==="SOLO"&&<><Label htmlFor="g-professional">Nombre profesional</Label><Input id="g-professional" value={form.displayName} onChange={e=>updateForm("displayName",e.target.value)} required/></>}
+      {form.kind==="BUSINESS"&&<><Label htmlFor="g-business">Nombre de la barbería</Label><Input id="g-business" value={form.businessName} onChange={e=>updateForm("businessName",e.target.value)} required/></>}
+      {(form.kind==="SOLO"||form.kind==="BUSINESS")&&<>
+       <Label htmlFor="g-slug">Enlace / slug</Label><Input id="g-slug" value={form.slug} onChange={e=>updateForm("slug",slugify(e.target.value))} required/>
+       <Label htmlFor="g-plan">Plan asignado</Label>
+       <select id="g-plan" className="w-full h-10 border rounded bg-background" required value={form.planCode} onChange={e=>updateForm("planCode",e.target.value)}>
+        <option value="">Selecciona un plan</option>
+        {plans.filter(p=>p.audience==="ALL"||p.audience===(form.kind==="SOLO"?"SOLO_PROFESSIONAL":"BUSINESS")).map(p=><option key={p.code} value={p.code}>{p.name} ({p.code})</option>)}
+       </select>
+       <Label htmlFor="g-duration">Tiempo de acceso</Label>
+       <select id="g-duration" className="w-full h-10 border rounded bg-background" value={form.duration} onChange={e=>updateForm("duration",e.target.value)}>
+        {Object.entries(durations).map(([k,v])=><option key={k} value={k}>{v}</option>)}
+       </select>
+       {form.duration==="CUSTOM"&&<>
+        <Label htmlFor="g-start">Inicio (opcional: ahora)</Label><Input id="g-start" type="datetime-local" value={form.startsAt} onChange={e=>updateForm("startsAt",e.target.value)}/>
+        <Label htmlFor="g-end">Vencimiento exacto</Label><Input id="g-end" type="datetime-local" required value={form.endsAt} onChange={e=>updateForm("endsAt",e.target.value)}/>
+       </>}
+       <p className="text-xs text-muted-foreground">Concesión temporal sin cobro automático; al vencer se revocan módulos de pago.</p>
+      </>}
+      {form.kind==="PLATFORM_ADMIN"&&<div className="border border-amber-500/40 rounded p-3 text-xs">Acceso global completo. Sólo disponible para un administrador de plataforma autenticado. Quedará registrado en auditoría.</div>}
+      <DialogFooter><Button type="button" variant="outline" onClick={closeCreate}>Cancelar</Button><Button type="submit" disabled={busy}>{busy?"Creando...":"Crear usuario"}</Button></DialogFooter>
+     </form>}
+   </DialogContent>
+  </Dialog>
+  <Dialog open={!!detail} onOpenChange={open=>{if(!open){setDetail(null);setCredentials(null);}}}>
+   <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+    <DialogHeader><DialogTitle>Expediente global de usuario</DialogTitle><DialogDescription>Datos reales y permisos efectivos de PostgreSQL. Los cambios quedan auditados.</DialogDescription></DialogHeader>
+    {detail&&<div className="space-y-5 text-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+       <div className="space-y-1"><Label>Nombre</Label><Input value={editName} onChange={e=>setEditName(e.target.value)}/></div>
+       <div className="space-y-1"><Label>Correo</Label><Input value={editEmail} type="email" onChange={e=>setEditEmail(e.target.value)}/></div>
+       <div className="space-y-1"><Label>Estado de cuenta</Label><select className="w-full h-10 rounded border bg-background" value={editStatus} onChange={e=>setEditStatus(e.target.value)}><option value="ACTIVE">Activo</option><option value="SUSPENDED">Suspendido</option><option value="DISABLED">Desactivado</option></select></div>
+       <div className="space-y-1"><Label>Administrador del sistema</Label><select className="w-full h-10 rounded border bg-background" value={editAdmin?"yes":"no"} onChange={e=>setEditAdmin(e.target.value==="yes")}><option value="no">Sin privilegios globales</option><option value="yes">Administrador global</option></select></div>
       </div>
-    </div>
-  );
+      <div className="flex flex-wrap gap-2">
+       <Button onClick={saveUser} disabled={busy}>Guardar datos y privilegios</Button>
+       <Button variant="outline" onClick={resetPassword} disabled={busy}><KeyRound size={15} className="mr-1"/>Nueva contraseña</Button>
+       <Button variant="outline" onClick={archiveUser} disabled={busy||detail.user.status==="DISABLED"}><LockKeyhole size={15} className="mr-1"/>Desactivar / archivar</Button>
+      </div>
+      {credentials&&<div className="space-y-2 border rounded p-3 border-amber-500/40"><p className="font-semibold">Nueva contraseña de un solo uso</p><Input aria-label="Contraseña temporal nueva" readOnly value={credentials.temporaryPassword}/><Button onClick={()=>void navigator.clipboard.writeText(`Usuario: ${credentials.email}\nContraseña: ${credentials.temporaryPassword}`)}>Copiar</Button><Button variant="outline" onClick={()=>setCredentials(null)}>Olvidar</Button></div>}
+      {detail.workspaces.length>0&&<section className="border-t pt-4 space-y-3">
+       <h2 className="font-semibold flex items-center gap-2"><CalendarClock size={17}/>Workspaces, planes y acceso</h2>
+       <select aria-label="Seleccionar workspace" className="h-10 w-full border bg-background rounded" value={workingTenant} onChange={e=>{const v=e.target.value;setWorkingTenant(v);setAccessPlan(detail.workspaces.find(w=>w.tenantId===v)?.subscription?.planCode||"");}}>
+        {detail.workspaces.map(w=><option key={w.tenantId} value={w.tenantId}>{w.tenantName} ({w.tenantType}) · {w.roles.join(", ")||"Sin rol"}</option>)}
+       </select>
+       {selected&&<>
+        <p className="text-xs text-muted-foreground">Estado: {selected.subscription?.status||"Sin suscripción"} · Plan: {selected.subscription?.planName||"Sin plan"} · Vencimiento: {present(selected.subscription?.currentPeriodEnd||selected.subscription?.trialEndsAt)}</p>
+        {selected.subscription&&<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+         <div><Label>Plan</Label><select aria-label="Editar plan" className="h-10 w-full border rounded bg-background" value={accessPlan} onChange={e=>setAccessPlan(e.target.value)}>{plans.filter(p=>p.audience==="ALL"||p.audience===selected.tenantType).map(p=><option key={p.code} value={p.code}>{p.name}</option>)}</select></div>
+         <div><Label>Nuevo período de acceso</Label><select aria-label="Nuevo período" className="h-10 w-full border rounded bg-background" value={accessDuration} onChange={e=>setAccessDuration(e.target.value as GrantType)}>{Object.entries(durations).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select></div>
+         {accessDuration==="CUSTOM"&&<><div><Label>Fecha inicial opcional</Label><Input type="datetime-local" value={accessStartsAt} onChange={e=>setAccessStartsAt(e.target.value)}/></div><div><Label>Fecha final</Label><Input type="datetime-local" value={accessEndsAt} onChange={e=>setAccessEndsAt(e.target.value)}/></div></>}
+         <div className="sm:col-span-2"><Button onClick={saveAccess} disabled={busy}>Aplicar plan y acceso</Button></div>
+        </div>}
+        <h3 className="font-semibold pt-3 flex items-center gap-2"><Settings2 size={16}/>Módulos efectivos</h3>
+        {selected.tenantType==="BUSINESS"&&<p className="text-xs text-muted-foreground">Los módulos de esta barbería se determinan por el plan empresarial.</p>}
+        <div className="max-h-52 overflow-y-auto border rounded">
+         {selected.modules.map(m=><div key={m.code} className="flex flex-wrap items-center justify-between p-2 border-b gap-2">
+          <div><div className="font-medium text-xs">{m.name}</div><div className="text-[11px] text-muted-foreground">{m.code} · {m.reason||m.source}</div></div>
+          <div className="flex items-center gap-2"><span className={m.enabled?"text-emerald-500 text-xs":"text-muted-foreground text-xs"}>{m.enabled?"Habilitado":"Restringido"}</span>
+           {selected.tenantType==="SOLO_PROFESSIONAL"&&<select aria-label={"Modificar módulo "+m.name} className="text-xs border rounded bg-background p-1" value="" onChange={e=>{if(e.target.value)changeModule(m,e.target.value);}}>
+            <option value="">Modificar...</option><option value="FORCE_ENABLED">Habilitar</option><option value="FORCE_DISABLED">Restringir</option><option value="INHERIT">Restablecer plan</option>
+           </select>}
+          </div>
+         </div>)}
+        </div>
+       </>}
+      </section>}
+      <section className="border-t pt-4"><h3 className="font-semibold mb-2">Relaciones como cliente</h3><p className="text-xs text-muted-foreground">{detail.relationships.map(x=>x.tenantName).join(", ")||"Sin relaciones"}</p></section>
+      <section className="border-t pt-4"><h3 className="font-semibold mb-2">Auditoría reciente</h3>{detail.events.slice(0,12).map((e,i)=><div key={i} className="flex justify-between text-xs border-b py-2"><span>{e.action}</span><span>{present(e.createdAt)}</span></div>)}{!detail.events.length&&<p className="text-xs text-muted-foreground">Sin eventos de gestión global registrados</p>}</section>
+     </div>}
+   </DialogContent>
+  </Dialog>
+ </div>
+ );
 }

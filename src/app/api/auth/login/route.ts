@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     if (user.isPlatformAdmin) {
       defaultRedirect = "/admin";
     } else if (authContext?.isOwner()) {
-      defaultRedirect = "/barber/admin";
+      defaultRedirect = "/business";
     } else if (authContext?.isEmployee()) {
       defaultRedirect = "/barber";
     }

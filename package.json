@@ -11,7 +11,7 @@
     "start:realtime": "tsx src/infrastructure/realtime/server.ts",
     "start:outbox": "tsx src/infrastructure/outbox/server.ts",
     "start:notifications": "tsx src/infrastructure/notifications/server.ts",
-    "lint": "next lint",
+    "lint": "node ./node_modules/eslint/bin/eslint.js src tests",
     "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit",
     "test": "node ./node_modules/vitest/vitest.mjs run",
     "db:generate": "drizzle-kit generate",

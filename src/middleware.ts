@@ -37,7 +37,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isPlatformAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
-  const isOwnerRoute = pathname === "/barber/admin" || pathname.startsWith("/barber/admin/");
+  const isOwnerRoute = pathname === "/business" || pathname.startsWith("/business/");
   const isEmployeeRoute = pathname === "/barber" || pathname.startsWith("/barber/");
   const isCustomerRoute = pathname === "/clientes" || pathname.startsWith("/clientes/");
   const isPortalRoute = pathname === "/portal" || pathname.startsWith("/portal/");

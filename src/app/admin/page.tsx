@@ -34,17 +34,28 @@ export default function AdminDashboard() {
       <div className="fixed top-0 left-1/4 w-[50vw] h-[50vw] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 mix-blend-screen" />
       <div className="fixed bottom-0 right-0 w-[40vw] h-[40vw] bg-amber-700/10 rounded-full blur-[100px] pointer-events-none translate-x-1/4 translate-y-1/4 mix-blend-screen" />
 
-      {/* Botón Flotante Cerrar Sesión */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="fixed top-6 right-6 lg:top-8 lg:right-10 z-50"
-      >
-        <Link href="/" className="group flex items-center justify-center w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-border hover:border-red-500/30 hover:bg-red-500/10 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]" title="Cerrar Sesión">
-          <LogOut className="w-5 h-5 text-foreground/50 group-hover:text-red-400 transition-colors translate-x-[1px]" />
-        </Link>
-      </motion.div>
+      {/* Controles Top Right */}
+      <div className="fixed top-6 right-6 lg:top-8 lg:right-10 z-50 flex items-center gap-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="px-4 py-2 rounded-full text-xs font-headline tracking-widest uppercase shadow-[0_8px_32px_rgba(0,0,0,0.4)] bg-amber-500/20 text-amber-500 border border-amber-500/50"
+        >
+          Vista: Super Admin
+        </motion.div>
+
+        {/* Botón Flotante Cerrar Sesión */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <Link href="/" className="group flex items-center justify-center w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-border hover:border-red-500/30 hover:bg-red-500/10 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)]" title="Cerrar Sesión">
+            <LogOut className="w-5 h-5 text-foreground/50 group-hover:text-red-400 transition-colors translate-x-[1px]" />
+          </Link>
+        </motion.div>
+      </div>
 
       {/* Contenido Principal */}
       <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 py-8 md:py-12 z-10 w-full max-w-7xl mx-auto">
